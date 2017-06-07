@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xmomen.generator.mapping.TableMapper" >
+
+    <!--    查询消息    -->
+    <select id="getTableInfo"
+            resultType="com.xmomen.generator.model.ColumnInfo"
+            parameterType="java.util.HashMap">
+        select
+        t.table_schema tableSchema,
+        t.table_name tableName,
+        t.column_comment columnComment,
+        t.CHARACTER_maximum_LENGTH length,
+        t.numeric_scale scale,
+        case column_key when 'PRI' then 1 else 0 end as isPrimaryKey,
+        upper(t.data_type) jdbcType,
+        t.column_name actualColumnName,
+        t.column_default defaultValue,
+        t.is_nullable nullable
+        from information_schema.columns t
+        <where>
+            <if test="schema">
+                and table_schema = #{schema}
+            </if>
+            <if test="tableName">
+                AND table_name = #{tableName}
+            </if>
+        </where>
+    </select>
+
+</mapper>

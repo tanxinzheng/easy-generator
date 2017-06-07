@@ -1,0 +1,18 @@
+{
+  "dataSource":{
+    "driver":"com.mysql.jdbc.Driver",
+    "url":"jdbc:mysql://121.40.156.26:3306/pms?useUnicode=true&amp;characterEncoding=utf8",
+    "username":"root",
+    "password":"fuckyoumysql"
+  },
+  "tables":[
+    {
+      "domainObjectName":"dictionary",
+      "tableComment":"数据字典",
+      "tableName":"xmo_dictionary",
+      "targetPackage":"com.xmomen.module.system.entity.mapper",
+      "modulePackage":"com.xmomen.module.system",
+      "restMapping":"/dictionary"
+    }
+  ]
+}
