@@ -1,9 +1,11 @@
 package com.xmomen.maven.plugin;
 
 import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
 import com.xmomen.generator.XmomenGenerator;
 import com.xmomen.generator.configuration.ConfigurationParser;
 import com.xmomen.generator.configuration.GeneratorConfiguration;
+import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.JSONUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -54,6 +56,10 @@ public class MybatisGeneratorMojo extends AbstractMojo {
             GeneratorConfiguration.ProjectMetadata projectMetadata = new GeneratorConfiguration.ProjectMetadata();
             projectMetadata.setRootPath(basedir);
             configuration.setMetadata(projectMetadata);
+            getLog().info("------------------------------------------------------------------------");
+            getLog().info("Reading Generator Json Configuration File");
+            getLog().info("------------------------------------------------------------------------");
+            System.out.println(JSONUtils.formatJson(JSONObject.toJSONString(configuration)));
             XmomenGenerator.generate(configuration);
         } catch (IOException e) {
             getLog().info("未找到配置文件", e);

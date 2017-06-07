@@ -42,7 +42,6 @@ public class XmomenGenerator {
     protected static Log logger = new JdkLoggingImpl(XmomenGenerator.class);
 
 
-
     public static void generate(GeneratorConfiguration configuration) throws Exception {
         DataSource dataSource = new DriverManagerDataSource(
                 configuration.getDataSource().getUrl(),

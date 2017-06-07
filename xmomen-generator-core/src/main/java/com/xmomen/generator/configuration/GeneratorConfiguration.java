@@ -1,6 +1,7 @@
 package com.xmomen.generator.configuration;
 
 import com.xmomen.generator.model.TableInfo;
+import com.xmomen.generator.template.TemplateType;
 import lombok.Data;
 
 import java.util.List;
@@ -19,7 +20,6 @@ public class GeneratorConfiguration {
     @Data
     public static class ProjectMetadata {
         private String rootPath;
-
     }
 
     @Data
