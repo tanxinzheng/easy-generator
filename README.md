@@ -37,6 +37,13 @@
     "username":"root",
     "password":"root"
   },
+  "metadata":{
+    "ignoreTemplateTypes":["Controller"],
+    "templateTypes":["Entity"],
+    "templates":{
+      "Controller":"./src/test/resources/tpl/controller.ftl"
+    }
+  },
   "tables":[
     {
       "domainName":"dictionary",

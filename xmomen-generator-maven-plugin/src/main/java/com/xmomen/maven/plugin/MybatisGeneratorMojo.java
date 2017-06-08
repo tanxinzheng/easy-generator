@@ -53,9 +53,14 @@ public class MybatisGeneratorMojo extends AbstractMojo {
             String basedir = new File("").getAbsolutePath() + File.separator;
             File configFile = new File(basedir, configurationFile);
             GeneratorConfiguration configuration = ConfigurationParser.parserJsonConfig(configFile);
-            GeneratorConfiguration.ProjectMetadata projectMetadata = new GeneratorConfiguration.ProjectMetadata();
+            GeneratorConfiguration.ProjectMetadata projectMetadata = null;
+            if(configuration.getMetadata() != null){
+                projectMetadata = configuration.getMetadata();
+            }else{
+                projectMetadata = new GeneratorConfiguration.ProjectMetadata();
+                configuration.setMetadata(projectMetadata);
+            }
             projectMetadata.setRootPath(basedir);
-            configuration.setMetadata(projectMetadata);
             getLog().info("------------------------------------------------------------------------");
             getLog().info("Reading Generator Json Configuration File");
             getLog().info("------------------------------------------------------------------------");

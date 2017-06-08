@@ -2,8 +2,11 @@ package com.xmomen.generator.model;
 
 import com.xmomen.generator.model.ColumnInfo;
 import lombok.Data;
+import org.hibernate.validator.constraints.NotBlank;
 import org.mybatis.generator.api.IntrospectedColumn;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -12,13 +15,15 @@ import java.util.Properties;
  * Created by tanxinzheng on 16/8/28.
  */
 public @Data class TableInfo {
-    private String rootPath;
     private String schema;
     // 表名
+    @NotBlank(message = "表名为必填项")
     private String tableName;
     // 表名注释
+    @NotBlank(message = "表注释为必填项（生成代码注释所需）")
     private String tableComment;
     // 业务领域对象名称
+    @NotBlank(message = "领域对象名称为必填项")
     private String domainObjectName;
     /** 领域对象类 */
     private String domainObjectClassName;
@@ -37,8 +42,10 @@ public @Data class TableInfo {
     // 包名(包含模块名)
     private String targetPackage;
     // 模块包名
+    @NotBlank(message = "目标包路径为必填项（java包路径，如:com.xmomen.module.demo）")
     private String modulePackage;
     // restful 资源映射名称
+    @NotBlank(message = "Rest接口为必填项（生成Controller时映射Restful接口，如:/user）")
     private String restMapping;
     // 列集合
     List<ColumnInfo> columns;
@@ -48,8 +55,6 @@ public @Data class TableInfo {
     private List<ColumnInfo> keywordColumns;
     // 详情界面排除字段
     private List<ColumnInfo> saveExcludeColumns;
-    // 需要排除的插件
-    private String[] excludePluginsName;
     private boolean isSkip;
     private ColumnInfo primaryKeyColumn;
 

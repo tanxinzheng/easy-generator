@@ -1,7 +1,7 @@
 package com.xmomen.generator;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.xmomen.generator.configuration.ConfigurationParser;
 import com.xmomen.generator.configuration.GeneratorConfiguration;
 import com.xmomen.generator.mapping.TableMapper;
 import com.xmomen.generator.model.ColumnInfo;
@@ -14,6 +14,7 @@ import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.PluginUtils;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.ibatis.session.*;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.exception.ShellException;
@@ -41,8 +42,14 @@ public class XmomenGenerator {
 
     protected static Log logger = new JdkLoggingImpl(XmomenGenerator.class);
 
+    private static GeneratorConfiguration generatorConfiguration = null;
+
 
     public static void generate(GeneratorConfiguration configuration) throws Exception {
+        ConfigurationParser.validate();
+        if(generatorConfiguration == null){
+            generatorConfiguration = configuration;
+        }
         DataSource dataSource = new DriverManagerDataSource(
                 configuration.getDataSource().getUrl(),
                 configuration.getDataSource().getUsername(),
@@ -61,7 +68,6 @@ public class XmomenGenerator {
         for (TableInfo config : configuration.getTables()) {
             TableInfo tableInfo = new TableInfo();
             BeanUtils.copyProperties(config, tableInfo);
-            tableInfo.setRootPath(configuration.getMetadata().getRootPath());
             List<ColumnInfo> columnInfoList = session.getMapper(TableMapper.class).getTableInfo(tableInfo.getSchema(), tableInfo.getTableName());
             Assert.isTrue(CollectionUtils.isNotEmpty(columnInfoList), "Not Found the table [ " + tableInfo.getTableName() + " ] information.");
             JavaTypeResolverDefaultImplExt javaTypeResolver = new JavaTypeResolverDefaultImplExt();
@@ -81,7 +87,13 @@ public class XmomenGenerator {
             setParameter(tableInfo);
             System.out.println(JSONUtils.formatJson(JSONObject.toJSONString(tableInfo)));
             for (TemplateType templateType : TemplateType.values()) {
-                if(!templateType.isSkip()){
+                // 忽略模板
+                if(configuration.getMetadata().getIgnoreTemplateTypes() != null && ArrayUtils.contains(configuration.getMetadata().getIgnoreTemplateTypes(), templateType)){
+                    continue;
+                }
+                // 只生成指定模板
+                if(configuration.getMetadata().getTemplateTypes() == null ||
+                        (configuration.getMetadata().getTemplateTypes() != null && ArrayUtils.contains(configuration.getMetadata().getTemplateTypes(), templateType))){
                     // 指定模板文件
                     tableInfo.setTemplateFileName(templateType.getTemplateFileName() + ".ftl");
                     // 输出目录
@@ -89,8 +101,9 @@ public class XmomenGenerator {
                     // 模块包路径
                     tableInfo.setTargetPackage(tableInfo.getModulePackage() + "." + templateType.getTargetPackage());
                     tableInfo.setTargetProject(templateType.getTargetProject());
-                    mainGenerate(tableInfo);
+                    mainGenerate(tableInfo, configuration.getMetadata().getTemplates().get(templateType));
                 }
+
             }
         }
     }
@@ -128,15 +141,15 @@ public class XmomenGenerator {
         return tableInfo;
     }
 
-    private static void mainGenerate(TableInfo tableInfo){
+    private static void mainGenerate(TableInfo tableInfo, String overwriteTemplate){
         try {
             Template template = null;
-            if(false){
-                template = FreemarkerUtils.getTemplate(tableInfo.getTemplateFileName());
+            if(overwriteTemplate != null){
+                template = FreemarkerUtils.getTemplate(overwriteTemplate);
             }else{
                 template = FreemarkerUtils.getTemplate(tableInfo.getTemplateFileName(), "/templates");
             }
-            File file = new DefaultShellCallback(false).getDirectory(tableInfo.getRootPath()+
+            File file = new DefaultShellCallback(false).getDirectory(generatorConfiguration.getMetadata().getRootPath()+
                     File.separator +
                     tableInfo.getTargetProject(), tableInfo.getTargetPackage().replace(".", "/"));
             Writer writer = new FileWriter(new File(file, tableInfo.getTargetFileName()));

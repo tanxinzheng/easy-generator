@@ -5,12 +5,14 @@
     "username":"root",
     "password":"fuckyoumysql"
   },
+  "metadata":{
+    "templateTypes":["Entity"]
+  },
   "tables":[
     {
       "domainObjectName":"dictionary",
       "tableComment":"数据字典",
       "tableName":"xmo_dictionary",
-      "targetPackage":"com.xmomen.module.system.entity.mapper",
       "modulePackage":"com.xmomen.module.system",
       "restMapping":"/dictionary"
     }
