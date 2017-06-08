@@ -101,7 +101,11 @@ public class XmomenGenerator {
                     // 模块包路径
                     tableInfo.setTargetPackage(tableInfo.getModulePackage() + "." + templateType.getTargetPackage());
                     tableInfo.setTargetProject(templateType.getTargetProject());
-                    mainGenerate(tableInfo, configuration.getMetadata().getTemplates().get(templateType));
+                    if(configuration.getMetadata().getTemplates() != null){
+                        mainGenerate(tableInfo, configuration.getMetadata().getTemplates().get(templateType));
+                    }else{
+                        mainGenerate(tableInfo, null);
+                    }
                 }
 
             }

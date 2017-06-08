@@ -204,8 +204,7 @@
 		"primaryKey":true
 	},
 	"restMapping":"/dictionary",
-	"rootPath":"/Users/jeng/xmomen-repo/framework/xmomen-generator-maven-plugin/",
-	"skip":false,
+	"rootPath":"/Users/root/xmomen-repo/framework/xmomen-generator-maven-plugin/",
 	"tableComment":"数据字典",
 	"tableName":"xmo_dictionary",
 	"targetPackage":"com.xmomen.module.system.entity.mapper"
