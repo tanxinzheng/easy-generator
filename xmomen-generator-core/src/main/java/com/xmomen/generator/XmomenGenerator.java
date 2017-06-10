@@ -110,7 +110,9 @@ public class XmomenGenerator {
                 if(configuration.getMetadata().getTemplateTypes() == null ||
                         (configuration.getMetadata().getTemplateTypes() != null && ArrayUtils.contains(configuration.getMetadata().getTemplateTypes(), templateCodeKey))){
                     // 指定模板文件
-                    if(!templateCode.isCustom()){
+                    if(templateCode.isCustom()){
+                        tableInfo.setTemplateFileName(generatorConfiguration.getMetadata().getRootPath() + templateCode.getTemplateFileName());
+                    }else{
                         tableInfo.setTemplateFileName(templateCode.getTemplateFileName() + ".ftl");
                     }
                     // 输出目录
@@ -118,7 +120,7 @@ public class XmomenGenerator {
                     // 模块包路径
                     tableInfo.setTargetPackage(tableInfo.getModulePackage() + "." + templateCode.getTargetPackage());
                     tableInfo.setTargetProject(templateCode.getTargetProject());
-                    if(configuration.getMetadata().getOverwriteTemplates() != null){
+                    if(configuration.getMetadata().getOverwriteTemplates().get(templateCodeKey) != null){
                         mainGenerate(tableInfo, configuration.getMetadata().getOverwriteTemplates().get(templateCodeKey));
                     }else if(templateCode.isCustom()){
                         mainGenerate(tableInfo, templateCode.getTemplateFileName());

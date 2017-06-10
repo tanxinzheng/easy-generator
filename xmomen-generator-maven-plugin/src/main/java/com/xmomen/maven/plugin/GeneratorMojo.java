@@ -110,7 +110,7 @@ public class GeneratorMojo extends AbstractMojo {
             getLog().error("JSON 配置文件格式不正确", e);
             e.printStackTrace();
         } catch (Exception e) {
-            getLog().error("Generate fail.", e);
+            getLog().error(e.getMessage(), e);
             e.printStackTrace();
         }
     }
