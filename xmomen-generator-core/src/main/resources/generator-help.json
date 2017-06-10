@@ -1,20 +1,42 @@
 {
+  //【必填项】数据源配置
   "dataSource":{
     "driver":"com.mysql.jdbc.Driver",
-    "url":"jdbc:mysql://121.40.156.26:3306/pms?useUnicode=true&amp;characterEncoding=utf8",
+    "url":"jdbc:mysql://localhost:3306/demo?useUnicode=true&amp;characterEncoding=utf8",
     "username":"root",
-    "password":"fuckyoumysql"
+    "password":"root"
   },
+  //【选填项】自定义配置元数据
   "metadata":{
+    //【选填项】忽略生成那些模板
+    "ignoreTemplateTypes":["Query"],
+    //【选填项】只生成那些模板
+    "templateTypes":["Query", "Entity"],
+    //【选填项】自定义ftl模板路径
+    "templates":{
+      "ControllerTest":"src/test/resources/templates/controllerTest.ftl",
+      "Controller":"src/test/resources/templates/controller.ftl",
+      "Model":"src/test/resources/templates/model.ftl",
+      "Service":"src/test/resources/templates/service.ftl",
+      "ServiceImpl":"src/test/resources/templates/serviceImpl.ftl",
+      "Mapper":"src/test/resources/templates/mapper.ftl",
+      "MapperXml":"src/test/resources/templates/mapper-xml.ftl"
+    },
+    //【选填项】项目根目录(与pom.xml文件同目录)
     "rootPath":"/Users/jeng/xmomen-repo/framework/mybatis-generator"
   },
+  //【必填项】生成表配置
   "tables":[
     {
+      //【必填项】表对应生成的实体类(如下表则包含Dictionary,DictionaryQuery,DictionaryModel等类)
       "domainName":"dictionary",
+      //【必填项】表业务含义描述，生成对应注释
       "tableComment":"数据字典",
+      //【必填项】对应数据库表名
       "tableName":"xmo_dictionary",
-      "targetPackage":"com.xmomen.module.system.entity.mapper",
+      //【必填项】所属包模块
       "modulePackage":"com.xmomen.module.system",
+      //【必填项】若生成Controller,ControllerTest则为必填项，Controller类对应RequestMapping中的URL，遵循Restful接口规范定义
       "restMapping":"/dictionary"
     }
   ]

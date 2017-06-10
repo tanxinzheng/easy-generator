@@ -33,6 +33,14 @@ public interface ${domainObjectClassName}Service {
     List<${domainObjectClassName}Model> create${domainObjectClassName}s(List<${domainObjectClassName}Model> ${domainObjectName}Models);
 
     /**
+    * 更新${tableComment}
+    *
+    * @param ${domainObjectName}Model 更新${tableComment}对象参数
+    * @param ${domainObjectName}Query 过滤${tableComment}对象参数
+    */
+    public void update${domainObjectClassName}(${domainObjectClassName}Model ${domainObjectName}Model, ${domainObjectClassName}Query ${domainObjectName}Query);
+
+    /**
      * 更新${tableComment}
      * @param ${domainObjectName}Model    更新${tableComment}对象参数
      */

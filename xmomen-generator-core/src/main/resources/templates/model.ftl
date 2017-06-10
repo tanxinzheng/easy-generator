@@ -28,7 +28,7 @@ public @Data class ${domainObjectClassName}Model extends BaseModel implements Se
     <#if !field.primaryKey && !field.hide>
     @Excel(name = "${field['columnComment']}")
     </#if>
-    <#if !field.nullable>
+    <#if !field.nullable && !field.primaryKey>
     <#if field['javaType'] = 'String'>
     @NotBlank(message = "${field['columnComment']}为必填项")
     <#else>

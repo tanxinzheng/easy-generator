@@ -9,7 +9,9 @@ import ${modulePackage}.service.${domainObjectClassName}Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import org.apache.commons.lang3.StringUtils;
 import javax.validation.Valid;
+import java.util.List;
 
 <#include "header.ftl">
 @RestController
@@ -27,7 +29,11 @@ public class ${domainObjectClassName}Controller {
     @RequestMapping(method = RequestMethod.GET)
     @ActionLog(actionName = "查询${tableComment}列表")
     public Page<${domainObjectClassName}Model> get${domainObjectClassName}List(${domainObjectClassName}Query ${domainObjectName}Query){
-        return ${domainObjectName}Service.get${domainObjectClassName}ModelPage(${domainObjectName}Query);
+        if(${domainObjectName}Query.isPaging()){
+            return ${domainObjectName}Service.get${domainObjectClassName}ModelPage(${domainObjectName}Query);
+        }
+        List<${domainObjectClassName}Model> ${domainObjectName}List = ${domainObjectName}Service.get${domainObjectClassName}ModelList(${domainObjectName}Query);
+        return new Page(${domainObjectName}List);
     }
 
     /**
@@ -54,14 +60,19 @@ public class ${domainObjectClassName}Controller {
 
     /**
      * 更新${tableComment}
-     * @param id                            主键
-     * @param ${domainObjectName}Model 更新对象参数
+     * @param id    主键
+     * @param ${domainObjectName}Model  更新对象参数
+     * @return  ${domainObjectClassName}Model   ${tableComment}领域对象
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ActionLog(actionName = "更新${tableComment}")
-    public void update${domainObjectClassName}(@PathVariable(value = "id") String id,
+    public ${domainObjectClassName}Model update${domainObjectClassName}(@PathVariable(value = "id") String id,
                            @RequestBody @Valid ${domainObjectClassName}Model ${domainObjectName}Model){
+        if(StringUtils.isNotBlank(id)){
+            ${domainObjectName}Model.set${primaryKeyColumn.columnName?cap_first}(id);
+        }
         ${domainObjectName}Service.update${domainObjectClassName}(${domainObjectName}Model);
+        return ${domainObjectName}Service.getOne${domainObjectClassName}Model(id);
     }
 
     /**
@@ -76,12 +87,12 @@ public class ${domainObjectClassName}Controller {
 
     /**
      *  删除${tableComment}
-     * @param ids    主键
+     * @param dictionaryQuery    查询参数对象
      */
     @RequestMapping(method = RequestMethod.DELETE)
     @ActionLog(actionName = "批量删除${tableComment}")
-    public void delete${domainObjectClassName}s(@RequestParam(value = "ids") String[] ids){
-        ${domainObjectName}Service.delete${domainObjectClassName}(ids);
+    public void delete${domainObjectClassName}s(${domainObjectClassName}Query ${domainObjectName}Query){
+        ${domainObjectName}Service.delete${domainObjectClassName}(${domainObjectName}Query.getIds());
     }
 
 

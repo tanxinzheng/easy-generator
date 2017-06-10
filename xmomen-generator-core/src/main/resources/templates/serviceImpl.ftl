@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 <#include "header.ftl">
@@ -75,6 +76,18 @@ public class ${domainObjectClassName}ServiceImpl implements ${domainObjectClassN
     }
 
     /**
+    * 更新${tableComment}
+    *
+    * @param ${domainObjectName}Model 更新${tableComment}对象参数
+    * @param ${domainObjectName}Query 过滤${tableComment}对象参数
+    */
+    @Override
+    @Transactional
+    public void update${domainObjectClassName}(${domainObjectClassName}Model ${domainObjectName}Model, ${domainObjectClassName}Query ${domainObjectName}Query) {
+        ${domainObjectName}Mapper.updateSelectiveByQuery(${domainObjectName}Model.getEntity(), ${domainObjectName}Query);
+    }
+
+    /**
      * 更新${tableComment}
      *
      * @param ${domainObjectName}Model 更新${tableComment}对象参数
@@ -82,7 +95,7 @@ public class ${domainObjectClassName}ServiceImpl implements ${domainObjectClassN
     @Override
     @Transactional
     public void update${domainObjectClassName}(${domainObjectClassName}Model ${domainObjectName}Model) {
-        ${domainObjectName}Mapper.updateSelectiveByQuery(${domainObjectName}Model.getEntity(), null);
+        update${domainObjectClassName}(${domainObjectName}Model.getEntity());
     }
 
     /**
@@ -105,7 +118,7 @@ public class ${domainObjectClassName}ServiceImpl implements ${domainObjectClassN
     @Override
     @Transactional
     public void delete${domainObjectClassName}(String[] ids) {
-        ${domainObjectName}Mapper.deletesByPrimaryKey(ids);
+        ${domainObjectName}Mapper.deletesByPrimaryKey(Arrays.asList(ids));
     }
 
     /**
@@ -127,7 +140,7 @@ public class ${domainObjectClassName}ServiceImpl implements ${domainObjectClassN
      */
     @Override
     public Page<${domainObjectClassName}Model> get${domainObjectClassName}ModelPage(${domainObjectClassName}Query ${domainObjectName}Query) {
-        PageInterceptor.startPage(${domainObjectName}Query.getPageNum(), ${domainObjectName}Query.getPageSize());
+        PageInterceptor.startPage(${domainObjectName}Query);
         ${domainObjectName}Mapper.selectModel(${domainObjectName}Query);
         return PageInterceptor.endPage();
     }

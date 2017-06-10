@@ -20,7 +20,7 @@ public interface ${domainObjectClassName}Mapper {
 
     int deleteByPrimaryKey(String primaryKey);
 
-    int deletesByPrimaryKey(String[] primaryKeys);
+    int deletesByPrimaryKey(@Param("ids") List<String> primaryKeys);
 
     int insertSelective(${domainObjectClassName} record);
 

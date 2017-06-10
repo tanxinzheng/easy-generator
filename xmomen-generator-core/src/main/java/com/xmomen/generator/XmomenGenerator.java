@@ -72,7 +72,7 @@ public class XmomenGenerator {
             Assert.isTrue(CollectionUtils.isNotEmpty(columnInfoList), "Not Found the table [ " + tableInfo.getTableName() + " ] information.");
             JavaTypeResolverDefaultImplExt javaTypeResolver = new JavaTypeResolverDefaultImplExt();
             for (ColumnInfo columnInfo : columnInfoList) {
-                FullyQualifiedJavaType fullyQualifiedJavaType = javaTypeResolver.getJavaTypeByJdbcTypeName(columnInfo.getJdbcType());
+                FullyQualifiedJavaType fullyQualifiedJavaType = javaTypeResolver.getJavaTypeByJdbcTypeName(columnInfo.getJdbcType(), columnInfo);
                 columnInfo.setFullyJavaType(fullyQualifiedJavaType.getFullyQualifiedName());
                 columnInfo.setJavaType(fullyQualifiedJavaType.getShortName());
                 columnInfo.setColumnName(PluginUtils.underlineToCamel2(columnInfo.getActualColumnName().toLowerCase()));

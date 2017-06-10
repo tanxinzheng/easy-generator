@@ -1,5 +1,6 @@
 package com.xmomen.maven.plugins.mybatis.generator.plugins.types;
 
+import com.xmomen.generator.model.ColumnInfo;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl;
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -94,56 +96,53 @@ public class JavaTypeResolverDefaultImplExt extends JavaTypeResolverDefaultImpl 
      * @param jdbcTypeName
      * @return
      */
-    public FullyQualifiedJavaType getJavaTypeByJdbcTypeName(String jdbcTypeName){
+    public FullyQualifiedJavaType getJavaTypeByJdbcTypeName(String jdbcTypeName, ColumnInfo columnInfo){
         FullyQualifiedJavaType fullyQualifiedJavaType = null;
+        Integer types = null;
+        for (Map.Entry<Integer, JdbcTypeInformation> integerJdbcTypeInformationEntry : typeMap.entrySet()) {
+            if(integerJdbcTypeInformationEntry.getValue().getJdbcTypeName().equalsIgnoreCase(jdbcTypeName)){
+                fullyQualifiedJavaType = integerJdbcTypeInformationEntry.getValue().getFullyQualifiedJavaType();
+                types = integerJdbcTypeInformationEntry.getKey();
+                break;
+            }
+        }
         for (JdbcTypeInformation jdbcTypeInformation : typeMap.values()) {
             if(jdbcTypeInformation.getJdbcTypeName().equalsIgnoreCase(jdbcTypeName)){
                 fullyQualifiedJavaType = jdbcTypeInformation.getFullyQualifiedJavaType();
                 break;
             }
         }
-        return fullyQualifiedJavaType;
+        return calculateJavaType(fullyQualifiedJavaType, types, columnInfo);
     }
 
-    public FullyQualifiedJavaType calculateJavaType(
-            IntrospectedColumn introspectedColumn) {
-        FullyQualifiedJavaType answer;
-        JdbcTypeInformation jdbcTypeInformation = typeMap
-                .get(introspectedColumn.getJdbcType());
-
-        if (jdbcTypeInformation == null) {
-            switch (introspectedColumn.getJdbcType()) {
-                case Types.DECIMAL:
-                case Types.NUMERIC:
-                    if (introspectedColumn.getScale() > 0
-                            || introspectedColumn.getLength() > 18
-                            || forceBigDecimals) {
-                        answer = new FullyQualifiedJavaType(BigDecimal.class
-                                .getName());
-                    } else if (introspectedColumn.getLength() > 9) {
-                        answer = new FullyQualifiedJavaType(Long.class.getName());
-                    } else if (introspectedColumn.getLength() > 4) {
-                        answer = new FullyQualifiedJavaType(Integer.class.getName());
-                    } else {
-                        answer = new FullyQualifiedJavaType(Short.class.getName());
-                    }
-                    break;
-
-                default:
-                    answer = null;
-                    break;
-            }
-        } else if (Types.CHAR == introspectedColumn.getJdbcType()) {
-            if (introspectedColumn.getLength() == 1) {
-                answer = new FullyQualifiedJavaType(Boolean.class.getName());
-            } else {
-                answer = new FullyQualifiedJavaType(String.class.getName());
-            }
-        } else {
-            answer = jdbcTypeInformation.getFullyQualifiedJavaType();
+    public FullyQualifiedJavaType calculateJavaType(FullyQualifiedJavaType fullyQualifiedJavaType, Integer jdbcType, ColumnInfo introspectedColumn) {
+        switch (jdbcType) {
+            case Types.DECIMAL:
+            case Types.NUMERIC:
+                if (introspectedColumn.getScale() > 0
+                        || introspectedColumn.getLength() > 18
+                        || forceBigDecimals) {
+                    fullyQualifiedJavaType = new FullyQualifiedJavaType(BigDecimal.class
+                            .getName());
+                } else if (introspectedColumn.getLength() > 9) {
+                    fullyQualifiedJavaType = new FullyQualifiedJavaType(Long.class.getName());
+                } else if (introspectedColumn.getLength() > 4) {
+                    fullyQualifiedJavaType = new FullyQualifiedJavaType(Integer.class.getName());
+                } else {
+                    fullyQualifiedJavaType = new FullyQualifiedJavaType(Short.class.getName());
+                }
+                break;
+            case Types.CHAR:
+                if (introspectedColumn.getLength() == 1) {
+                    fullyQualifiedJavaType = new FullyQualifiedJavaType(Boolean.class.getName());
+                } else {
+                    fullyQualifiedJavaType = new FullyQualifiedJavaType(String.class.getName());
+                }
+                break;
+            default:
+                break;
         }
-
-        return answer;
+        return fullyQualifiedJavaType;
     }
 
 }

@@ -45,7 +45,7 @@ public @Data class TableInfo {
     @NotBlank(message = "目标包路径为必填项（java包路径，如:com.xmomen.module.demo）")
     private String modulePackage;
     // restful 资源映射名称
-    @NotBlank(message = "Rest接口为必填项（生成Controller时映射Restful接口，如:/user）")
+    @NotBlank(message = "Restful映射接口为必填项（对应Controller类中的RequestMapping，如:/user）")
     private String restMapping;
     // 列集合
     List<ColumnInfo> columns;

@@ -41,9 +41,6 @@ public class ConfigurationParser {
                     constraintViolation.getPropertyPath(),
                     constraintViolation.getMessage()));
         }
-//        Assert.isTrue(generatorConfiguration.getMetadata().getIgnoreTemplateTypes() != null ||
-//                generatorConfiguration.getMetadata().getTemplateTypes() != null,
-//                "ignoreTemplateTypes | templateTypes only use one.");
     }
 
 

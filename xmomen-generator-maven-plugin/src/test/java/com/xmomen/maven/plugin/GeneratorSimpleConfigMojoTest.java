@@ -8,36 +8,35 @@ import org.junit.Test;
 import java.io.File;
 
 /**
- * Created by tanxinzheng on 16/10/16.
+ * Created by tanxinzheng on 17/6/10.
  */
-public class MybatisGeneratorMojoTest extends AbstractMojoTestCase {
+public class GeneratorSimpleConfigMojoTest extends AbstractMojoTestCase {
 
     private File testPom;
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        testPom = new File( getBasedir(),"src/test/resources/plugin-test.xml");
+        testPom = new File( getBasedir(),"src/test/resources/plugin-help.xml");
     }
 
     @Test
     public void testExecute() throws Exception {
         //mvn clean test-compile
-        MybatisGeneratorMojo mojo = (MybatisGeneratorMojo) lookupMojo ("generate", testPom );
+        GeneratorSimpleConfigMojo mojo = (GeneratorSimpleConfigMojo) lookupMojo ("generate-config", testPom );
         mojo.execute();
     }
 
     @After
     public void tearDown() throws Exception {
         super.tearDown();
-        deleteDirectory(new File("./src/test/webapp"));
-        deleteDirectory(new File("./src/test/java/com/xmomen/module"));
-        deleteDirectory(new File("./src/main/java/com/xmomen/module"));
+        deleteDirectory(new File("./src/test/resources/help/generator-config.json"));
     }
+
 
     /**
      * 递归删除目录下的所有文件及子目录下所有文件
-     * @param path 将要删除的目录路径
+     * @param dir 将要删除的目录路径
      * @return
      */
     public static boolean deleteDirectory(File dir) {
@@ -53,4 +52,5 @@ public class MybatisGeneratorMojoTest extends AbstractMojoTestCase {
         // 目录此时为空，可以删除
         return dir.delete();
     }
+
 }

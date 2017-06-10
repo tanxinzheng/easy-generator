@@ -18,13 +18,13 @@ import java.util.Map;
 public class GeneratorConfiguration {
 
     @Valid
-    @NotNull
+    @NotNull(message = "数据源配置为必填项")
     private DataSource dataSource;
     @Valid
     private ProjectMetadata metadata;
 
-    @NotNull
-    @NotEmpty
+    @NotNull(message = "数据表配置为必填项")
+    @NotEmpty(message = "数据表配置为必填项")
     @Valid
     private List<TableInfo> tables;
 
@@ -34,19 +34,19 @@ public class GeneratorConfiguration {
         private String rootPath;
         private TemplateType[] ignoreTemplateTypes;
         private TemplateType[] templateTypes;
-        private String templatePath;
+        private String templatesPath;
         private Map<TemplateType, String> templates;
     }
 
     @Data
     public static class DataSource {
-        @NotBlank
+        @NotBlank(message = "driver为必填项")
         private String driver;
-        @NotBlank
+        @NotBlank(message = "url为必填项")
         private String url;
-        @NotBlank
+        @NotBlank(message = "username为必填项")
         private String username;
-        @NotBlank
+        @NotBlank(message = "password为必填项")
         private String password;
     }
 
