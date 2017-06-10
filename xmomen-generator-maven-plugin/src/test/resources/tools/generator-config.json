@@ -6,10 +6,10 @@
     "password":"fuckyoumysql"
   },
   "metadata":{
-    "ignoreTemplateTypes":["Query"],
+    "templateTypes":["ServiceTest"],
     "templates":{
       "ServiceTest":{
-        "fileExt":".java",
+        "fileExt":"Service.java",
         "templateFileName":"src/test/resources/templates/serviceTest.ftl",
         "targetPackage":"service",
         "targetProject":"src/test/java"

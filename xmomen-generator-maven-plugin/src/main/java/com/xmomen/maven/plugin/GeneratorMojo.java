@@ -6,6 +6,7 @@ import com.xmomen.generator.XmomenGenerator;
 import com.xmomen.generator.configuration.ConfigurationParser;
 import com.xmomen.generator.configuration.GeneratorConfiguration;
 import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.JSONUtils;
+import freemarker.template.TemplateNotFoundException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -100,15 +101,16 @@ public class GeneratorMojo extends AbstractMojo {
             getLog().info(MessageFormat.format("Reading Generator Json Configuration File ：{0}", configurationFile));
             getLog().info("------------------------------------------------------------------------");
             System.out.println(JSONUtils.formatJson(JSONObject.toJSONString(configuration)));
-            XmomenGenerator.generate(configuration);
+            int generateCount = XmomenGenerator.generate(configuration);
+            getLog().info("Generate File Count：" + generateCount);
         } catch (IOException e) {
-            getLog().info("未找到配置文件", e);
+            getLog().error(e.getMessage(), e);
             e.printStackTrace();
         } catch (JSONException e){
-            getLog().info("JSON 配置文件格式不正确", e);
+            getLog().error("JSON 配置文件格式不正确", e);
             e.printStackTrace();
         } catch (Exception e) {
-            getLog().info("Generate fail.", e);
+            getLog().error("Generate fail.", e);
             e.printStackTrace();
         }
     }

@@ -14,6 +14,7 @@ import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.JSONUtils;
 import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.PluginUtils;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateNotFoundException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.ibatis.session.*;
@@ -46,7 +47,8 @@ public class XmomenGenerator {
     private static GeneratorConfiguration generatorConfiguration = null;
 
 
-    public static void generate(GeneratorConfiguration configuration) throws Exception {
+    public static int generate(GeneratorConfiguration configuration) throws Exception {
+        int generateCount = 0;
         ConfigurationParser.validate();
         if(generatorConfiguration == null){
             generatorConfiguration = configuration;
@@ -123,9 +125,11 @@ public class XmomenGenerator {
                     }else{
                         mainGenerate(tableInfo, null);
                     }
+                    generateCount++;
                 }
             }
         }
+        return generateCount;
     }
 
     public static TableInfo setParameter(TableInfo tableInfo){
@@ -161,7 +165,7 @@ public class XmomenGenerator {
         return tableInfo;
     }
 
-    private static void mainGenerate(TableInfo tableInfo, String overwriteTemplate){
+    private static void mainGenerate(TableInfo tableInfo, String overwriteTemplate) throws IOException, TemplateException {
         try {
             Template template = null;
             if(overwriteTemplate != null){
@@ -176,10 +180,6 @@ public class XmomenGenerator {
             template.process(tableInfo, writer);
             writer.flush();
             writer.close();
-        } catch (TemplateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (ShellException e) {
             e.printStackTrace();
         }

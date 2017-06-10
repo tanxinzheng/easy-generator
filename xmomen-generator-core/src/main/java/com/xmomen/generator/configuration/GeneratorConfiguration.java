@@ -33,8 +33,8 @@ public class GeneratorConfiguration {
     public static class ProjectMetadata {
         @NotBlank
         private String rootPath;
-        private TemplateType[] ignoreTemplateTypes;
-        private TemplateType[] templateTypes;
+        private String[] ignoreTemplateTypes;
+        private String[] templateTypes;
         private String templatesPath;
         private Map<TemplateType, String> overwriteTemplates;
         private Map<String, TemplateCode> templates;
