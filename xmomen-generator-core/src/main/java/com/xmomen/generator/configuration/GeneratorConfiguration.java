@@ -1,6 +1,7 @@
 package com.xmomen.generator.configuration;
 
 import com.xmomen.generator.model.TableInfo;
+import com.xmomen.generator.model.TemplateCode;
 import com.xmomen.generator.template.TemplateType;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
@@ -35,7 +36,8 @@ public class GeneratorConfiguration {
         private TemplateType[] ignoreTemplateTypes;
         private TemplateType[] templateTypes;
         private String templatesPath;
-        private Map<TemplateType, String> templates;
+        private Map<TemplateType, String> overwriteTemplates;
+        private Map<String, TemplateCode> templates;
     }
 
     @Data

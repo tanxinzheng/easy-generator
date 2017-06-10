@@ -6,6 +6,7 @@ import com.xmomen.generator.configuration.GeneratorConfiguration;
 import com.xmomen.generator.mapping.TableMapper;
 import com.xmomen.generator.model.ColumnInfo;
 import com.xmomen.generator.model.TableInfo;
+import com.xmomen.generator.model.TemplateCode;
 import com.xmomen.generator.template.TemplateType;
 import com.xmomen.maven.plugins.mybatis.generator.plugins.types.JavaTypeResolverDefaultImplExt;
 import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.FreemarkerUtils;
@@ -86,28 +87,43 @@ public class XmomenGenerator {
             logger.debug(JSONObject.toJSONString(tableInfo));
             setParameter(tableInfo);
             System.out.println(JSONUtils.formatJson(JSONObject.toJSONString(tableInfo)));
+            Map<String, TemplateCode> templateMap = new HashMap<>();
+            // 内置模板
             for (TemplateType templateType : TemplateType.values()) {
+                TemplateCode templateCode = new TemplateCode();
+                BeanUtils.copyProperties(templateType, templateCode);
+                templateCode.setCustom(false);
+                templateMap.put(templateType.name(), templateCode);
+            }
+            // 自定义模板
+            templateMap.putAll(generatorConfiguration.getMetadata().getTemplates());
+            for (Map.Entry<String, TemplateCode> templateCodeEntry : templateMap.entrySet()) {
+                String templateCodeKey = templateCodeEntry.getKey();
+                TemplateCode templateCode = templateCodeEntry.getValue();
                 // 忽略模板
-                if(configuration.getMetadata().getIgnoreTemplateTypes() != null && ArrayUtils.contains(configuration.getMetadata().getIgnoreTemplateTypes(), templateType)){
+                if(configuration.getMetadata().getIgnoreTemplateTypes() != null && ArrayUtils.contains(configuration.getMetadata().getIgnoreTemplateTypes(), templateCodeKey)){
                     continue;
                 }
                 // 只生成指定模板
                 if(configuration.getMetadata().getTemplateTypes() == null ||
-                        (configuration.getMetadata().getTemplateTypes() != null && ArrayUtils.contains(configuration.getMetadata().getTemplateTypes(), templateType))){
+                        (configuration.getMetadata().getTemplateTypes() != null && ArrayUtils.contains(configuration.getMetadata().getTemplateTypes(), templateCodeKey))){
                     // 指定模板文件
-                    tableInfo.setTemplateFileName(templateType.getTemplateFileName() + ".ftl");
+                    if(!templateCode.isCustom()){
+                        tableInfo.setTemplateFileName(templateCode.getTemplateFileName() + ".ftl");
+                    }
                     // 输出目录
-                    tableInfo.setTargetFileName(tableInfo.getDomainObjectClassName() + templateType.getFileExt());
+                    tableInfo.setTargetFileName(tableInfo.getDomainObjectClassName() + templateCode.getFileExt());
                     // 模块包路径
-                    tableInfo.setTargetPackage(tableInfo.getModulePackage() + "." + templateType.getTargetPackage());
-                    tableInfo.setTargetProject(templateType.getTargetProject());
-                    if(configuration.getMetadata().getTemplates() != null){
-                        mainGenerate(tableInfo, configuration.getMetadata().getTemplates().get(templateType));
+                    tableInfo.setTargetPackage(tableInfo.getModulePackage() + "." + templateCode.getTargetPackage());
+                    tableInfo.setTargetProject(templateCode.getTargetProject());
+                    if(configuration.getMetadata().getOverwriteTemplates() != null){
+                        mainGenerate(tableInfo, configuration.getMetadata().getOverwriteTemplates().get(templateCodeKey));
+                    }else if(templateCode.isCustom()){
+                        mainGenerate(tableInfo, templateCode.getTemplateFileName());
                     }else{
                         mainGenerate(tableInfo, null);
                     }
                 }
-
             }
         }
     }

@@ -12,8 +12,8 @@
     "ignoreTemplateTypes":["Query"],
     //【选填项】只生成那些模板
     "templateTypes":["Query", "Entity"],
-    //【选填项】自定义ftl模板路径
-    "templates":{
+    //【选填项】覆盖插件中内置模板
+    "overwriteTemplates":{
       "ControllerTest":"src/test/resources/templates/controllerTest.ftl",
       "Controller":"src/test/resources/templates/controller.ftl",
       "Model":"src/test/resources/templates/model.ftl",
@@ -21,6 +21,15 @@
       "ServiceImpl":"src/test/resources/templates/serviceImpl.ftl",
       "Mapper":"src/test/resources/templates/mapper.ftl",
       "MapperXml":"src/test/resources/templates/mapper-xml.ftl"
+    },
+    //【选填项】自定义模板
+    "templates":{
+      "ServiceTest":{
+        "fileExt":".java",
+        "templateFileName":"src/test/resources/templates/serviceTest.ftl",
+        "targetPackage":"service",
+        "targetProject":"src/test/java"
+      }
     },
     //【选填项】项目根目录(与pom.xml文件同目录)
     "rootPath":"/Users/jeng/xmomen-repo/framework/mybatis-generator"
