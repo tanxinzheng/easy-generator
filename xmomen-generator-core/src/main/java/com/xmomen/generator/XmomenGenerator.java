@@ -94,11 +94,22 @@ public class XmomenGenerator {
             for (TemplateType templateType : TemplateType.values()) {
                 TemplateCode templateCode = new TemplateCode();
                 BeanUtils.copyProperties(templateType, templateCode);
+                if(configuration.getMetadata().getOverwriteTemplates() != null && configuration.getMetadata().getOverwriteTemplates().containsKey(templateType)){
+                    templateCode.setTemplateFileName(generatorConfiguration.getMetadata().getRootPath() + configuration.getMetadata().getOverwriteTemplates().get(templateType));
+                    templateCode.setOverwriteTemplate(true);
+                }
                 templateCode.setCustom(false);
                 templateMap.put(templateType.name(), templateCode);
             }
             // 自定义模板
-            templateMap.putAll(generatorConfiguration.getMetadata().getTemplates());
+            for (Map.Entry<String, TemplateCode> templateCodeEntry : generatorConfiguration.getMetadata().getTemplates().entrySet()) {
+                String key = templateCodeEntry.getKey();
+                TemplateCode templateCode = templateCodeEntry.getValue();
+                templateCode.setOverwriteTemplate(true);
+                templateCode.setCustom(true);
+                templateCode.setTemplateFileName(generatorConfiguration.getMetadata().getRootPath() + templateCode.getTemplateFileName());
+                templateMap.put(key, templateCode);
+            }
             for (Map.Entry<String, TemplateCode> templateCodeEntry : templateMap.entrySet()) {
                 String templateCodeKey = templateCodeEntry.getKey();
                 TemplateCode templateCode = templateCodeEntry.getValue();
@@ -110,23 +121,17 @@ public class XmomenGenerator {
                 if(configuration.getMetadata().getTemplateTypes() == null ||
                         (configuration.getMetadata().getTemplateTypes() != null && ArrayUtils.contains(configuration.getMetadata().getTemplateTypes(), templateCodeKey))){
                     // 指定模板文件
-                    if(templateCode.isCustom()){
-                        tableInfo.setTemplateFileName(generatorConfiguration.getMetadata().getRootPath() + templateCode.getTemplateFileName());
-                    }else{
+                    if(!templateCode.isOverwriteTemplate()){
                         tableInfo.setTemplateFileName(templateCode.getTemplateFileName() + ".ftl");
+                    }else{
+                        tableInfo.setTemplateFileName(templateCode.getTemplateFileName());
                     }
                     // 输出目录
                     tableInfo.setTargetFileName(tableInfo.getDomainObjectClassName() + templateCode.getFileExt());
                     // 模块包路径
                     tableInfo.setTargetPackage(tableInfo.getModulePackage() + "." + templateCode.getTargetPackage());
                     tableInfo.setTargetProject(templateCode.getTargetProject());
-                    if(configuration.getMetadata().getOverwriteTemplates().get(templateCodeKey) != null){
-                        mainGenerate(tableInfo, configuration.getMetadata().getOverwriteTemplates().get(templateCodeKey));
-                    }else if(templateCode.isCustom()){
-                        mainGenerate(tableInfo, templateCode.getTemplateFileName());
-                    }else{
-                        mainGenerate(tableInfo, null);
-                    }
+                    mainGenerate(tableInfo, templateCode.isOverwriteTemplate());
                     generateCount++;
                 }
             }
@@ -167,11 +172,11 @@ public class XmomenGenerator {
         return tableInfo;
     }
 
-    private static void mainGenerate(TableInfo tableInfo, String overwriteTemplate) throws IOException, TemplateException {
+    private static void mainGenerate(TableInfo tableInfo, boolean overwriteTemplate) throws IOException, TemplateException {
         try {
             Template template = null;
-            if(overwriteTemplate != null){
-                template = FreemarkerUtils.getTemplate(overwriteTemplate);
+            if(overwriteTemplate){
+                template = FreemarkerUtils.getTemplate(tableInfo.getTemplateFileName());
             }else{
                 template = FreemarkerUtils.getTemplate(tableInfo.getTemplateFileName(), "/templates");
             }

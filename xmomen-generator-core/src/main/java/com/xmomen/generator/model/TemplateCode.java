@@ -13,4 +13,5 @@ public class TemplateCode {
     private String targetPackage;
     private String targetProject;
     private boolean custom = true;
+    private boolean overwriteTemplate;
 }

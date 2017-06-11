@@ -10,7 +10,7 @@
     "templates":{
       "ServiceTest":{
         "fileExt":"ServiceTest.java",
-        "templateFileName":"src/test/resources/templates/serviceTest1.ftl",
+        "templateFileName":"src/test/resources/templates/serviceTest.ftl",
         "targetPackage":"service",
         "targetProject":"src/test/java"
       }
