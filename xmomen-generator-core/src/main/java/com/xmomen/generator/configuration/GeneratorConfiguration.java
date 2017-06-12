@@ -38,6 +38,7 @@ public class GeneratorConfiguration {
         private String templatesPath;
         private Map<TemplateType, String> overwriteTemplates;
         private Map<String, TemplateCode> templates;
+        private boolean ignoreKeywordValidate;
     }
 
     @Data

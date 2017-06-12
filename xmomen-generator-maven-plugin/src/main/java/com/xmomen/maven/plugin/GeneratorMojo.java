@@ -80,7 +80,7 @@ public class GeneratorMojo extends AbstractMojo {
      * 单模块生成代码
      * @param configurationFile
      */
-    private void generate(String configurationFile){
+    private void generate(String configurationFile) throws MojoExecutionException {
         if(configurationFile == null){
             return;
         }
@@ -103,15 +103,9 @@ public class GeneratorMojo extends AbstractMojo {
             System.out.println(JSONUtils.formatJson(JSONObject.toJSONString(configuration)));
             int generateCount = XmomenGenerator.generate(configuration);
             getLog().info("Generate File Count：" + generateCount);
-        } catch (IOException e) {
-            getLog().error(e.getMessage(), e);
-            e.printStackTrace();
-        } catch (JSONException e){
-            getLog().error("JSON 配置文件格式不正确", e);
-            e.printStackTrace();
         } catch (Exception e) {
             getLog().error(e.getMessage(), e);
-            e.printStackTrace();
+            throw new MojoExecutionException(e.getMessage(), e);
         }
     }
 

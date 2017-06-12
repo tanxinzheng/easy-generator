@@ -32,7 +32,7 @@ public class GeneratorMojoTest extends AbstractMojoTestCase {
         super.tearDown();
         deleteDirectory(new File("./src/test/webapp"));
         deleteDirectory(new File("./src/test/java/com/xmomen/module"));
-        deleteDirectory(new File("./src/main/java/com/xmomen/module"));
+//        deleteDirectory(new File("./src/main/java/com/xmomen/module"));
     }
 
     /**

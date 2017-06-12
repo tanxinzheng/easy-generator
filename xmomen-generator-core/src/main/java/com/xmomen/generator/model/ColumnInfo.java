@@ -14,6 +14,8 @@ public class ColumnInfo {
 
     private String actualColumnName;
 
+    private String formatActualColumnName;
+
     private String jdbcType;
 
     private String javaType;

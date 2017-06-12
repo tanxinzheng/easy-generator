@@ -8,24 +8,28 @@
         </selectKey>
         insert into ${tableName}
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            ${primaryKeyColumn.actualColumnName},
-            <#list columns as field>
+        ${primaryKeyColumn.actualColumnName},
+        <#list columns as field>
             <#if !field.primaryKey>
-            <if test="${field.columnName} != null" >
-                ${field.actualColumnName},
-            </if>
+                <if test="${field.columnName} != null" >
+                    <#if field.formatActualColumnName?? >
+                    ${field.formatActualColumnName},
+                    <#else>
+                    ${field.actualColumnName},
+                    </#if>
+                </if>
             </#if>
-            </#list>
+        </#list>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            ${'#'}{${primaryKeyColumn.columnName}},
-            <#list columns as field>
+        ${'#'}{${primaryKeyColumn.columnName}},
+        <#list columns as field>
             <#if !field.primaryKey>
-            <if test="${field.columnName} != null" >
-            ${'#'}{${field.columnName}},
-            </if>
+                <if test="${field.columnName} != null" >
+                ${'#'}{${field.columnName}},
+                </if>
             </#if>
-            </#list>
+        </#list>
         </trim>
     </insert>
 
@@ -45,7 +49,11 @@
         <set>
         <#list columns as field>
             <if test="${field.columnName} != null" >
+            <#if field.formatActualColumnName?? >
+            ${field.formatActualColumnName} = ${'#'}{${field.columnName}},
+            <#else>
             ${field.actualColumnName} = ${'#'}{${field.columnName}},
+            </#if>
             </if>
         </#list>
         </set>
@@ -57,7 +65,11 @@
         <set >
         <#list columns as field>
             <if test="record.${field.columnName} != null" >
+            <#if field.formatActualColumnName?? >
+            ${field.formatActualColumnName} = ${'#'}{${field.columnName}},
+            <#else>
             ${field.actualColumnName} = ${'#'}{${field.columnName}},
+            </#if>
             </if>
         </#list>
         </set>
@@ -91,7 +103,7 @@
             resultType="${modulePackage}.model.${domainObjectClassName}Model"
             parameterType="${modulePackage}.model.${domainObjectClassName}Query">
         SELECT * FROM ${tableName}
-            <include refid="Update_By_Query_Where_Clause"/>
+        <include refid="Update_By_Query_Where_Clause"/>
         ORDER BY id
     </select>
 

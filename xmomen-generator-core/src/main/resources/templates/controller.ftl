@@ -6,6 +6,7 @@ import ${modulePackage}.model.${domainObjectClassName}Query;
 import ${modulePackage}.model.${domainObjectClassName}Model;
 import ${modulePackage}.service.${domainObjectClassName}Service;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,11 @@ import java.util.List;
 @RequestMapping(value = "${restMapping}")
 public class ${domainObjectClassName}Controller {
 
+    public static final String PERMISSION_${domainObjectClassName?upper_case}_CREATE = "${domainObjectName?lower_case}:create";
+    public static final String PERMISSION_${domainObjectClassName?upper_case}_DELETE = "${domainObjectName?lower_case}:delete";
+    public static final String PERMISSION_${domainObjectClassName?upper_case}_UPDATE = "${domainObjectName?lower_case}:update";
+    public static final String PERMISSION_${domainObjectClassName?upper_case}_VIEW   = "${domainObjectName?lower_case}:view";
+
     @Autowired
     ${domainObjectClassName}Service ${domainObjectName}Service;
 
@@ -28,6 +34,7 @@ public class ${domainObjectClassName}Controller {
      */
     @RequestMapping(method = RequestMethod.GET)
     @ActionLog(actionName = "查询${tableComment}列表")
+    @RequiresPermissions(value = {PERMISSION_${domainObjectClassName?upper_case}_VIEW})
     public Page<${domainObjectClassName}Model> get${domainObjectClassName}List(${domainObjectClassName}Query ${domainObjectName}Query){
         if(${domainObjectName}Query.isPaging()){
             return ${domainObjectName}Service.get${domainObjectClassName}ModelPage(${domainObjectName}Query);
@@ -43,6 +50,7 @@ public class ${domainObjectClassName}Controller {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ActionLog(actionName = "查询${tableComment}")
+    @RequiresPermissions(value = {PERMISSION_${domainObjectClassName?upper_case}_VIEW})
     public ${domainObjectClassName}Model get${domainObjectClassName}ById(@PathVariable(value = "id") String id){
         return ${domainObjectName}Service.getOne${domainObjectClassName}Model(id);
     }
@@ -54,6 +62,7 @@ public class ${domainObjectClassName}Controller {
      */
     @RequestMapping(method = RequestMethod.POST)
     @ActionLog(actionName = "新增${tableComment}")
+    @RequiresPermissions(value = {PERMISSION_${domainObjectClassName?upper_case}_CREATE})
     public ${domainObjectClassName}Model create${domainObjectClassName}(@RequestBody @Valid ${domainObjectClassName}Model ${domainObjectName}Model) {
         return ${domainObjectName}Service.create${domainObjectClassName}(${domainObjectName}Model);
     }
@@ -66,6 +75,7 @@ public class ${domainObjectClassName}Controller {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ActionLog(actionName = "更新${tableComment}")
+    @RequiresPermissions(value = {PERMISSION_${domainObjectClassName?upper_case}_UPDATE})
     public ${domainObjectClassName}Model update${domainObjectClassName}(@PathVariable(value = "id") String id,
                            @RequestBody @Valid ${domainObjectClassName}Model ${domainObjectName}Model){
         if(StringUtils.isNotBlank(id)){
@@ -81,6 +91,7 @@ public class ${domainObjectClassName}Controller {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ActionLog(actionName = "删除单个${tableComment}")
+    @RequiresPermissions(value = {PERMISSION_${domainObjectClassName?upper_case}_DELETE})
     public void delete${domainObjectClassName}(@PathVariable(value = "id") String id){
         ${domainObjectName}Service.delete${domainObjectClassName}(id);
     }
@@ -91,6 +102,7 @@ public class ${domainObjectClassName}Controller {
      */
     @RequestMapping(method = RequestMethod.DELETE)
     @ActionLog(actionName = "批量删除${tableComment}")
+    @RequiresPermissions(value = {PERMISSION_${domainObjectClassName?upper_case}_DELETE})
     public void delete${domainObjectClassName}s(${domainObjectClassName}Query ${domainObjectName}Query){
         ${domainObjectName}Service.delete${domainObjectClassName}(${domainObjectName}Query.getIds());
     }

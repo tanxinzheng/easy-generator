@@ -37,19 +37,11 @@
     "username":"root",
     "password":"root"
   },
-  "metadata":{
-    "ignoreTemplateTypes":["Controller"],
-    "templateTypes":["Entity"],
-    "templates":{
-      "Controller":"./src/test/resources/tpl/controller.ftl"
-    }
-  },
   "tables":[
     {
       "domainName":"dictionary",
       "tableComment":"数据字典",
       "tableName":"xmo_dictionary",
-      "targetPackage":"com.xmomen.module.system.entity.mapper",
       "modulePackage":"com.xmomen.module.system",
       "restMapping":"/dictionary"
     }

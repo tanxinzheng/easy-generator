@@ -3,6 +3,8 @@ package com.xmomen.generator;
 import com.alibaba.fastjson.JSONObject;
 import com.xmomen.generator.configuration.ConfigurationParser;
 import com.xmomen.generator.configuration.GeneratorConfiguration;
+import com.xmomen.generator.jdbc.DatabaseType;
+import com.xmomen.generator.jdbc.SQLKeywords;
 import com.xmomen.generator.mapping.TableMapper;
 import com.xmomen.generator.model.ColumnInfo;
 import com.xmomen.generator.model.TableInfo;
@@ -14,7 +16,6 @@ import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.JSONUtils;
 import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.PluginUtils;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import freemarker.template.TemplateNotFoundException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.ibatis.session.*;
@@ -33,6 +34,7 @@ import org.springframework.util.Assert;
 import javax.sql.DataSource;
 import java.io.*;
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +86,7 @@ public class XmomenGenerator {
                     BeanUtils.copyProperties(columnInfo, columnInfo1);
                     tableInfo.setPrimaryKeyColumn(columnInfo1);
                 }
+                validateKeyword(tableInfo, columnInfo);
             }
             tableInfo.setColumns(columnInfoList);
             logger.debug(JSONObject.toJSONString(tableInfo));
@@ -189,6 +192,21 @@ public class XmomenGenerator {
             writer.close();
         } catch (ShellException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void validateKeyword(TableInfo tableInfo, ColumnInfo columnInfo){
+        Map<DatabaseType, List<String>> databaseTypeListMap = SQLKeywords.getKeywords();
+        for (Map.Entry<DatabaseType, List<String>> databaseTypeListEntry : databaseTypeListMap.entrySet()) {
+            List<String> keywords = databaseTypeListEntry.getValue();
+            if(!generatorConfiguration.getMetadata().isIgnoreKeywordValidate() && keywords.contains(columnInfo.getActualColumnName())){
+                throw new IllegalArgumentException(MessageFormat.format(
+                        "The column [{0}.{1}] is database keyword, please change the column name (or add attribute \"ignoreKeywordValidate\":true to metadata)",
+                        tableInfo.getTableName(),
+                        columnInfo.getActualColumnName()));
+            }else if(generatorConfiguration.getMetadata().isIgnoreKeywordValidate() && keywords.contains(columnInfo.getActualColumnName())){
+                columnInfo.setFormatActualColumnName("`" + columnInfo.getActualColumnName()+"`");
+            }
         }
     }
 }

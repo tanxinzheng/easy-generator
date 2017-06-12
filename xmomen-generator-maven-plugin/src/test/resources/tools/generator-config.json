@@ -6,7 +6,8 @@
     "password":"fuckyoumysql"
   },
   "metadata":{
-    "templateTypes":["ServiceTest"],
+    "templateTypes":["MapperXml"],
+    "ignoreKeywordValidate":true,
     "templates":{
       "ServiceTest":{
         "fileExt":"ServiceTest.java",

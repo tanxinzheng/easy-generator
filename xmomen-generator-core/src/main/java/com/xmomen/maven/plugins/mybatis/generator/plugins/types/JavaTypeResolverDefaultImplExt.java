@@ -82,6 +82,8 @@ public class JavaTypeResolverDefaultImplExt extends JavaTypeResolverDefaultImpl 
                 new FullyQualifiedJavaType(Date.class.getName())));
         typeMap.put(Types.TIMESTAMP, new JdbcTypeInformation("TIMESTAMP", //$NON-NLS-1$
                 new FullyQualifiedJavaType(Date.class.getName())));
+        typeMap.put(Types.DATE, new JdbcTypeInformation("DATETIME", //$NON-NLS-1$
+                new FullyQualifiedJavaType(Date.class.getName())));
         typeMap.put(Types.INTEGER, new JdbcTypeInformation("INT", //$NON-NLS-1$
                 new FullyQualifiedJavaType(Integer.class.getName())));// TINYINT -> Byte 修改为 TINYINT -> Integer
         typeMap.put(Types.VARBINARY, new JdbcTypeInformation("VARBINARY", //$NON-NLS-1$
