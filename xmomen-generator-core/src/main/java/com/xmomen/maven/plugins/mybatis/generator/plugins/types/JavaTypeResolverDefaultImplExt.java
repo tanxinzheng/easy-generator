@@ -1,12 +1,14 @@
 package com.xmomen.maven.plugins.mybatis.generator.plugins.types;
 
 import com.xmomen.generator.model.ColumnInfo;
+import org.apache.ibatis.type.JdbcType;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.internal.types.JavaTypeResolverDefaultImpl;
 import org.mybatis.generator.internal.types.Jdbc4Types;
 
 import java.math.BigDecimal;
+import java.sql.JDBCType;
 import java.sql.Types;
 import java.util.Date;
 import java.util.HashMap;
@@ -115,6 +117,13 @@ public class JavaTypeResolverDefaultImplExt extends JavaTypeResolverDefaultImpl 
             }
         }
         return calculateJavaType(fullyQualifiedJavaType, types, columnInfo);
+    }
+
+    public String calculateJdbcType(String jdbcType, FullyQualifiedJavaType fullyQualifiedJavaType){
+        if(fullyQualifiedJavaType.getShortName().equalsIgnoreCase(Date.class.getSimpleName())){
+            return JdbcType.TIMESTAMP.name();
+        }
+        return jdbcType;
     }
 
     public FullyQualifiedJavaType calculateJavaType(FullyQualifiedJavaType fullyQualifiedJavaType, Integer jdbcType, ColumnInfo introspectedColumn) {
