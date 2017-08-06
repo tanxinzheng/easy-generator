@@ -35,7 +35,7 @@ public class ConfigurationParser {
     public static void validate() throws ValidationException {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
-        Set<ConstraintViolation<GeneratorConfiguration>> constraintViolations =validator.validate(generatorConfiguration);
+        Set<ConstraintViolation<GeneratorConfiguration>> constraintViolations = validator.validate(generatorConfiguration);
         for(ConstraintViolation<GeneratorConfiguration> constraintViolation : constraintViolations) {
             throw new ValidationException(MessageFormat.format("{0} ：{1}",
                     constraintViolation.getPropertyPath(),

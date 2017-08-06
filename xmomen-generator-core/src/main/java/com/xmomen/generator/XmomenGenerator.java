@@ -147,7 +147,7 @@ public class XmomenGenerator {
         return generateCount;
     }
 
-    public static TableInfo setParameter(TableInfo tableInfo){
+    private static TableInfo setParameter(TableInfo tableInfo){
         String tableName = tableInfo.getTableName();
         String camelTableName = JavaBeansUtil.getCamelCaseString(tableInfo.getTableName(), false);
         String domainObjectName = camelTableName;

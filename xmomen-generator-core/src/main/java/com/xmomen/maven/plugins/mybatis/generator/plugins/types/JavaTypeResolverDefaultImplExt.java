@@ -86,13 +86,14 @@ public class JavaTypeResolverDefaultImplExt extends JavaTypeResolverDefaultImpl 
                 new FullyQualifiedJavaType(Date.class.getName())));
         typeMap.put(Types.DATE, new JdbcTypeInformation("DATETIME", //$NON-NLS-1$
                 new FullyQualifiedJavaType(Date.class.getName())));
-        typeMap.put(Types.INTEGER, new JdbcTypeInformation("INT", //$NON-NLS-1$
-                new FullyQualifiedJavaType(Integer.class.getName())));// TINYINT -> Byte 修改为 TINYINT -> Integer
         typeMap.put(Types.VARBINARY, new JdbcTypeInformation("VARBINARY", //$NON-NLS-1$
                 new FullyQualifiedJavaType("byte[]"))); //$NON-NLS-1$
+        typeMap.put(Types.DECIMAL, new JdbcTypeInformation("DECIMAL", //$NON-NLS-1$
+                new FullyQualifiedJavaType(BigDecimal.class.getName())));
         typeMap.put(Types.VARCHAR, new JdbcTypeInformation("VARCHAR", //$NON-NLS-1$
                 new FullyQualifiedJavaType(String.class.getName())));
-
+        typeMap.put(TypesExt.INT, new JdbcTypeInformation("INT", //$NON-NLS-1$
+                new FullyQualifiedJavaType(Integer.class.getName())));
     }
 
     /**
@@ -127,6 +128,9 @@ public class JavaTypeResolverDefaultImplExt extends JavaTypeResolverDefaultImpl 
     }
 
     public FullyQualifiedJavaType calculateJavaType(FullyQualifiedJavaType fullyQualifiedJavaType, Integer jdbcType, ColumnInfo introspectedColumn) {
+        if(jdbcType == null){
+            return fullyQualifiedJavaType;
+        }
         switch (jdbcType) {
             case Types.DECIMAL:
             case Types.NUMERIC:

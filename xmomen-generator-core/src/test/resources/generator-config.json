@@ -1,0 +1,17 @@
+{
+  "dataSource":{
+    "driver":"com.mysql.jdbc.Driver",
+    "url":"jdbc:mysql://121.40.156.26:3306/pms?useUnicode=true&amp;characterEncoding=utf8",
+    "username":"root",
+    "password":"fuckyoumysql"
+  },
+  "tables":[
+    {
+      "domainObjectName":"attachment",
+      "tableComment":"数据字典",
+      "tableName":"xmo_attachment",
+      "modulePackage":"com.xmomen.module.attachment",
+      "restMapping":"/attachment"
+    }
+  ]
+}

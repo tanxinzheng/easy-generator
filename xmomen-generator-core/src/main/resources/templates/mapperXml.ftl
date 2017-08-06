@@ -22,11 +22,11 @@
         </#list>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-        ${'#'}{${primaryKeyColumn.columnName}},
+        ${'#'}{${primaryKeyColumn.columnName}, jdbcType=${primaryKeyColumn.jdbcType}},
         <#list columns as field>
             <#if !field.primaryKey>
                 <if test="${field.columnName} != null" >
-                ${'#'}{${field.columnName}},
+                ${'#'}{${field.columnName}, jdbcType=${field.jdbcType}},
                 </if>
             </#if>
         </#list>
@@ -50,9 +50,9 @@
         <#list columns as field>
             <if test="${field.columnName} != null" >
             <#if field.formatActualColumnName?? >
-            ${field.formatActualColumnName} = ${'#'}{${field.columnName}},
+            ${field.formatActualColumnName} = ${'#'}{${field.columnName}, jdbcType=${field.jdbcType}},
             <#else>
-            ${field.actualColumnName} = ${'#'}{${field.columnName}},
+            ${field.actualColumnName} = ${'#'}{${field.columnName}, jdbcType=${field.jdbcType}},
             </#if>
             </if>
         </#list>
@@ -66,9 +66,9 @@
         <#list columns as field>
             <if test="record.${field.columnName} != null" >
             <#if field.formatActualColumnName?? >
-            ${field.formatActualColumnName} = ${'#'}{${field.columnName}},
+            ${field.formatActualColumnName} = ${'#'}{${field.columnName}, jdbcType=${field.jdbcType}},
             <#else>
-            ${field.actualColumnName} = ${'#'}{${field.columnName}},
+            ${field.actualColumnName} = ${'#'}{${field.columnName}, jdbcType=${field.jdbcType}},
             </#if>
             </if>
         </#list>
