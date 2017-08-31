@@ -54,7 +54,9 @@ public class PluginUtils {
         for (int i = 0; i < len; i++) {
             char c=param.charAt(i);
             if (Character.isUpperCase(c)){
-                sb.append(UNDERLINE);
+                if(i != 0){
+                    sb.append(UNDERLINE);
+                }
                 sb.append(Character.toLowerCase(c));
             }else{
                 sb.append(c);

@@ -1,12 +1,10 @@
 package com.xmomen.maven.plugin;
 
-import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.xmomen.generator.XmomenGenerator;
 import com.xmomen.generator.configuration.ConfigurationParser;
 import com.xmomen.generator.configuration.GeneratorConfiguration;
 import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.JSONUtils;
-import freemarker.template.TemplateNotFoundException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -17,7 +15,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.MessageFormat;
 
 /**

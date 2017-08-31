@@ -11,8 +11,7 @@ public enum TemplateType {
     Service("Service.java", "service", "service", "src/main/java"),
     ServiceImpl("ServiceImpl.java", "serviceImpl", "service.impl", "src/main/java"),
     Controller("Controller.java", "controller", "controller", "src/main/java"),
-    MapperXml("Mapper.xml", "mapperXml", "mapper", "src/main/java"),
-    ControllerTest("ControllerTest.java", "controllerTest", "controller", "src/test/java")
+    MapperXml("Mapper.xml", "mapperXml", "mapper", "src/main/java")
     ;
 
     private String fileExt;
@@ -58,4 +57,5 @@ public enum TemplateType {
     public void setTargetProject(String targetProject) {
         this.targetProject = targetProject;
     }
+
 }

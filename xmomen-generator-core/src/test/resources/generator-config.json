@@ -5,13 +5,39 @@
     "username":"root",
     "password":"fuckyoumysql"
   },
+  "metadata":{
+    "targetProject":"src/test/java",
+    "templates":{
+      "JsApi":{
+        "fileExt":".api.js",
+        "templateFileName":"src/main/resources/templates/jsApi.ftl",
+        "targetPackage":"",
+        "targetProject":"src/test/webapp",
+        "webTemplate":true
+      },
+      "GridJs":{
+        "fileExt":".js",
+        "templateFileName":"src/main/resources/templates/gridJs.ftl",
+        "targetPackage":"",
+        "targetProject":"src/test/webapp",
+        "webTemplate":true
+      },
+      "GridHtml":{
+        "fileExt":".html",
+        "templateFileName":"src/main/resources/templates/gridHtml.ftl",
+        "targetPackage":"",
+        "targetProject":"src/test/webapp",
+        "webTemplate":true
+      }
+    }
+  },
   "tables":[
     {
-      "domainObjectName":"attachment",
-      "tableComment":"数据字典",
-      "tableName":"xmo_attachment",
-      "modulePackage":"com.xmomen.module.attachment",
-      "restMapping":"/attachment"
+      "domainObjectName":"notificationTemplate",
+      "tableComment":"通知模板",
+      "tableName":"xmo_notification_template",
+      "modulePackage":"com.xmomen.module.notification",
+      "restMapping":"/notification_template"
     }
   ]
 }

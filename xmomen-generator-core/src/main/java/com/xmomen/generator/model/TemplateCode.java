@@ -12,6 +12,7 @@ public class TemplateCode {
     private String templateFileName;
     private String targetPackage;
     private String targetProject;
+    private boolean webTemplate;
     private boolean custom = true;
     private boolean overwriteTemplate;
 }

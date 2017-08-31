@@ -1,6 +1,6 @@
 package ${targetPackage};
 
-import com.xmomen.framework.mybatis.page.Page;
+import com.github.pagehelper.Page;
 import ${modulePackage}.model.${domainObjectClassName}Query;
 import ${modulePackage}.model.${domainObjectClassName}Model;
 import ${modulePackage}.model.${domainObjectClassName};

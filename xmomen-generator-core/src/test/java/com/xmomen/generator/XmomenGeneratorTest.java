@@ -8,20 +8,19 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by tanxinzheng on 17/8/6.
  */
 public class XmomenGeneratorTest {
     @Before
     public void setUp() throws Exception {
-//
 
     }
 
     @After
     public void tearDown() throws Exception {
+//        deleteDirectory(new File("./src/test/webapp/com"));
+//        deleteDirectory(new File("./src/test/java/com/xmomen/module"));
     }
 
     @Test
@@ -40,4 +39,22 @@ public class XmomenGeneratorTest {
         XmomenGenerator.generate(configuration);
     }
 
+    /**
+     * 递归删除目录下的所有文件及子目录下所有文件
+     * @param dir 将要删除的目录路径
+     * @return
+     */
+    public static boolean deleteDirectory(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();//递归删除目录中的子目录下
+            for (int i=0; i<children.length; i++) {
+                boolean success = deleteDirectory(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        // 目录此时为空，可以删除
+        return dir.delete();
+    }
 }

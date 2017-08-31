@@ -3,14 +3,12 @@ package com.xmomen.generator;
 import com.alibaba.fastjson.JSONObject;
 import com.xmomen.generator.configuration.ConfigurationParser;
 import com.xmomen.generator.configuration.GeneratorConfiguration;
-import com.xmomen.generator.jdbc.DatabaseType;
-import com.xmomen.generator.jdbc.SQLKeywords;
 import com.xmomen.generator.mapping.TableMapper;
 import com.xmomen.generator.model.ColumnInfo;
 import com.xmomen.generator.model.TableInfo;
 import com.xmomen.generator.model.TemplateCode;
 import com.xmomen.generator.template.TemplateType;
-import com.xmomen.maven.plugins.mybatis.generator.plugins.types.JavaTypeResolverDefaultImplExt;
+import com.xmomen.maven.plugins.mybatis.generator.plugins.types.JdbcTypeEnums;
 import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.FreemarkerUtils;
 import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.JSONUtils;
 import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.PluginUtils;
@@ -19,8 +17,9 @@ import freemarker.template.TemplateException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.ibatis.session.*;
-import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
+import org.apache.ibatis.session.AutoMappingBehavior;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.generator.exception.ShellException;
 import org.mybatis.generator.internal.DefaultShellCallback;
 import org.mybatis.generator.internal.db.SqlReservedWords;
@@ -34,7 +33,10 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.util.Assert;
 
 import javax.sql.DataSource;
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -77,12 +79,16 @@ public class XmomenGenerator {
             BeanUtils.copyProperties(config, tableInfo);
             List<ColumnInfo> columnInfoList = session.getMapper(TableMapper.class).getTableInfo(tableInfo.getSchema(), tableInfo.getTableName());
             Assert.isTrue(CollectionUtils.isNotEmpty(columnInfoList), "Not Found the table [ " + tableInfo.getTableName() + " ] information.");
-            JavaTypeResolverDefaultImplExt javaTypeResolver = new JavaTypeResolverDefaultImplExt();
             for (ColumnInfo columnInfo : columnInfoList) {
-                FullyQualifiedJavaType fullyQualifiedJavaType = javaTypeResolver.getJavaTypeByJdbcTypeName(columnInfo.getJdbcType(), columnInfo);
-                columnInfo.setFullyJavaType(fullyQualifiedJavaType.getFullyQualifiedName());
-                columnInfo.setJavaType(fullyQualifiedJavaType.getShortName());
-                columnInfo.setJdbcType(javaTypeResolver.calculateJdbcType(columnInfo.getJdbcType(), fullyQualifiedJavaType));
+                try {
+                    JdbcTypeEnums jdbcTypeEnums = JdbcTypeEnums.valueOf(columnInfo.getJdbcType());
+                    columnInfo.setFullyJavaType(jdbcTypeEnums.getJavaType().getName());
+                    columnInfo.setJavaType(jdbcTypeEnums.getJavaType().getSimpleName());
+                    columnInfo.setJdbcType(jdbcTypeEnums.getJdbcType());
+                } catch (IllegalArgumentException ex){
+                    logger.error("未找到适配的JdbcType:" + columnInfo.getJdbcType());
+                    logger.error(ex.getMessage(), ex);
+                }
                 columnInfo.setColumnName(PluginUtils.underlineToCamel2(columnInfo.getActualColumnName().toLowerCase()));
                 if(columnInfo.isPrimaryKey()){
                     ColumnInfo columnInfo1 = new ColumnInfo();
@@ -107,11 +113,13 @@ public class XmomenGenerator {
                 templateCode.setCustom(false);
                 templateMap.put(templateType.name(), templateCode);
             }
+            Map<String, TemplateCode> templateCodeMap = generatorConfiguration.getMetadata().getTemplates();
             // 自定义模板
-            if(MapUtils.isNotEmpty(generatorConfiguration.getMetadata().getTemplates())){
-                for (Map.Entry<String, TemplateCode> templateCodeEntry : generatorConfiguration.getMetadata().getTemplates().entrySet()) {
+            if(MapUtils.isNotEmpty(templateCodeMap)){
+                for (Map.Entry<String, TemplateCode> templateCodeEntry : templateCodeMap.entrySet()) {
                     String key = templateCodeEntry.getKey();
-                    TemplateCode templateCode = templateCodeEntry.getValue();
+                    TemplateCode templateCode = new TemplateCode();
+                    BeanUtils.copyProperties(templateCodeEntry.getValue(), templateCode);
                     templateCode.setOverwriteTemplate(true);
                     templateCode.setCustom(true);
                     templateCode.setTemplateFileName(generatorConfiguration.getMetadata().getRootPath() + templateCode.getTemplateFileName());
@@ -134,8 +142,13 @@ public class XmomenGenerator {
                     }else{
                         tableInfo.setTemplateFileName(templateCode.getTemplateFileName());
                     }
-                    // 输出目录
-                    tableInfo.setTargetFileName(tableInfo.getDomainObjectClassName() + templateCode.getFileExt());
+                    if(templateCode.isWebTemplate()){
+                        // 输出目录
+                        tableInfo.setTargetFileName(PluginUtils.camelToUnderline(tableInfo.getDomainObjectClassName()) + templateCode.getFileExt());
+                    }else{
+                        // 输出目录
+                        tableInfo.setTargetFileName(tableInfo.getDomainObjectClassName() + templateCode.getFileExt());
+                    }
                     // 模块包路径
                     tableInfo.setTargetPackage(tableInfo.getModulePackage() + "." + templateCode.getTargetPackage());
                     tableInfo.setTargetProject(templateCode.getTargetProject());
@@ -196,6 +209,8 @@ public class XmomenGenerator {
             writer.flush();
             writer.close();
         } catch (ShellException e) {
+            logger.error(MessageFormat.format("Generate Fail :", JSONObject.toJSONString(tableInfo)));
+            logger.error(e.getMessage(), e);
             e.printStackTrace();
         }
     }
