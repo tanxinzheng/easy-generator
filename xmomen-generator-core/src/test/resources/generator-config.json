@@ -1,43 +1,17 @@
 {
   "dataSource":{
     "driver":"com.mysql.jdbc.Driver",
-    "url":"jdbc:mysql://121.40.156.26:3306/pms?useUnicode=true&amp;characterEncoding=utf8",
+    "url":"jdbc:mysql://127.0.0.1:3306/demo?useUnicode=true&amp;characterEncoding=utf8",
     "username":"root",
-    "password":"fuckyoumysql"
-  },
-  "metadata":{
-    "targetProject":"src/test/java",
-    "templates":{
-      "JsApi":{
-        "fileExt":".api.js",
-        "templateFileName":"src/main/resources/templates/jsApi.ftl",
-        "targetPackage":"",
-        "targetProject":"src/test/webapp",
-        "webTemplate":true
-      },
-      "GridJs":{
-        "fileExt":".js",
-        "templateFileName":"src/main/resources/templates/gridJs.ftl",
-        "targetPackage":"",
-        "targetProject":"src/test/webapp",
-        "webTemplate":true
-      },
-      "GridHtml":{
-        "fileExt":".html",
-        "templateFileName":"src/main/resources/templates/gridHtml.ftl",
-        "targetPackage":"",
-        "targetProject":"src/test/webapp",
-        "webTemplate":true
-      }
-    }
+    "password":"root"
   },
   "tables":[
     {
-      "domainObjectName":"notificationTemplate",
+      "domainObjectName":"BusinessKindClassify",
       "tableComment":"通知模板",
-      "tableName":"xmo_notification_template",
-      "modulePackage":"com.xmomen.module.notification",
-      "restMapping":"/notification_template"
+      "tableName":"pims_business_kind_classify",
+      "modulePackage":"com.xmomen.module.decision",
+      "restMapping":"/business_kind_classify"
     }
   ]
 }
