@@ -98,5 +98,5 @@ public interface ${domainObjectClassName}Service {
      * @param ${domainObjectName}Query ${tableComment}查询参数对象
      * @return ${domainObjectClassName}Model ${tableComment}领域对象
      */
-    public ${domainObjectClassName}Model getOne${domainObjectClassName}Model(${domainObjectClassName}Query ${domainObjectName}Query) throws TooManyResultsException;
+    public ${domainObjectClassName}Model getOne${domainObjectClassName}Model(${domainObjectClassName}Query ${domainObjectName}Query);
 }

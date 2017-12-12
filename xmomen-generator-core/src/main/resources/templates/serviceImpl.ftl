@@ -189,13 +189,13 @@ public class ${domainObjectClassName}ServiceImpl implements ${domainObjectClassN
      * @return ${domainObjectClassName}Model ${tableComment}领域对象
      */
     @Override
-    public ${domainObjectClassName}Model getOne${domainObjectClassName}Model(${domainObjectClassName}Query ${domainObjectName}Query) throws TooManyResultsException {
+    public ${domainObjectClassName}Model getOne${domainObjectClassName}Model(${domainObjectClassName}Query ${domainObjectName}Query) {
         List<${domainObjectClassName}Model> ${domainObjectName}ModelList = ${domainObjectName}Mapper.selectModel(${domainObjectName}Query);
         if(CollectionUtils.isEmpty(${domainObjectName}ModelList)){
             return null;
         }
         if(${domainObjectName}ModelList.size() > 1){
-            throw new TooManyResultsException();
+            throw new BusinessException();
         }
         return ${domainObjectName}ModelList.get(0);
     }
