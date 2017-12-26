@@ -46,8 +46,6 @@ import java.util.Map;
 
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
-//import oracle.jdbc.driver.OracleDriver;
-
 /**
  * Created by tanxinzheng on 17/5/27.
  */
