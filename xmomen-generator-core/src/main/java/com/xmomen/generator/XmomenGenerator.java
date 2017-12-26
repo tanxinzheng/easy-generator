@@ -239,7 +239,7 @@ public class XmomenGenerator {
         }
     }
 
-    private Driver getDriver(String driverClass) {
+    private static Driver getDriver(String driverClass) {
         Driver driver;
         try {
             Class<?> clazz = ObjectFactory.externalClassForName(driverClass);
