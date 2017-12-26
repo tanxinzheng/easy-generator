@@ -3,7 +3,6 @@ package com.xmomen.generator;
 import com.alibaba.fastjson.JSONObject;
 import com.xmomen.generator.configuration.ConfigurationParser;
 import com.xmomen.generator.configuration.GeneratorConfiguration;
-import com.xmomen.generator.jdbc.DatabaseType;
 import com.xmomen.generator.mapping.TableMapper;
 import com.xmomen.generator.model.ColumnInfo;
 import com.xmomen.generator.model.TableInfo;
@@ -16,7 +15,6 @@ import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.PluginUtils;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
-//import oracle.jdbc.driver.OracleDriver;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -25,6 +23,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.generator.exception.ShellException;
 import org.mybatis.generator.internal.DefaultShellCallback;
+import org.mybatis.generator.internal.ObjectFactory;
 import org.mybatis.generator.internal.db.SqlReservedWords;
 import org.mybatis.generator.internal.util.JavaBeansUtil;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -40,11 +39,14 @@ import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.sql.Driver;
-import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
+
+//import oracle.jdbc.driver.OracleDriver;
 
 /**
  * Created by tanxinzheng on 17/5/27.
@@ -62,7 +64,7 @@ public class XmomenGenerator {
             generatorConfiguration = configuration;
         }
         DataSource dataSource = new SimpleDriverDataSource(
-                getDriverByDialect(configuration.getDataSource().getDialectType()),
+                getDriver(configuration.getDataSource().getDriver()),
                 configuration.getDataSource().getUrl(),
                 configuration.getDataSource().getUsername(),
                 configuration.getDataSource().getPassword());
@@ -237,14 +239,15 @@ public class XmomenGenerator {
         }
     }
 
-    private static Driver getDriverByDialect(DatabaseType databaseType) throws SQLException {
-        switch (databaseType){
-            case MYSQL:
-                return new com.mysql.jdbc.Driver();
-            case ORACLE:
-//                return new OracleDriver();
-            default:
-                throw new IllegalArgumentException("仅支持MySQL，Oracle数据库");
+    private Driver getDriver(String driverClass) {
+        Driver driver;
+        try {
+            Class<?> clazz = ObjectFactory.externalClassForName(driverClass);
+            driver = (Driver) clazz.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(getString("RuntimeError.8"), e); //$NON-NLS-1$
         }
+        return driver;
     }
+
 }
