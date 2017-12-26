@@ -3,11 +3,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
+    <!--<parent>-->
+        <!--<groupId>org.sonatype.oss</groupId>-->
+        <!--<artifactId>oss-parent</artifactId>-->
+        <!--<version>7</version>-->
+    <!--</parent>-->
     <groupId>com.xmomen.generator</groupId>
     <artifactId>xmomen-generator</artifactId>
     <version>1.0.0-SNAPSHOT</version>
@@ -27,29 +27,14 @@
     <developers>
         <developer>
             <id>tanxinzheng</id>
-            <name>Laughing Tan</name>
-            <email>jeng.tam@gmail.com</email>
+            <name>Tan XinZheng</name>
+            <email>tanxinzheng@139.com</email>
         </developer>
     </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <distributionManagement>
-        <!-- Repository for snapshots -->
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Nexus Snapshots Repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <!-- Repository for releases -->
-        <repository>
-            <id>nexus-releases</id>
-            <name>Nexus Release Repository</name>
-            <url>http://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
 
     <modules>
         <module>xmomen-generator-core</module>

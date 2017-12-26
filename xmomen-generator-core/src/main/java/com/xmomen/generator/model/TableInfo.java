@@ -1,15 +1,11 @@
 package com.xmomen.generator.model;
 
-import com.xmomen.generator.model.ColumnInfo;
+import com.xmomen.generator.jdbc.DatabaseType;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
-import org.mybatis.generator.api.IntrospectedColumn;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Created by tanxinzheng on 16/8/28.

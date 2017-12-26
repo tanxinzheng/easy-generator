@@ -3,6 +3,7 @@ package com.xmomen.generator;
 import com.alibaba.fastjson.JSONObject;
 import com.xmomen.generator.configuration.ConfigurationParser;
 import com.xmomen.generator.configuration.GeneratorConfiguration;
+import com.xmomen.generator.jdbc.DatabaseType;
 import com.xmomen.generator.mapping.TableMapper;
 import com.xmomen.generator.model.ColumnInfo;
 import com.xmomen.generator.model.TableInfo;
@@ -14,6 +15,8 @@ import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.JSONUtils;
 import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.PluginUtils;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import lombok.extern.slf4j.Slf4j;
+//import oracle.jdbc.driver.OracleDriver;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -24,12 +27,10 @@ import org.mybatis.generator.exception.ShellException;
 import org.mybatis.generator.internal.DefaultShellCallback;
 import org.mybatis.generator.internal.db.SqlReservedWords;
 import org.mybatis.generator.internal.util.JavaBeansUtil;
-import org.mybatis.generator.logging.JdkLoggingImpl;
-import org.mybatis.generator.logging.Log;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.util.Assert;
 
 import javax.sql.DataSource;
@@ -38,6 +39,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.sql.Driver;
+import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -46,9 +49,8 @@ import java.util.Map;
 /**
  * Created by tanxinzheng on 17/5/27.
  */
+@Slf4j
 public class XmomenGenerator {
-
-    protected static Log logger = new JdkLoggingImpl(XmomenGenerator.class);
 
     private static GeneratorConfiguration generatorConfiguration = null;
 
@@ -59,16 +61,16 @@ public class XmomenGenerator {
         if(generatorConfiguration == null){
             generatorConfiguration = configuration;
         }
-        DataSource dataSource = new DriverManagerDataSource(
+        DataSource dataSource = new SimpleDriverDataSource(
+                getDriverByDialect(configuration.getDataSource().getDialectType()),
                 configuration.getDataSource().getUrl(),
                 configuration.getDataSource().getUsername(),
                 configuration.getDataSource().getPassword());
         SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
         sqlSessionFactory.setDataSource(dataSource);
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        SqlSessionFactory sessionFactory = null;
         sqlSessionFactory.setMapperLocations(resolver.getResources("classpath:table.xml"));
-        sessionFactory = sqlSessionFactory.getObject();
+        SqlSessionFactory sessionFactory = sqlSessionFactory.getObject();
         sessionFactory.getConfiguration().setMapUnderscoreToCamelCase(true);
         sessionFactory.getConfiguration().setUseColumnLabel(true);
         sessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.FULL);
@@ -77,7 +79,17 @@ public class XmomenGenerator {
         for (TableInfo config : configuration.getTables()) {
             TableInfo tableInfo = new TableInfo();
             BeanUtils.copyProperties(config, tableInfo);
-            List<ColumnInfo> columnInfoList = session.getMapper(TableMapper.class).getTableInfo(tableInfo.getSchema(), tableInfo.getTableName());
+            List<ColumnInfo> columnInfoList = null;
+            switch (configuration.getDataSource().getDialectType()) {
+                case MYSQL:
+                    columnInfoList = session.getMapper(TableMapper.class).getTableInfoByMySQL(tableInfo.getSchema(), tableInfo.getTableName());
+                    break;
+                case ORACLE:
+                    columnInfoList = session.getMapper(TableMapper.class).getTableInfoByOracle(tableInfo.getSchema(), tableInfo.getTableName());
+                    break;
+                default:
+                    throw new IllegalArgumentException("仅支持MySQL，Oracle数据库");
+            }
             Assert.isTrue(CollectionUtils.isNotEmpty(columnInfoList), "Not Found the table [ " + tableInfo.getTableName() + " ] information.");
             for (ColumnInfo columnInfo : columnInfoList) {
                 try {
@@ -85,12 +97,12 @@ public class XmomenGenerator {
                     columnInfo.setFullyJavaType(jdbcTypeEnums.getJavaType().getName());
                     columnInfo.setJavaType(jdbcTypeEnums.getJavaType().getSimpleName());
                     columnInfo.setJdbcType(jdbcTypeEnums.getJdbcType());
-                } catch (IllegalArgumentException ex){
-                    logger.error("未找到适配的JdbcType:" + columnInfo.getJdbcType());
-                    logger.error(ex.getMessage(), ex);
+                } catch (IllegalArgumentException ex) {
+                    log.error("未找到适配的JdbcType:" + columnInfo.getJdbcType());
+                    log.error(ex.getMessage(), ex);
                 }
                 columnInfo.setColumnName(PluginUtils.underlineToCamel2(columnInfo.getActualColumnName().toLowerCase()));
-                if(columnInfo.isPrimaryKey()){
+                if (columnInfo.isPrimaryKey()) {
                     ColumnInfo columnInfo1 = new ColumnInfo();
                     BeanUtils.copyProperties(columnInfo, columnInfo1);
                     tableInfo.setPrimaryKeyColumn(columnInfo1);
@@ -98,7 +110,7 @@ public class XmomenGenerator {
                 validateKeyword(tableInfo, columnInfo);
             }
             tableInfo.setColumns(columnInfoList);
-            logger.debug(JSONObject.toJSONString(tableInfo));
+            log.debug(JSONObject.toJSONString(tableInfo));
             setParameter(tableInfo);
             System.out.println(JSONUtils.formatJson(JSONObject.toJSONString(tableInfo)));
             Map<String, TemplateCode> templateMap = new HashMap<>();
@@ -106,7 +118,7 @@ public class XmomenGenerator {
             for (TemplateType templateType : TemplateType.values()) {
                 TemplateCode templateCode = new TemplateCode();
                 BeanUtils.copyProperties(templateType, templateCode);
-                if(configuration.getMetadata().getOverwriteTemplates() != null && configuration.getMetadata().getOverwriteTemplates().containsKey(templateType)){
+                if (configuration.getMetadata().getOverwriteTemplates() != null && configuration.getMetadata().getOverwriteTemplates().containsKey(templateType)) {
                     templateCode.setTemplateFileName(generatorConfiguration.getMetadata().getRootPath() + configuration.getMetadata().getOverwriteTemplates().get(templateType));
                     templateCode.setOverwriteTemplate(true);
                 }
@@ -115,7 +127,7 @@ public class XmomenGenerator {
             }
             Map<String, TemplateCode> templateCodeMap = generatorConfiguration.getMetadata().getTemplates();
             // 自定义模板
-            if(MapUtils.isNotEmpty(templateCodeMap)){
+            if (MapUtils.isNotEmpty(templateCodeMap)) {
                 for (Map.Entry<String, TemplateCode> templateCodeEntry : templateCodeMap.entrySet()) {
                     String key = templateCodeEntry.getKey();
                     TemplateCode templateCode = new TemplateCode();
@@ -130,22 +142,22 @@ public class XmomenGenerator {
                 String templateCodeKey = templateCodeEntry.getKey();
                 TemplateCode templateCode = templateCodeEntry.getValue();
                 // 忽略模板
-                if(configuration.getMetadata().getIgnoreTemplateTypes() != null && ArrayUtils.contains(configuration.getMetadata().getIgnoreTemplateTypes(), templateCodeKey)){
+                if (configuration.getMetadata().getIgnoreTemplateTypes() != null && ArrayUtils.contains(configuration.getMetadata().getIgnoreTemplateTypes(), templateCodeKey)) {
                     continue;
                 }
                 // 只生成指定模板
-                if(configuration.getMetadata().getTemplateTypes() == null ||
-                        (configuration.getMetadata().getTemplateTypes() != null && ArrayUtils.contains(configuration.getMetadata().getTemplateTypes(), templateCodeKey))){
+                if (configuration.getMetadata().getTemplateTypes() == null ||
+                        (configuration.getMetadata().getTemplateTypes() != null && ArrayUtils.contains(configuration.getMetadata().getTemplateTypes(), templateCodeKey))) {
                     // 指定模板文件
-                    if(!templateCode.isOverwriteTemplate()){
+                    if (!templateCode.isOverwriteTemplate()) {
                         tableInfo.setTemplateFileName(templateCode.getTemplateFileName() + ".ftl");
-                    }else{
+                    } else {
                         tableInfo.setTemplateFileName(templateCode.getTemplateFileName());
                     }
-                    if(templateCode.isWebTemplate()){
+                    if (templateCode.isWebTemplate()) {
                         // 输出目录
                         tableInfo.setTargetFileName(PluginUtils.camelToUnderline(tableInfo.getDomainObjectClassName()) + templateCode.getFileExt());
-                    }else{
+                    } else {
                         // 输出目录
                         tableInfo.setTargetFileName(tableInfo.getDomainObjectClassName() + templateCode.getFileExt());
                     }
@@ -175,13 +187,13 @@ public class XmomenGenerator {
         Map<String, String> importList = new HashMap<>();
         for (ColumnInfo introspectedColumn : tableInfo.getColumns()) {
             if(Integer.class.getSimpleName().equals(introspectedColumn.getJavaType())){
-                BigDecimal max = new BigDecimal(Math.pow(10, introspectedColumn.getLength())).subtract(BigDecimal.ONE);
+                BigDecimal max = BigDecimal.valueOf(Math.pow(10, introspectedColumn.getLength())).subtract(BigDecimal.ONE);
                 introspectedColumn.setMax(String.valueOf(max));
                 if(introspectedColumn.getMax() != null){
                     introspectedColumn.setMin(String.valueOf(max.multiply(BigDecimal.valueOf(-1))));
                 }
             }else if(BigDecimal.class.getSimpleName().equals(introspectedColumn.getJavaType())){
-                BigDecimal max = new BigDecimal(Math.pow(10, introspectedColumn.getLength())).subtract(BigDecimal.valueOf(1/(Math.pow(10, introspectedColumn.getScale())))).setScale(introspectedColumn.getScale());
+                BigDecimal max = BigDecimal.valueOf(Math.pow(10, introspectedColumn.getLength())).subtract(BigDecimal.valueOf(1/(Math.pow(10, introspectedColumn.getScale())))).setScale(introspectedColumn.getScale());
                 introspectedColumn.setMax(String.valueOf(max));
                 if(introspectedColumn.getMax() != null){
                     introspectedColumn.setMin(String.valueOf(max.multiply(BigDecimal.valueOf(-1))));
@@ -209,9 +221,8 @@ public class XmomenGenerator {
             writer.flush();
             writer.close();
         } catch (ShellException e) {
-            logger.error(MessageFormat.format("Generate Fail :", JSONObject.toJSONString(tableInfo)));
-            logger.error(e.getMessage(), e);
-            e.printStackTrace();
+            log.error("Generate Fail :{0}", JSONObject.toJSONString(tableInfo));
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -223,6 +234,17 @@ public class XmomenGenerator {
                     columnInfo.getActualColumnName()));
         }else if(generatorConfiguration.getMetadata().isIgnoreKeywordValidate() && SqlReservedWords.containsWord(columnInfo.getActualColumnName())){
             columnInfo.setFormatActualColumnName("`" + columnInfo.getActualColumnName()+"`");
+        }
+    }
+
+    private static Driver getDriverByDialect(DatabaseType databaseType) throws SQLException {
+        switch (databaseType){
+            case MYSQL:
+                return new com.mysql.jdbc.Driver();
+            case ORACLE:
+//                return new OracleDriver();
+            default:
+                throw new IllegalArgumentException("仅支持MySQL，Oracle数据库");
         }
     }
 }

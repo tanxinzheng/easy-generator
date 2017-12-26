@@ -28,7 +28,7 @@ public class GeneratorHelpMojo extends AbstractMojo {
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
         getLog().info("------------------------------------------------------------------------");
-        getLog().info("Generate Help Json Configuration File ：generator-help.json");
+        getLog().info("Generate Help Json Configuration File : generator-help.json");
         InputStream is = XmomenGenerator.class.getResourceAsStream("/generator-help.json");
         String basedir = new File("").getAbsolutePath() + File.separator;
         try {

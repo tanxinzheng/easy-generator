@@ -11,5 +11,19 @@ import java.util.List;
  */
 public interface TableMapper {
 
-    public List<ColumnInfo> getTableInfo(@Param("schema") String schema, @Param("tableName") String tableName);
+    /**
+     * MySQL 查询
+     * @param schema
+     * @param tableName
+     * @return
+     */
+    public List<ColumnInfo> getTableInfoByMySQL(@Param("schema") String schema, @Param("tableName") String tableName);
+
+    /**
+     * Oracle 查询
+     * @param schema
+     * @param tableName
+     * @return
+     */
+    public List<ColumnInfo> getTableInfoByOracle(@Param("schema") String schema, @Param("tableName") String tableName);
 }

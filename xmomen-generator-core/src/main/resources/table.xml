@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.xmomen.generator.mapping.TableMapper" >
-
-    <!--    查询消息    -->
-    <select id="getTableInfo"
+    <select id="getTableInfoByMySQL"
             resultType="com.xmomen.generator.model.ColumnInfo"
             parameterType="java.util.HashMap">
         select
@@ -24,6 +22,42 @@
             </if>
             <if test="tableName">
                 AND table_name = #{tableName}
+            </if>
+        </where>
+    </select>
+    <select id="getTableInfoByOracle"
+            resultType="com.xmomen.generator.model.ColumnInfo"
+            parameterType="java.util.HashMap">
+        SELECT c.table_name tableName,
+                c.column_name actualColumnName,
+                c.data_type jdbcType,
+                c.data_length length,
+                c.data_precision,
+                c.data_scale scale,
+                c.nullable,
+                c.data_default defaultValue,
+                case
+                when ucc.column_name = c.COLUMN_NAME then
+                1
+                else
+                0
+                end as isPrimaryKey,
+                c.num_distinct,
+                cm.comments columnComment
+        FROM user_tab_columns c
+            left join user_col_comments cm on c.column_name = cm.column_name
+                and c.table_name = cm.table_name
+            left join user_constraints con on con.constraint_type = 'P'
+                and con.table_name = c.table_name
+            left join user_cons_columns ucc on ucc.table_name = c.table_name
+                and ucc.column_name = c.column_name
+                and con.constraint_name = ucc.constraint_name
+        <where>
+            <if test="schema">
+                and table_schema = #{schema}
+            </if>
+            <if test="tableName">
+                AND UPPER(c.TABLE_NAME) = UPPER(#{tableName})
             </if>
         </where>
     </select>

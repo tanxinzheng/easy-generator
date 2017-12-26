@@ -18,7 +18,7 @@ import java.text.MessageFormat;
  *
  */
 @Mojo(name = "generate-config", defaultPhase = LifecyclePhase.NONE)
-public class GeneratorSimpleConfigMojo extends AbstractMojo {
+public class GeneratorBaseConfigMojo extends AbstractMojo {
 
     /**
      * generator-help
@@ -26,15 +26,19 @@ public class GeneratorSimpleConfigMojo extends AbstractMojo {
      * @throws MojoFailureException
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
+        generateConfig("/generator-config.json");
+    }
+
+    protected void generateConfig(String sourceConfigPath){
         getLog().info("------------------------------------------------------------------------");
-        getLog().info(MessageFormat.format("Generate Simple Json Configuration File ：{0}", "generator-config.json"));
+        getLog().info(MessageFormat.format("Generate Simple Json Configuration File : {0}", "generator-config.json"));
         getLog().info("------------------------------------------------------------------------");
-        InputStream is = XmomenGenerator.class.getResourceAsStream("/generator-config.json");
+        InputStream is = XmomenGenerator.class.getResourceAsStream(sourceConfigPath);
         String basedir = new File("").getAbsolutePath() + File.separator;
         try {
             FileUtils.copyInputStreamToFile(is, new File(basedir, "/src/test/resources/help/generator-config.json"));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException(e.getMessage(), e);
         }
     }
 

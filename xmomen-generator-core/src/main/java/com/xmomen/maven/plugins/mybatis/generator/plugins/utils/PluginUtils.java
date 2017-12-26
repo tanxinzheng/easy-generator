@@ -1,12 +1,13 @@
 package com.xmomen.maven.plugins.mybatis.generator.plugins.utils;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by jengt_000 on 2014/12/27.
  */
-public class PluginUtils {
+public  class PluginUtils {
 
     public static final char UNDERLINE='_';
 
@@ -106,6 +107,25 @@ public class PluginUtils {
             sb.replace(position-1,position+1,sb.substring(position,position+1).toUpperCase());
         }
         return sb.toString();
+    }
+
+    /**
+     * 递归删除目录下的所有文件及子目录下所有文件
+     * @param dir 将要删除的目录路径
+     * @return
+     */
+    public static boolean deleteDirectory(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();//递归删除目录中的子目录下
+            for (int i=0; i<children.length; i++) {
+                boolean success = deleteDirectory(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        // 目录此时为空，可以删除
+        return dir.delete();
     }
 
 }

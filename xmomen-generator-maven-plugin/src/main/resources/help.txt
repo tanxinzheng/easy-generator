@@ -13,5 +13,11 @@ xmomen-generator:help
 xmomen-generator:generate-config
   Generate a simple generator-config.json configuration file in the test resources help directory.
 
+xmomen-generator:generate-config-oracle
+Generate a simple mysql database generator-config.json configuration file in the test resources help directory.
+
+xmomen-generator:generate-config-mysql
+  Generate a simple oracle database generator-config.json configuration file in the test resources help directory.
+
 xmomen-generator:generate-help
   Generate a simple generator-help.json configuration file in the test resources help directory.

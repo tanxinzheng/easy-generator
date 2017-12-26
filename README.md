@@ -32,6 +32,7 @@
 ``` json
 {
   "dataSource":{
+    "dialect":"MySQL",
     "driver":"com.mysql.jdbc.Driver",
     "url":"jdbc:mysql://localhost:3306/demo?useUnicode=true&amp;characterEncoding=utf8",
     "username":"root",
