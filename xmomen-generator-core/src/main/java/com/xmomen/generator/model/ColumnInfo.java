@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class ColumnInfo {
 
+    private String tableName;
+
     private String columnName;
 
     private String columnComment;

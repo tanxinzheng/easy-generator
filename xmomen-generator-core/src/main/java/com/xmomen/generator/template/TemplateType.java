@@ -4,14 +4,14 @@ package com.xmomen.generator.template;
  * Created by tanxinzheng on 17/5/27.
  */
 public enum TemplateType {
-    Entity(".java", "entity", "model", "src/main/java"),
-    Query("Query.java", "queryModel", "model", "src/main/java"),
-    Model("Model.java", "model", "model", "src/main/java"),
-    Mapper("Mapper.java", "mapper", "mapper", "src/main/java"),
-    Service("Service.java", "service", "service", "src/main/java"),
-    ServiceImpl("ServiceImpl.java", "serviceImpl", "service.impl", "src/main/java"),
-    Controller("Controller.java", "controller", "controller", "src/main/java"),
-    MapperXml("Mapper.xml", "mapperXml", "mapper", "src/main/java")
+    Entity(".java", "entity.ftl", "model", "src/main/java"),
+    Query("Query.java", "queryModel.ftl", "model", "src/main/java"),
+    Model("Model.java", "model.ftl", "model", "src/main/java"),
+    Mapper("Mapper.java", "mapper.ftl", "mapper", "src/main/java"),
+    Service("Service.java", "service.ftl", "service", "src/main/java"),
+    ServiceImpl("ServiceImpl.java", "serviceImpl.ftl", "service.impl", "src/main/java"),
+    Controller("Controller.java", "controller.ftl", "controller", "src/main/java"),
+    MapperXml("Mapper.xml", "mapperXml.ftl", "mapper", "src/main/java")
     ;
 
     private String fileExt;

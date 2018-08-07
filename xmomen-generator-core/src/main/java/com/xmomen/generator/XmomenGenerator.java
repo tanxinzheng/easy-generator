@@ -1,23 +1,23 @@
 package com.xmomen.generator;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.xmomen.generator.configuration.ConfigurationParser;
 import com.xmomen.generator.configuration.GeneratorConfiguration;
 import com.xmomen.generator.mapping.TableMapper;
 import com.xmomen.generator.model.ColumnInfo;
 import com.xmomen.generator.model.TableInfo;
-import com.xmomen.generator.model.TemplateCode;
+import com.xmomen.generator.model.TemplateConfig;
 import com.xmomen.generator.template.TemplateType;
 import com.xmomen.maven.plugins.mybatis.generator.plugins.types.JdbcTypeEnums;
 import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.FreemarkerUtils;
-import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.JSONUtils;
 import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.PluginUtils;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.AutoMappingBehavior;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -37,13 +37,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.math.BigDecimal;
 import java.sql.Driver;
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.stream.Collectors.groupingBy;
 import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 /**
@@ -61,6 +60,25 @@ public class XmomenGenerator {
         if(generatorConfiguration == null){
             generatorConfiguration = configuration;
         }
+        if(configuration.getMetadata().getTemplateDirectory() == null){
+            configuration.getMetadata().setTemplateDirectory("/templates");
+        }
+        defineTemplates(configuration);
+        defineTables(configuration);
+        configuration.getTables().stream().forEach(tableInfo -> {
+            tableInfo.getTemplates().stream().forEach(templateConfig -> {
+                tableInfo.setTargetPackage(templateConfig.getTargetPackage());
+                try {
+                    mainGenerate(configuration, tableInfo, templateConfig);
+                } catch (IOException | TemplateException e) {
+                    log.error(e.getMessage(), e);
+                }
+            });
+        });
+        return generateCount;
+    }
+
+    public static void defineTables(GeneratorConfiguration configuration) throws Exception {
         DataSource dataSource = new SimpleDriverDataSource(
                 getDriver(configuration.getDataSource().getDriver()),
                 configuration.getDataSource().getUrl(),
@@ -76,147 +94,188 @@ public class XmomenGenerator {
         sessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.FULL);
         sessionFactory.getConfiguration().setMultipleResultSetsEnabled(true);
         SqlSession session = sessionFactory.openSession();
-        for (TableInfo config : configuration.getTables()) {
-            TableInfo tableInfo = new TableInfo();
-            BeanUtils.copyProperties(config, tableInfo);
-            List<ColumnInfo> columnInfoList = null;
-            switch (configuration.getDataSource().getDialectType()) {
-                case MYSQL:
-                    columnInfoList = session.getMapper(TableMapper.class).getTableInfoByMySQL(tableInfo.getSchema(), tableInfo.getTableName());
-                    break;
-                case ORACLE:
-                    columnInfoList = session.getMapper(TableMapper.class).getTableInfoByOracle(tableInfo.getSchema(), tableInfo.getTableName());
-                    break;
-                default:
-                    throw new IllegalArgumentException("仅支持MySQL，Oracle数据库");
-            }
-            Assert.isTrue(CollectionUtils.isNotEmpty(columnInfoList), "Not Found the table [ " + tableInfo.getTableName() + " ] information.");
-            for (ColumnInfo columnInfo : columnInfoList) {
-                try {
-                    JdbcTypeEnums jdbcTypeEnums = JdbcTypeEnums.valueOf(columnInfo.getJdbcType());
-                    columnInfo.setFullyJavaType(jdbcTypeEnums.getJavaType().getName());
-                    columnInfo.setJavaType(jdbcTypeEnums.getJavaType().getSimpleName());
-                    columnInfo.setJdbcType(jdbcTypeEnums.getJdbcType());
-                } catch (IllegalArgumentException ex) {
-                    log.error("未找到适配的JdbcType:" + columnInfo.getJdbcType());
-                    log.error(ex.getMessage(), ex);
-                }
-                columnInfo.setColumnName(PluginUtils.underlineToCamel2(columnInfo.getActualColumnName().toLowerCase()));
-                if (columnInfo.isPrimaryKey()) {
-                    ColumnInfo columnInfo1 = new ColumnInfo();
-                    BeanUtils.copyProperties(columnInfo, columnInfo1);
-                    tableInfo.setPrimaryKeyColumn(columnInfo1);
-                }
-                validateKeyword(tableInfo, columnInfo);
-            }
-            tableInfo.setColumns(columnInfoList);
-            log.debug(JSONObject.toJSONString(tableInfo));
-            setParameter(tableInfo);
-            System.out.println(JSONUtils.formatJson(JSONObject.toJSONString(tableInfo)));
-            Map<String, TemplateCode> templateMap = new HashMap<>();
-            // 内置模板
-            for (TemplateType templateType : TemplateType.values()) {
-                TemplateCode templateCode = new TemplateCode();
-                BeanUtils.copyProperties(templateType, templateCode);
-                if (configuration.getMetadata().getOverwriteTemplates() != null && configuration.getMetadata().getOverwriteTemplates().containsKey(templateType)) {
-                    templateCode.setTemplateFileName(generatorConfiguration.getMetadata().getRootPath() + configuration.getMetadata().getOverwriteTemplates().get(templateType));
-                    templateCode.setOverwriteTemplate(true);
-                }
-                templateCode.setCustom(false);
-                templateMap.put(templateType.name(), templateCode);
-            }
-            Map<String, TemplateCode> templateCodeMap = generatorConfiguration.getMetadata().getTemplates();
-            // 自定义模板
-            if (MapUtils.isNotEmpty(templateCodeMap)) {
-                for (Map.Entry<String, TemplateCode> templateCodeEntry : templateCodeMap.entrySet()) {
-                    String key = templateCodeEntry.getKey();
-                    TemplateCode templateCode = new TemplateCode();
-                    BeanUtils.copyProperties(templateCodeEntry.getValue(), templateCode);
-                    templateCode.setOverwriteTemplate(true);
-                    templateCode.setCustom(true);
-                    templateCode.setTemplateFileName(generatorConfiguration.getMetadata().getRootPath() + templateCode.getTemplateFileName());
-                    templateMap.put(key, templateCode);
-                }
-            }
-            for (Map.Entry<String, TemplateCode> templateCodeEntry : templateMap.entrySet()) {
-                String templateCodeKey = templateCodeEntry.getKey();
-                TemplateCode templateCode = templateCodeEntry.getValue();
-                // 忽略模板
-                if (configuration.getMetadata().getIgnoreTemplateTypes() != null && ArrayUtils.contains(configuration.getMetadata().getIgnoreTemplateTypes(), templateCodeKey)) {
-                    continue;
-                }
-                // 只生成指定模板
-                if (configuration.getMetadata().getTemplateTypes() == null ||
-                        (configuration.getMetadata().getTemplateTypes() != null && ArrayUtils.contains(configuration.getMetadata().getTemplateTypes(), templateCodeKey))) {
-                    // 指定模板文件
-                    if (!templateCode.isOverwriteTemplate()) {
-                        tableInfo.setTemplateFileName(templateCode.getTemplateFileName() + ".ftl");
-                    } else {
-                        tableInfo.setTemplateFileName(templateCode.getTemplateFileName());
-                    }
-                    if (templateCode.isWebTemplate()) {
-                        // 输出目录
-                        tableInfo.setTargetFileName(PluginUtils.camelToUnderline(tableInfo.getDomainObjectClassName()) + templateCode.getFileExt());
-                    } else {
-                        // 输出目录
-                        tableInfo.setTargetFileName(tableInfo.getDomainObjectClassName() + templateCode.getFileExt());
-                    }
-                    // 模块包路径
-                    tableInfo.setTargetPackage(tableInfo.getModulePackage() + "." + templateCode.getTargetPackage());
-                    tableInfo.setTargetProject(templateCode.getTargetProject());
-                    mainGenerate(tableInfo, templateCode.isOverwriteTemplate());
-                    generateCount++;
-                }
-            }
+        List<ColumnInfo> columnInfoList = Lists.newArrayList();
+        switch (configuration.getDataSource().getDialectType()) {
+            case MYSQL:
+                columnInfoList = session.getMapper(TableMapper.class).getTableInfoByMySQL(configuration);
+                break;
+            case ORACLE:
+                columnInfoList = session.getMapper(TableMapper.class).getTableInfoByOracle(configuration);
+                break;
+            default:
+                throw new IllegalArgumentException("仅支持MySQL，Oracle数据库");
         }
-        return generateCount;
+        if(CollectionUtils.isEmpty(columnInfoList)){
+            return;
+        }
+        Map<String, List<ColumnInfo>> collect = columnInfoList.stream().collect(groupingBy(ColumnInfo::getTableName));
+        configuration.getTables().stream().forEach(tableInfo -> {
+            List<ColumnInfo> columnInfos = collect.get(tableInfo.getTableName());
+            Assert.isTrue(CollectionUtils.isNotEmpty(columnInfos), "Not Found the table [ " + tableInfo.getTableName() + " ] information");
+            buildColumn(tableInfo, columnInfos);
+            String domainObjectName = JavaBeansUtil.getCamelCaseString(tableInfo.getTableName(), false);
+            if(tableInfo.getDomainObjectName() != null){
+                domainObjectName = tableInfo.getDomainObjectName();
+            }
+            tableInfo.setTargetPackage(tableInfo.getModulePackage());
+            tableInfo.setDomainObjectName(PluginUtils.getLowerCaseString(domainObjectName));
+            tableInfo.setDomainObjectUnderlineName(PluginUtils.camelToUnderline(PluginUtils.getLowerCaseString(domainObjectName)));
+            tableInfo.setDomainObjectClassName(PluginUtils.getUpperCaseString(domainObjectName));
+            setImportClassList(tableInfo);
+            buildTableTemplate(configuration, tableInfo);
+            tableInfo.setMetadata(configuration.getMetadata());
+        });
     }
 
-    private static TableInfo setParameter(TableInfo tableInfo){
-        String tableName = tableInfo.getTableName();
-        String camelTableName = JavaBeansUtil.getCamelCaseString(tableInfo.getTableName(), false);
-        String domainObjectName = camelTableName;
-        if(tableInfo.getDomainObjectName() != null){
-            domainObjectName = tableInfo.getDomainObjectName();
-        }
-        tableInfo.setDomainObjectName(PluginUtils.getLowerCaseString(domainObjectName));
-        tableInfo.setDomainObjectUnderlineName(PluginUtils.camelToUnderline(PluginUtils.getLowerCaseString(domainObjectName)));
-        tableInfo.setTableName(tableName);
-        tableInfo.setDomainObjectClassName(PluginUtils.getUpperCaseString(domainObjectName));
-        tableInfo.setTableName(tableName);
-        Map<String, String> importList = new HashMap<>();
-        for (ColumnInfo introspectedColumn : tableInfo.getColumns()) {
-            if(Integer.class.getSimpleName().equals(introspectedColumn.getJavaType())){
-                BigDecimal max = BigDecimal.valueOf(Math.pow(10, introspectedColumn.getLength())).subtract(BigDecimal.ONE);
-                introspectedColumn.setMax(String.valueOf(max));
-                if(introspectedColumn.getMax() != null){
-                    introspectedColumn.setMin(String.valueOf(max.multiply(BigDecimal.valueOf(-1))));
-                }
-            }else if(BigDecimal.class.getSimpleName().equals(introspectedColumn.getJavaType())){
-                BigDecimal max = BigDecimal.valueOf(Math.pow(10, introspectedColumn.getLength())).subtract(BigDecimal.valueOf(1/(Math.pow(10, introspectedColumn.getScale())))).setScale(introspectedColumn.getScale());
-                introspectedColumn.setMax(String.valueOf(max));
-                if(introspectedColumn.getMax() != null){
-                    introspectedColumn.setMin(String.valueOf(max.multiply(BigDecimal.valueOf(-1))));
-                }
+    /**
+     * 定义表字段信息
+     * @param tableInfo
+     * @param columnInfoList
+     */
+    private static void buildColumn(TableInfo tableInfo, List<ColumnInfo> columnInfoList){
+        for (ColumnInfo columnInfo : columnInfoList) {
+            try {
+                JdbcTypeEnums jdbcTypeEnums = JdbcTypeEnums.valueOf(columnInfo.getJdbcType());
+                jdbcTypeEnums = convertType(jdbcTypeEnums, columnInfo);
+                columnInfo.setFullyJavaType(jdbcTypeEnums.getJavaType().getName());
+                columnInfo.setJavaType(jdbcTypeEnums.getJavaType().getSimpleName());
+                columnInfo.setJdbcType(jdbcTypeEnums.getJdbcType());
+            } catch (IllegalArgumentException e) {
+                log.error("未找到适配的JdbcType：{}", columnInfo.getJdbcType());
+                log.error(e.getMessage(), e);
             }
-            importList.put(introspectedColumn.getFullyJavaType(), introspectedColumn.getFullyJavaType());
+            columnInfo.setColumnName(PluginUtils.underlineToCamel(columnInfo.getActualColumnName().toLowerCase()));
+            if(columnInfo.isPrimaryKey()){
+                ColumnInfo primaryKeyColumn = new ColumnInfo();
+                BeanUtils.copyProperties(columnInfo, primaryKeyColumn);
+                tableInfo.setPrimaryKeyColumn(primaryKeyColumn);
+            }
+            validateKeyword(tableInfo, columnInfo);
+        }
+        tableInfo.setColumns(columnInfoList);
+    }
+
+    /**
+     * 特殊类型转换
+     * @param jdbcTypeEnums
+     * @param columnInfo
+     * @return
+     */
+    private static JdbcTypeEnums convertType(JdbcTypeEnums jdbcTypeEnums, ColumnInfo columnInfo){
+        switch (jdbcTypeEnums){
+            case NUMBER:
+                if(columnInfo.getScale() == null){
+                    jdbcTypeEnums = JdbcTypeEnums.BOOLEAN_DECIMAL;
+                }
+                break;
+            default:
+                break;
+        }
+        return jdbcTypeEnums;
+    }
+
+    /**
+     * 定义表模板
+     * @param configuration
+     * @param tableInfo
+     */
+    private static void buildTableTemplate(GeneratorConfiguration configuration, TableInfo tableInfo){
+        List<TemplateConfig> templateConfigList = Lists.newArrayList();
+        configuration.getTemplates().values().stream().forEach(templateConfig -> {
+            TemplateConfig template = new TemplateConfig();
+            template.setCustom(templateConfig.isCustom());
+            template.setIgnore(templateConfig.isIgnore());
+            template.setTemplateName(templateConfig.getTemplateName());
+            template.setTemplateFileName(templateConfig.getTemplateFileName());
+            template.setTargetProject(templateConfig.getTargetProject());
+            template.setTargetPackage(tableInfo.getModulePackage() + "." + StringUtils.trim(templateConfig.getTargetPackage()));
+            template.setTargetPath(tableInfo.getModulePackage().replace(".", File.separator) +
+                    File.separator + StringUtils.trim(templateConfig.getTargetPackage()));
+            template.setFileExt(templateConfig.getFileExt());
+            template.setTargetFileName(tableInfo.getDomainObjectClassName() + templateConfig.getFileExt());
+            templateConfigList.add(template);
+        });
+        tableInfo.setTemplates(templateConfigList);
+    }
+
+    /**
+     * 导入依赖类
+     * @param tableInfo
+     */
+    private static void setImportClassList(TableInfo tableInfo){
+        Map<String, String> importList = Maps.newHashMap();
+        for (ColumnInfo columnInfo : tableInfo.getColumns()) {
+            importList.put(columnInfo.getFullyJavaType(), columnInfo.getFullyJavaType());
         }
         tableInfo.setImportClassList(importList);
-        return tableInfo;
     }
 
-    private static void mainGenerate(TableInfo tableInfo, boolean overwriteTemplate) throws IOException, TemplateException {
-        try {
-            Template template = null;
-            if(overwriteTemplate){
-                template = FreemarkerUtils.getTemplate(tableInfo.getTemplateFileName());
+    /**
+     * 定义默认模板
+     * @param generatorConfiguration
+     */
+    private static void defineTemplates(GeneratorConfiguration generatorConfiguration) {
+        Map<String, TemplateConfig> templates = Maps.newHashMap();
+        for (TemplateType templateType : TemplateType.values()) {
+            TemplateConfig templateConfig = new TemplateConfig();
+            templateConfig.setFileExt(templateType.getFileExt());
+            templateConfig.setTargetPackage(templateType.getTargetPackage());
+            templateConfig.setTargetProject(templateType.getTargetProject());
+            templateConfig.setTemplateName(templateType.name());
+            templateConfig.setTemplateFileName(templateType.getTemplateFileName());
+            templates.put(templateType.name(), templateConfig);
+        }
+        defineCustomTemplate(generatorConfiguration, templates);
+        generatorConfiguration.setTemplates(templates);
+    }
+
+    /**
+     * 定义自定义模板
+     * @param configuration
+     * @param defaultTemplates
+     */
+    private static void defineCustomTemplate(GeneratorConfiguration configuration, Map<String, TemplateConfig> defaultTemplates){
+        Map<String, TemplateConfig> customTemplates = configuration.getTemplates();
+        if(customTemplates == null){
+            return;
+        }
+        for (Map.Entry<String, TemplateConfig> templateConfigEntry : customTemplates.entrySet()) {
+            TemplateConfig templateConfig = defaultTemplates.get(templateConfigEntry.getKey());
+            if(templateConfig == null){
+                // 添加自定义模板到模板列表
+                TemplateConfig config = templateConfigEntry.getValue();
+                config.setCustom(Boolean.TRUE);
+                defaultTemplates.put(templateConfigEntry.getKey(), config);
             }else{
-                template = FreemarkerUtils.getTemplate(tableInfo.getTemplateFileName(), "/templates");
+                // 覆盖默认模板参数
+                TemplateConfig template = templateConfigEntry.getValue();
+                if(template.getTargetProject() != null){
+                    templateConfig.setTargetProject(template.getTargetProject());
+                }
+                if(template.isIgnore()){
+                    templateConfig.setIgnore(Boolean.TRUE);
+                }
+                defaultTemplates.put(templateConfigEntry.getKey(), templateConfig);
+            }
+        }
+        configuration.setTemplates(defaultTemplates);
+    }
+
+    private static void mainGenerate(GeneratorConfiguration configuration, TableInfo tableInfo, TemplateConfig templateConfig) throws IOException, TemplateException {
+        try {
+            if(templateConfig.isIgnore()){
+                return;
+            }
+            Template template = null;
+            if(templateConfig.isCustom()){
+                template = FreemarkerUtils.getTemplate(templateConfig.getTemplateFileName());
+            }else{
+                template = FreemarkerUtils.getTemplate(templateConfig.getTemplateFileName(), configuration.getMetadata().getTemplateDirectory());
             }
             File file = new DefaultShellCallback(false).getDirectory(generatorConfiguration.getMetadata().getRootPath()+
                     File.separator +
-                    tableInfo.getTargetProject(), tableInfo.getTargetPackage().replace(".", "/"));
-            Writer writer = new FileWriter(new File(file, tableInfo.getTargetFileName()));
+                    StringUtils.trim(templateConfig.getTargetProject()), templateConfig.getTargetPath());
+            Writer writer = new FileWriter(new File(file, templateConfig.getTargetFileName()));
             template.process(tableInfo, writer);
             writer.flush();
             writer.close();

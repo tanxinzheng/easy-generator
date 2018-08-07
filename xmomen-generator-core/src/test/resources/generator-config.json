@@ -7,11 +7,11 @@
   },
   "tables":[
     {
-      "domainObjectName":"BusinessKindClassify",
-      "tableComment":"通知模板",
-      "tableName":"pims_business_kind_classify",
-      "modulePackage":"com.xmomen.module.decision",
-      "restMapping":"/business_kind_classify"
+      "domainObjectName":"User",
+      "tableComment":"用户",
+      "tableName":"xmo_user",
+      "modulePackage":"com.xmomen.module.user",
+      "restMapping":"/user"
     }
   ]
 }

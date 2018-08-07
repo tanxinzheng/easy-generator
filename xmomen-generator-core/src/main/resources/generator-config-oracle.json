@@ -4,15 +4,15 @@
     "driver":"oracle.jdbc.driver.OracleDriver",
     "url":"jdbc:oracle:thin:@127.0.0.1:1526:test_db",
     "username":"root",
-    "password":"123456"
+    "password":"root"
   },
   "tables":[
     {
-      "domainObjectName":"dictionary",
-      "tableComment":"数据字典",
-      "tableName":"xmo_dictionary",
-      "modulePackage":"com.xmomen.module.system",
-      "restMapping":"/dictionary"
+      "domainObjectName":"User",
+      "tableComment":"用户",
+      "tableName":"xmo_user",
+      "modulePackage":"com.xmomen.module.user",
+      "restMapping":"/user"
     }
   ]
 }

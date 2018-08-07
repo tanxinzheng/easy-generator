@@ -2,41 +2,17 @@
   "dataSource":{
     "dialect":"Oracle",
     "driver":"oracle.jdbc.driver.OracleDriver",
-    "url":"jdbc:oracle:thin:@10.20.131.94:1526:d0pare",
-    "username":"imspdata",
-    "password":"imsp1111"
-  },
-  "metadata":{
-    "templateTypes":["Query", "Entity", "Model", "Mapper", "MapperXml", "Service", "ServiceImpl"],
+    "url":"jdbc:oracle:thin:@127.0.0.1:1526:test_db",
+    "username":"root",
+    "password":"root"
   },
   "tables":[
     {
-      "domainObjectName":"ProScheduleBatchArea",
-      "tableComment":"批次面积表",
-      "tableName":"PIMS_PRO_SCHEDULE_BATCH_AREA",
-      "modulePackage":"com.pingan.pims.schedulerecord",
-      "restMapping":"/actionRelation"
-    },
-    {
-      "domainObjectName":"BatchAreaBusiKind",
-      "tableComment":"业态明细",
-      "tableName":"PIMS_BATCH_AREA_BUSI_KIND",
-      "modulePackage":"com.pingan.pims.schedulerecord",
-      "restMapping":"/actionRelation"
-    },
-    {
-      "domainObjectName":"ProScheduleFloorBatch",
-      "tableComment":"楼栋批次",
-      "tableName":"PIMS_PRO_SCHEDULE_FLOOR_BATCH",
-      "modulePackage":"com.pingan.pims.schedulerecord",
-      "restMapping":"/actionRelation"
-    },
-    {
-      "domainObjectName":"ProScheSalePrice",
-      "tableComment":"销售均价",
-      "tableName":"PIMS_PRO_SCHE_SALE_PRICE",
-      "modulePackage":"com.pingan.pims.schedulerecord",
-      "restMapping":"/actionRelation"
+      "domainObjectName":"User",
+      "tableComment":"用户",
+      "tableName":"xmo_user",
+      "modulePackage":"com.xmomen.module.user",
+      "restMapping":"/user"
     }
   ]
 }

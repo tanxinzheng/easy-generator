@@ -17,14 +17,13 @@
         t.is_nullable nullable
         from information_schema.columns t
         <where>
-            <if test="schema">
-                and table_schema = #{schema}
-            </if>
-            <if test="tableName">
-                AND table_name = #{tableName}
-            </if>
+            table_name IN
+            <foreach collection="config.tables" item="item" open="(" separator="," close=")">
+                #{item.tableName}
+            </foreach>
         </where>
     </select>
+
     <select id="getTableInfoByOracle"
             resultType="com.xmomen.generator.model.ColumnInfo"
             parameterType="java.util.HashMap">
@@ -53,12 +52,10 @@
                 and ucc.column_name = c.column_name
                 and con.constraint_name = ucc.constraint_name
         <where>
-            <if test="schema">
-                and table_schema = #{schema}
-            </if>
-            <if test="tableName">
-                AND UPPER(c.TABLE_NAME) = UPPER(#{tableName})
-            </if>
+            UPPER(c.TABLE_NAME) IN
+            <foreach collection="config.tables" item="item" open="(" separator="," close=")">
+                UPPER(#{item.tableName})
+            </foreach>
         </where>
     </select>
 

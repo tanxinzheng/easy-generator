@@ -1,9 +1,9 @@
 package com.xmomen.generator.configuration;
 
 import com.xmomen.generator.jdbc.DatabaseType;
+import com.xmomen.generator.model.ProjectMetadata;
 import com.xmomen.generator.model.TableInfo;
-import com.xmomen.generator.model.TemplateCode;
-import com.xmomen.generator.template.TemplateType;
+import com.xmomen.generator.model.TemplateConfig;
 import lombok.Data;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
@@ -31,17 +31,7 @@ public class GeneratorConfiguration {
     @Valid
     private List<TableInfo> tables;
 
-    @Data
-    public static class ProjectMetadata {
-        @NotBlank
-        private String rootPath;
-        private String[] ignoreTemplateTypes;
-        private String[] templateTypes;
-        private String templatesPath;
-        private Map<TemplateType, String> overwriteTemplates;
-        private Map<String, TemplateCode> templates;
-        private boolean ignoreKeywordValidate;
-    }
+    private Map<String, TemplateConfig> templates;
 
     @Data
     public static class DataSource {

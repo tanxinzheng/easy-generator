@@ -19,6 +19,7 @@ public enum JdbcTypeEnums {
     DATETIME(Date.class, "TIMESTAMP"),
     TIMESTAMP(Date.class, "TIMESTAMP"),
     LONG(Long.class, "DECIMAL"),
+    BOOLEAN_DECIMAL(Boolean.class, "DECIMAL"),
     DECIMAL(BigDecimal.class, "DECIMAL"),
     NUMBER(BigDecimal.class, "DECIMAL"),
     DOUBLE(BigDecimal.class, "DECIMAL"),

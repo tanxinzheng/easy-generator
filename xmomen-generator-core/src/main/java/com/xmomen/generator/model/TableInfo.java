@@ -1,6 +1,6 @@
 package com.xmomen.generator.model;
 
-import com.xmomen.generator.jdbc.DatabaseType;
+import com.xmomen.generator.configuration.GeneratorConfiguration;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -53,5 +53,7 @@ public @Data class TableInfo {
     private List<ColumnInfo> saveExcludeColumns;
     private boolean isSkip;
     private ColumnInfo primaryKeyColumn;
+    private List<TemplateConfig> templates;
+    private ProjectMetadata metadata;
 
 }

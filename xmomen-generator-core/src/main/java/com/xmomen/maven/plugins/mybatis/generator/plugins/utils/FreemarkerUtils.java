@@ -28,6 +28,7 @@ public class FreemarkerUtils {
             // cfg.setServletContextForTemplateLoading(ServletActionContext.getServletContext(), "templates");
             // setEncoding这个方法一定要设置国家及其编码，不然在flt中的中文在生成html后会变成乱码
             cfg.setEncoding(Locale.getDefault(), "UTF-8");
+            cfg.setClassicCompatible(true);
             // 设置对象的包装器
             cfg.setObjectWrapper(new DefaultObjectWrapper());
             // 设置异常处理器//这样的话就可以${a.b.c.d}即使没有属性也不会出错
@@ -46,6 +47,7 @@ public class FreemarkerUtils {
             cfg = getConfiguration();
             // 设定去哪里读取相应的ftl模板文件
             cfg.setClassForTemplateLoading(FreemarkerUtils.class, ftlDirectory);
+            cfg.setClassicCompatible(true);
             // 在模板文件目录中找到名称为name的文件
             Template temp = cfg.getTemplate(name);
             return temp;

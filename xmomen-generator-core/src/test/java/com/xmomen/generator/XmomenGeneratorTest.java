@@ -2,6 +2,7 @@ package com.xmomen.generator;
 
 import com.xmomen.generator.configuration.ConfigurationParser;
 import com.xmomen.generator.configuration.GeneratorConfiguration;
+import com.xmomen.generator.model.ProjectMetadata;
 import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.PluginUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -28,11 +29,11 @@ public class XmomenGeneratorTest {
         String basedir = new File("").getAbsolutePath() + File.separator;
         File configFile = new File(basedir, configPath);
         GeneratorConfiguration configuration = ConfigurationParser.parserJsonConfig(configFile);
-        GeneratorConfiguration.ProjectMetadata projectMetadata = null;
+        ProjectMetadata projectMetadata = null;
         if(configuration.getMetadata() != null){
             projectMetadata = configuration.getMetadata();
         }else{
-            projectMetadata = new GeneratorConfiguration.ProjectMetadata();
+            projectMetadata = new ProjectMetadata();
             configuration.setMetadata(projectMetadata);
         }
         projectMetadata.setRootPath(basedir);
