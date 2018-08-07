@@ -3,10 +3,9 @@ package com.xmomen.generator;
 import com.xmomen.generator.configuration.ConfigurationParser;
 import com.xmomen.generator.configuration.GeneratorConfiguration;
 import com.xmomen.generator.model.ProjectMetadata;
-import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.PluginUtils;
+import com.xmomen.generator.utils.PluginUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.io.File;
 

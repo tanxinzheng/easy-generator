@@ -1,4 +1,4 @@
-package com.xmomen.generator.template;
+package com.xmomen.generator.model;
 
 /**
  * Created by tanxinzheng on 17/5/27.

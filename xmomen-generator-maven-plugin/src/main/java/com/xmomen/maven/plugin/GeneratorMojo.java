@@ -4,7 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.xmomen.generator.XmomenGenerator;
 import com.xmomen.generator.configuration.ConfigurationParser;
 import com.xmomen.generator.configuration.GeneratorConfiguration;
-import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.JSONUtils;
+import com.xmomen.generator.model.ProjectMetadata;
+import com.xmomen.generator.utils.JSONUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -85,11 +86,11 @@ public class GeneratorMojo extends AbstractMojo {
             String basedir = new File("").getAbsolutePath() + File.separator;
             File configFile = new File(basedir, configurationFile);
             GeneratorConfiguration configuration = ConfigurationParser.parserJsonConfig(configFile);
-            GeneratorConfiguration.ProjectMetadata projectMetadata = null;
+            ProjectMetadata projectMetadata = null;
             if(configuration.getMetadata() != null){
                 projectMetadata = configuration.getMetadata();
             }else{
-                projectMetadata = new GeneratorConfiguration.ProjectMetadata();
+                projectMetadata = new ProjectMetadata();
                 configuration.setMetadata(projectMetadata);
             }
             setDataSource(configuration);

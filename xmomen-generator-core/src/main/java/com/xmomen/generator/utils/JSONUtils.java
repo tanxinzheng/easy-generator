@@ -1,4 +1,4 @@
-package com.xmomen.maven.plugins.mybatis.generator.plugins.utils;
+package com.xmomen.generator.utils;
 
 /**
  * Created by tanxinzheng on 16/9/23.

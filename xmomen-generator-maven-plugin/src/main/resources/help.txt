@@ -1,8 +1,8 @@
 
 Maven Generator Plugin of Xmomen
-  Base on generator configuration will generate some java code file.
+  Base on JSON generator configuration will generate some java code file.
 
-This plugin has 4 goals:
+This plugin has 7 goals:
 
 xmomen-generator:generate
   Base on freemarker template create java code.
@@ -19,5 +19,9 @@ Generate a simple mysql database generator-config.json configuration file in the
 xmomen-generator:generate-config-mysql
   Generate a simple oracle database generator-config.json configuration file in the test resources help directory.
 
+xmomen-generator:generate-templates
+  Generate all default template files in the test resources help directory.
+
 xmomen-generator:generate-help
   Generate a simple generator-help.json configuration file in the test resources help directory.
+  Or you can view com.xmomen.generator.configuration.GeneratorConfiguration.java file know all properties.

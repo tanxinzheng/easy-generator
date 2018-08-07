@@ -1,6 +1,6 @@
 package com.xmomen.maven.plugin;
 
-import com.xmomen.maven.plugins.mybatis.generator.plugins.utils.PluginUtils;
+import com.xmomen.generator.utils.PluginUtils;
 import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.junit.After;
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package com.xmomen.maven.plugins.mybatis.generator.plugins.types;
+package com.xmomen.generator.types;
 
 import java.math.BigDecimal;
 import java.util.Date;
