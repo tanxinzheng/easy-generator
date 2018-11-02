@@ -2,32 +2,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="${targetPackage}.${domainObjectClassName}Mapper" >
 
+    <sql id="Base_Columns">
+        <#list columns as column>
+        ${column.actualColumnName}<#if column_has_next>,</#if>
+        </#list>
+    </sql>
+
+    <sql id="Base_Properties">
+        <#list columns as column>
+        ${'#'}{${column.columnName}, jdbcType=${column.jdbcType}}<#if column_has_next>,</#if>
+        </#list>
+    </sql>
+
     <insert id="insertSelective" parameterType="${modulePackage}.model.${domainObjectClassName}" useGeneratedKeys="true" keyProperty="${primaryKeyColumn.columnName}" keyColumn="${primaryKeyColumn.actualColumnName}" >
         <selectKey resultType="java.lang.String" keyProperty="${primaryKeyColumn.columnName}" order="BEFORE" >
             SELECT replace(UUID(),'-','')
         </selectKey>
         insert into ${tableName}
         <trim prefix="(" suffix=")" suffixOverrides="," >
-        ${primaryKeyColumn.actualColumnName},
+            ${primaryKeyColumn.actualColumnName},
         <#list columns as field>
             <#if !field.primaryKey>
-                <if test="${field.columnName} != null" >
-                    <#if field.formatActualColumnName?? >
-                    ${field.formatActualColumnName},
-                    <#else>
-                    ${field.actualColumnName},
-                    </#if>
-                </if>
+            <if test="${field.columnName} != null" >
+                <#if field.formatActualColumnName?? >
+                ${field.formatActualColumnName},
+                <#else>
+                ${field.actualColumnName},
+                </#if>
+            </if>
             </#if>
         </#list>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-        ${'#'}{${primaryKeyColumn.columnName}, jdbcType=${primaryKeyColumn.jdbcType}},
+            ${'#'}{${primaryKeyColumn.columnName}, jdbcType=${primaryKeyColumn.jdbcType}},
         <#list columns as field>
             <#if !field.primaryKey>
-                <if test="${field.columnName} != null" >
-                ${'#'}{${field.columnName}, jdbcType=${field.jdbcType}},
-                </if>
+            <if test="${field.columnName} != null" >
+            ${'#'}{${field.columnName}, jdbcType=${field.jdbcType}},
+            </if>
             </#if>
         </#list>
         </trim>
@@ -66,9 +78,9 @@
         <#list columns as field>
             <if test="record.${field.columnName} != null" >
             <#if field.formatActualColumnName?? >
-            ${field.formatActualColumnName} = ${'#'}{${field.columnName}, jdbcType=${field.jdbcType}},
+            ${field.formatActualColumnName} = ${'#'}{record.${field.columnName}, jdbcType=${field.jdbcType}},
             <#else>
-            ${field.actualColumnName} = ${'#'}{${field.columnName}, jdbcType=${field.jdbcType}},
+            ${field.actualColumnName} = ${'#'}{record.${field.columnName}, jdbcType=${field.jdbcType}},
             </#if>
             </if>
         </#list>
@@ -78,11 +90,12 @@
         </if>
     </update>
 
-    <!--    查询消息    -->
     <select id="select"
             resultType="${modulePackage}.model.${domainObjectClassName}"
             parameterType="${modulePackage}.model.${domainObjectClassName}Query">
-        SELECT * FROM ${tableName}
+        SELECT
+        <include refid="Base_Columns"/>
+        FROM ${tableName}
         <include refid="Update_By_Query_Where_Clause"/>
         ORDER BY ${primaryKeyColumn.actualColumnName}
     </select>
@@ -90,19 +103,25 @@
     <select id="selectByPrimaryKey"
             resultType="${modulePackage}.model.${domainObjectClassName}"
             parameterType="java.lang.String">
-        SELECT * FROM ${tableName} WHERE ${primaryKeyColumn.actualColumnName} = ${'#'}{${primaryKeyColumn.columnName}}
+        SELECT
+            <include refid="Base_Columns"/>
+        FROM ${tableName} WHERE ${primaryKeyColumn.actualColumnName} = ${'#'}{${primaryKeyColumn.columnName}}
     </select>
 
     <select id="selectModelByPrimaryKey"
             resultType="${modulePackage}.model.${domainObjectClassName}Model"
             parameterType="java.lang.String">
-        SELECT * FROM ${tableName} WHERE ${primaryKeyColumn.actualColumnName} = ${'#'}{${primaryKeyColumn.columnName}}
+        SELECT
+            <include refid="Base_Columns"/>
+        FROM ${tableName} WHERE ${primaryKeyColumn.actualColumnName} = ${'#'}{${primaryKeyColumn.columnName}}
     </select>
 
     <select id="selectModel"
             resultType="${modulePackage}.model.${domainObjectClassName}Model"
             parameterType="${modulePackage}.model.${domainObjectClassName}Query">
-        SELECT * FROM ${tableName}
+        SELECT
+            <include refid="Base_Columns"/>
+        FROM ${tableName}
         <include refid="Update_By_Query_Where_Clause"/>
         ORDER BY id
     </select>

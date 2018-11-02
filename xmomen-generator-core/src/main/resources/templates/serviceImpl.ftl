@@ -1,29 +1,28 @@
 package ${targetPackage};
 
-import com.xmomen.framework.mybatis.page.PageInterceptor;
+import com.github.pagehelper.PageHelper;
 import ${modulePackage}.model.${domainObjectClassName};
 import ${modulePackage}.mapper.${domainObjectClassName}Mapper;
 import ${modulePackage}.model.${domainObjectClassName}Model;
 import ${modulePackage}.model.${domainObjectClassName}Query;
 import ${modulePackage}.service.${domainObjectClassName}Service;
+
 import com.github.pagehelper.Page;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 <#include "header.ftl">
+@Slf4j
 @Service
 public class ${domainObjectClassName}ServiceImpl implements ${domainObjectClassName}Service {
-
-    private static Logger logger = LoggerFactory.getLogger(${domainObjectClassName}ServiceImpl.class);
 
     @Autowired
     ${domainObjectClassName}Mapper ${domainObjectName}Mapper;
@@ -144,9 +143,9 @@ public class ${domainObjectClassName}ServiceImpl implements ${domainObjectClassN
      */
     @Override
     public Page<${domainObjectClassName}Model> get${domainObjectClassName}ModelPage(${domainObjectClassName}Query ${domainObjectName}Query) {
-        PageInterceptor.startPage(${domainObjectName}Query);
+        PageHelper.startPage(${domainObjectName}Query);
         ${domainObjectName}Mapper.selectModel(${domainObjectName}Query);
-        return PageInterceptor.endPage();
+        return PageHelper.getLocalPage();
     }
 
     /**
@@ -195,7 +194,7 @@ public class ${domainObjectClassName}ServiceImpl implements ${domainObjectClassN
             return null;
         }
         if(${domainObjectName}ModelList.size() > 1){
-            throw new BusinessException();
+            throw new TooManyResultsException();
         }
         return ${domainObjectName}ModelList.get(0);
     }

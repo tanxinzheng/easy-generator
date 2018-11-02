@@ -94,7 +94,7 @@ public class XmomenGenerator {
         sessionFactory.getConfiguration().setAutoMappingBehavior(AutoMappingBehavior.FULL);
         sessionFactory.getConfiguration().setMultipleResultSetsEnabled(true);
         SqlSession session = sessionFactory.openSession();
-        List<ColumnInfo> columnInfoList = Lists.newArrayList();
+        List<ColumnInfo> columnInfoList;
         switch (configuration.getDataSource().getDialectType()) {
             case MYSQL:
                 columnInfoList = session.getMapper(TableMapper.class).getTableInfoByMySQL(configuration);
@@ -166,6 +166,11 @@ public class XmomenGenerator {
             case NUMBER:
                 if(columnInfo.getScale() == null){
                     jdbcTypeEnums = JdbcTypeEnums.BOOLEAN_DECIMAL;
+                }
+                break;
+            case CHAR:
+                if(columnInfo.getScale() == null){
+                    jdbcTypeEnums = JdbcTypeEnums.BOOLEAN_CHAR;
                 }
                 break;
             default:
@@ -274,7 +279,7 @@ public class XmomenGenerator {
             }
             File file = new DefaultShellCallback(false).getDirectory(generatorConfiguration.getMetadata().getRootPath()+
                     File.separator +
-                    StringUtils.trim(templateConfig.getTargetProject()), templateConfig.getTargetPath());
+                    StringUtils.trim(tableInfo.getTargetProject()), templateConfig.getTargetPath());
             Writer writer = new FileWriter(new File(file, templateConfig.getTargetFileName()));
             template.process(tableInfo, writer);
             writer.flush();

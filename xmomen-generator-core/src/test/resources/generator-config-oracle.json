@@ -12,7 +12,8 @@
       "tableComment":"用户",
       "tableName":"xmo_user",
       "modulePackage":"com.xmomen.module.user",
-      "restMapping":"/user"
+      "restMapping":"/user",
+      "targetProject":"src/test/java"
     }
   ]
 }

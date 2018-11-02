@@ -1,7 +1,6 @@
 package ${targetPackage};
 
 import lombok.Data;
-import com.xmomen.framework.model.BaseEntity;
 
 <#if importClassList?exists>
     <#list importClassList?keys as mykey>
@@ -11,7 +10,7 @@ import ${mykey};
 import java.io.Serializable;
 
 <#include "header.ftl">
-public @Data class ${domainObjectClassName} extends BaseEntity implements Serializable {
+public @Data class ${domainObjectClassName} implements Serializable {
 
 <#if columns?exists>
     <#list columns as field>

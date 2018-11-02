@@ -3,11 +3,13 @@ package ${targetPackage};
 import ${modulePackage}.model.${domainObjectClassName};
 import ${modulePackage}.model.${domainObjectClassName}Model;
 import ${modulePackage}.model.${domainObjectClassName}Query;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 <#include "header.ftl">
+@Mapper
 public interface ${domainObjectClassName}Mapper {
 
     List<${domainObjectClassName}> select(${domainObjectClassName}Query ${domainObjectName}Query);

@@ -15,7 +15,7 @@ public class XmomenGeneratorMySQLTest extends XmomenGeneratorTest {
 
     @After
     public void tearDown() throws Exception {
-        super.tearDown();
+//        super.tearDown();
     }
 
     @Test

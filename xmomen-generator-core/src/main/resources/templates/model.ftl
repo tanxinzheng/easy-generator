@@ -1,14 +1,13 @@
 package ${targetPackage};
 
-import com.xmomen.framework.model.BaseModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import ${modulePackage}.model.${domainObjectClassName};
 import lombok.Data;
 import org.hibernate.validator.constraints.*;
 import javax.validation.constraints.*;
+<#if addExcelAnnotation >
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecgframework.poi.excel.annotation.ExcelTarget;
+</#if>
 import org.springframework.beans.BeanUtils;
 
 <#if importClassList?exists>
@@ -19,13 +18,15 @@ import ${mykey};
 import java.io.Serializable;
 
 <#include "header.ftl">
+<#if addExcelAnnotation >
 @ExcelTarget(value = "${domainObjectClassName}Model")
-public @Data class ${domainObjectClassName}Model extends BaseModel implements Serializable {
+</#if>
+public @Data class ${domainObjectClassName}Model implements Serializable {
 
 <#if columns?exists>
     <#list columns as field>
     /** ${field['columnComment']} */
-    <#if !field.primaryKey && !field.hide>
+    <#if !field.primaryKey && !field.hide && addExcelAnnotation>
     @Excel(name = "${field['columnComment']}")
     </#if>
     <#if !field.nullable && !field.primaryKey>

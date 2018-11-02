@@ -11,11 +11,12 @@
   },
   "tables":[
     {
-      "domainObjectName":"User",
-      "tableComment":"用户",
-      "tableName":"xmo_user",
-      "modulePackage":"com.xmomen.module.user",
-      "restMapping":"/user"
+      "domainObjectName":"permission",
+      "tableComment":"权限",
+      "tableName":"xmo_permission",
+      "modulePackage":"com.xmomen.module.authorization",
+      "restMapping":"/permission",
+      "targetProject":"src/test/java"
     }
   ]
 }

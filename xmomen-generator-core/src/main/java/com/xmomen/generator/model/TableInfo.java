@@ -1,6 +1,5 @@
 package com.xmomen.generator.model;
 
-import com.xmomen.generator.configuration.GeneratorConfiguration;
 import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -55,5 +54,9 @@ public @Data class TableInfo {
     private ColumnInfo primaryKeyColumn;
     private List<TemplateConfig> templates;
     private ProjectMetadata metadata;
+    /**
+     * 是否添加@Excel注解，默认不加
+     */
+    private boolean addExcelAnnotation;
 
 }
