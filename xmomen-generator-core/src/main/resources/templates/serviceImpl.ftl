@@ -8,6 +8,7 @@ import ${modulePackage}.model.${domainObjectClassName}Query;
 import ${modulePackage}.service.${domainObjectClassName}Service;
 
 import com.github.pagehelper.Page;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,7 +179,16 @@ public class ${domainObjectClassName}ServiceImpl implements ${domainObjectClassN
      */
     @Override
     public ${domainObjectClassName}Model getOne${domainObjectClassName}Model(String id) {
-        return ${domainObjectName}Mapper.selectModelByPrimaryKey(id);
+        if(StringUtils.isBlank(id)){
+            return null;
+        }
+        ${domainObjectClassName}Query query = new ${domainObjectClassName}Query();
+        query.setId(id);
+        List<${domainObjectClassName}Model> list = ${domainObjectName}Mapper.selectModel(query);
+        if(CollectionUtils.isEmpty(list)){
+            return null;
+        }
+        return list.get(0);
     }
 
     /**

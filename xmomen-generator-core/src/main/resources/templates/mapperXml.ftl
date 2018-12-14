@@ -14,6 +14,52 @@
         </#list>
     </sql>
 
+    <sql id="Select_By_Query_Where_Clause">
+        <where>
+            <if test="keyword">
+                AND ${primaryKeyColumn.actualColumnName} LIKE CONCAT('%', ${r"#{keyword}"}, '%')
+            </if>
+            <if test="id">
+                AND ${primaryKeyColumn.actualColumnName} = ${r"#{id}"}
+            </if>
+            <if test="ids">
+                AND ${primaryKeyColumn.actualColumnName} IN
+                <foreach collection="ids" item="item" separator="," open="(" close=")">
+                ${r"#{item}"}
+                </foreach>
+            </if>
+            <if test="excludeIds">
+                AND ${primaryKeyColumn.actualColumnName} NOT IN
+                <foreach collection="excludeIds" item="item" separator="," open="(" close=")">
+                ${r"#{item}"}
+                </foreach>
+            </if>
+        </where>
+    </sql>
+
+    <sql id="Update_By_Query_Where_Clause">
+        <where>
+            <if test="keyword">
+                AND ${primaryKeyColumn.actualColumnName} LIKE CONCAT('%', ${r"#{keyword}"}, '%')
+            </if>
+            <if test="id">
+                AND ${primaryKeyColumn.actualColumnName} = ${r"#{id}"}
+            </if>
+            <if test="ids">
+                AND ${primaryKeyColumn.actualColumnName} IN
+                <foreach collection="ids" item="item" separator="," open="(" close=")">
+                ${r"#{item}"}
+                </foreach>
+            </if>
+            <if test="excludeIds">
+                AND ${primaryKeyColumn.actualColumnName} NOT IN
+                <foreach collection="excludeIds" item="item" separator="," open="(" close=")">
+                ${r"#{item}"}
+                </foreach>
+            </if>
+        </where>
+    </sql>
+
     <insert id="insertSelective" parameterType="${modulePackage}.model.${domainObjectClassName}" useGeneratedKeys="true" keyProperty="${primaryKeyColumn.columnName}" keyColumn="${primaryKeyColumn.actualColumnName}" >
         <selectKey resultType="java.lang.String" keyProperty="${primaryKeyColumn.columnName}" order="BEFORE" >
             SELECT replace(UUID(),'-','')
@@ -96,7 +142,7 @@
         SELECT
         <include refid="Base_Columns"/>
         FROM ${tableName}
-        <include refid="Update_By_Query_Where_Clause"/>
+        <include refid="Select_By_Query_Where_Clause"/>
         ORDER BY ${primaryKeyColumn.actualColumnName}
     </select>
 
@@ -122,31 +168,8 @@
         SELECT
             <include refid="Base_Columns"/>
         FROM ${tableName}
-        <include refid="Update_By_Query_Where_Clause"/>
+        <include refid="Select_By_Query_Where_Clause"/>
         ORDER BY id
     </select>
-
-    <sql id="Update_By_Query_Where_Clause">
-        <where>
-            <if test="keyword">
-                AND ${primaryKeyColumn.actualColumnName} LIKE CONCAT('%', ${r"#{keyword}"}, '%')
-            </if>
-            <if test="id">
-                AND ${primaryKeyColumn.actualColumnName} = ${r"#{id}"}
-            </if>
-            <if test="ids">
-                AND ${primaryKeyColumn.actualColumnName} IN
-                <foreach collection="ids" item="item" separator="," open="(" close=")">
-                ${r"#{item}"}
-                </foreach>
-            </if>
-            <if test="excludeIds">
-                AND ${primaryKeyColumn.actualColumnName} NOT IN
-                <foreach collection="excludeIds" item="item" separator="," open="(" close=")">
-                ${r"#{item}"}
-                </foreach>
-            </if>
-        </where>
-    </sql>
 
 </mapper>

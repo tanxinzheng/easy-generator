@@ -5,7 +5,6 @@ import com.xmomen.generator.model.ProjectMetadata;
 import com.xmomen.generator.model.TableInfo;
 import com.xmomen.generator.model.TemplateConfig;
 import lombok.Data;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -36,9 +35,9 @@ public class GeneratorConfiguration {
     @Data
     public static class DataSource {
 
+        private DatabaseType dialectType;
         @NotBlank(message = "dialect为必填项，且仅支持MySQL，Oracle")
         private String dialect;
-        private DatabaseType dialectType;
         @NotBlank(message = "driver为必填项")
         private String driver;
         @NotBlank(message = "url为必填项")
@@ -48,12 +47,13 @@ public class GeneratorConfiguration {
         @NotBlank(message = "password为必填项")
         private String password;
 
-        public void setDialect(String dialect) {
-            if(StringUtils.isNotBlank(dialect)){
+        public DatabaseType getDialectType() {
+            if(dialectType == null){
                 this.dialectType = DatabaseType.valueOf(dialect.toUpperCase());
             }
-            this.dialect = dialect;
+            return dialectType;
         }
+
     }
 
 }
