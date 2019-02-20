@@ -2,6 +2,9 @@ package com.xmomen.generator.configuration;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -10,14 +13,14 @@ import javax.validation.ValidatorFactory;
 import javax.xml.bind.ValidationException;
 import java.io.*;
 import java.text.MessageFormat;
+import java.util.Optional;
 import java.util.Set;
 
 /**
  * Created by tanxinzheng on 17/6/7.
  */
+@Slf4j
 public class ConfigurationParser {
-
-    private static GeneratorConfiguration generatorConfiguration;
 
     /**
      * 解析json格式configuration
@@ -28,19 +31,41 @@ public class ConfigurationParser {
     public static GeneratorConfiguration parserJsonConfig(File file) throws FileNotFoundException, JSONException, ValidationException {
         InputStream inputStream = new FileInputStream(file);
         String stringBuffer = reader(inputStream);
-        generatorConfiguration = JSON.parseObject(stringBuffer, GeneratorConfiguration.class);
-        return generatorConfiguration;
+        return JSON.parseObject(stringBuffer, GeneratorConfiguration.class);
     }
 
-    public static void validate() throws ValidationException {
+    /**
+     * 解析yml格式配置文件
+     * @param file
+     * @return
+     * @throws FileNotFoundException
+     */
+    public static GeneratorConfiguration parserYmlConfig(File file) throws FileNotFoundException {
+        InputStream inputStream = new FileInputStream(file);
+        Yaml yaml = new Yaml();
+        return yaml.loadAs(inputStream, GeneratorConfiguration.class);
+    }
+
+    /**
+     * 校验配置文件
+     * @param configuration
+     * @throws ValidationException
+     */
+    public static void validate(GeneratorConfiguration configuration) throws ValidationException {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
-        Set<ConstraintViolation<GeneratorConfiguration>> constraintViolations = validator.validate(generatorConfiguration);
-        for(ConstraintViolation<GeneratorConfiguration> constraintViolation : constraintViolations) {
-            throw new ValidationException(MessageFormat.format("{0} ：{1}",
-                    constraintViolation.getPropertyPath(),
-                    constraintViolation.getMessage()));
+        Set<ConstraintViolation<GeneratorConfiguration>> constraintViolations = validator.validate(configuration);
+        if(CollectionUtils.isEmpty(constraintViolations)){
+            return;
         }
+        Optional<ConstraintViolation<GeneratorConfiguration>> first = constraintViolations.stream().findFirst();
+        if(!first.isPresent()){
+            return;
+        }
+        ConstraintViolation<GeneratorConfiguration> constraintViolation = first.get();
+        throw new ValidationException(MessageFormat.format("{0} ：{1}",
+                constraintViolation.getPropertyPath(),
+                constraintViolation.getMessage()));
     }
 
 
@@ -65,12 +90,12 @@ public class ConfigurationParser {
                 sb.append(line + "\n");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             try {
                 inputStream.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         }
         return sb.toString();

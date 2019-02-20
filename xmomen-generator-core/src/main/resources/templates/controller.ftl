@@ -1,20 +1,21 @@
-package ${targetPackage};
+package ${modulePackage}.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import com.github.pagehelper.Page;
 import ${modulePackage}.model.${domainObjectClassName}Query;
 import ${modulePackage}.model.${domainObjectClassName}Model;
 import ${modulePackage}.service.${domainObjectClassName}Service;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import org.apache.commons.lang3.StringUtils;
 import javax.validation.Valid;
 
-<#include "header.ftl">
+
 @Slf4j
+@Api(value = "${tableComment}接口", description = "${tableComment}接口")
 @RestController
 @RequestMapping(value = "${restMapping}")
 public class ${domainObjectClassName}Controller {
@@ -28,8 +29,7 @@ public class ${domainObjectClassName}Controller {
      * @return  Page<${domainObjectClassName}Model> ${tableComment}领域分页对象
      */
     @ApiOperation(value = "查询${tableComment}列表")
-    @PreAuthorize("hasAuthority('${domainObjectClassName?upper_case}:VIEW')")
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public Page<${domainObjectClassName}Model> get${domainObjectClassName}List(${domainObjectClassName}Query ${domainObjectName}Query){
         return ${domainObjectName}Service.get${domainObjectClassName}ModelPage(${domainObjectName}Query);
     }
@@ -40,8 +40,7 @@ public class ${domainObjectClassName}Controller {
      * @return  ${domainObjectClassName}Model   ${tableComment}领域对象
      */
     @ApiOperation(value = "查询${tableComment}")
-    @PreAuthorize("hasAuthority('${domainObjectClassName?upper_case}:VIEW')")
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/{id}")
     public ${domainObjectClassName}Model get${domainObjectClassName}ById(@PathVariable(value = "id") String id){
         return ${domainObjectName}Service.getOne${domainObjectClassName}Model(id);
     }
@@ -52,8 +51,7 @@ public class ${domainObjectClassName}Controller {
      * @return  ${domainObjectClassName}Model   ${tableComment}领域对象
      */
     @ApiOperation(value = "新增${tableComment}")
-    @PreAuthorize("hasAuthority('${domainObjectClassName?upper_case}:CREATE')")
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public ${domainObjectClassName}Model create${domainObjectClassName}(@RequestBody @Valid ${domainObjectClassName}Model ${domainObjectName}Model) {
         return ${domainObjectName}Service.create${domainObjectClassName}(${domainObjectName}Model);
     }
@@ -65,8 +63,7 @@ public class ${domainObjectClassName}Controller {
      * @return  ${domainObjectClassName}Model   ${tableComment}领域对象
      */
     @ApiOperation(value = "更新${tableComment}")
-    @PreAuthorize("hasAuthority('${domainObjectClassName?upper_case}:UPDATE')")
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @PutMapping(value = "/{id}")
     public ${domainObjectClassName}Model update${domainObjectClassName}(@PathVariable(value = "id") String id,
                            @RequestBody @Valid ${domainObjectClassName}Model ${domainObjectName}Model){
         if(StringUtils.isNotBlank(id)){
@@ -81,8 +78,7 @@ public class ${domainObjectClassName}Controller {
      * @param id    主键
      */
     @ApiOperation(value = "删除单个${tableComment}")
-    @PreAuthorize("hasAuthority('${domainObjectClassName?upper_case}:DELETE')")
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{id}")
     public void delete${domainObjectClassName}(@PathVariable(value = "id") String id){
         ${domainObjectName}Service.delete${domainObjectClassName}(id);
     }
@@ -92,8 +88,7 @@ public class ${domainObjectClassName}Controller {
      * @param ${domainObjectName}Query    查询参数对象
      */
     @ApiOperation(value = "批量删除${tableComment}")
-    @PreAuthorize("hasAuthority('${domainObjectClassName?upper_case}:DELETE')")
-    @RequestMapping(method = RequestMethod.DELETE)
+    @DeleteMapping
     public void delete${domainObjectClassName}s(${domainObjectClassName}Query ${domainObjectName}Query){
         ${domainObjectName}Service.delete${domainObjectClassName}(${domainObjectName}Query.getIds());
     }

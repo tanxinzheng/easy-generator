@@ -1,4 +1,4 @@
-package ${targetPackage};
+package ${modulePackage}.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import ${modulePackage}.model.${domainObjectClassName};
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-<#include "header.ftl">
+
 @Slf4j
 @Service
 public class ${domainObjectClassName}ServiceImpl implements ${domainObjectClassName}Service {

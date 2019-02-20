@@ -21,13 +21,19 @@ public class XmomenGeneratorTest {
     @After
     public void tearDown() throws Exception {
         PluginUtils.deleteDirectory(new File("./src/test/webapp/com"));
-        PluginUtils.deleteDirectory(new File("./src/test/java/com/xmomen/module"));
+        PluginUtils.deleteDirectory(new File("./src/test/java/com/xmomen/test"));
     }
 
-    public void generate(String configPath) throws Exception {
+    public GeneratorConfiguration generate(String configPath) throws Exception {
         String basedir = new File("").getAbsolutePath() + File.separator;
         File configFile = new File(basedir, configPath);
-        GeneratorConfiguration configuration = ConfigurationParser.parserJsonConfig(configFile);
+        String absolutePath = configFile.getAbsolutePath();
+        GeneratorConfiguration configuration = null;
+        if(absolutePath.endsWith(".json")){
+            configuration = ConfigurationParser.parserJsonConfig(configFile);
+        }else if(absolutePath.endsWith(".yml")){
+            configuration = ConfigurationParser.parserYmlConfig(configFile);
+        }
         ProjectMetadata projectMetadata = null;
         if(configuration.getMetadata() != null){
             projectMetadata = configuration.getMetadata();
@@ -36,6 +42,6 @@ public class XmomenGeneratorTest {
             configuration.setMetadata(projectMetadata);
         }
         projectMetadata.setRootPath(basedir);
-        XmomenGenerator.generate(configuration);
+        return configuration;
     }
 }

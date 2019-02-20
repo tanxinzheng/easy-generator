@@ -4,26 +4,26 @@ package com.xmomen.generator.model;
  * Created by tanxinzheng on 17/5/27.
  */
 public enum TemplateType {
-    Entity(".java", "entity.ftl", "model", "src/main/java"),
-    Query("Query.java", "queryModel.ftl", "model", "src/main/java"),
-    Model("Model.java", "model.ftl", "model", "src/main/java"),
-    Mapper("Mapper.java", "mapper.ftl", "mapper", "src/main/java"),
-    Service("Service.java", "service.ftl", "service", "src/main/java"),
-    ServiceImpl("ServiceImpl.java", "serviceImpl.ftl", "service.impl", "src/main/java"),
-    Controller("Controller.java", "controller.ftl", "controller", "src/main/java"),
-    MapperXml("Mapper.xml", "mapperXml.ftl", "mapper", "src/main/java")
+    Entity(".java", "entity.ftl", "model"),
+    Query("Query.java", "queryModel.ftl", "model"),
+    Model("Model.java", "model.ftl", "model"),
+    Mapper("Mapper.java", "mapper.ftl", "mapper"),
+    Service("Service.java", "service.ftl", "service"),
+    ServiceImpl("ServiceImpl.java", "serviceImpl.ftl", "service.impl"),
+    Controller("Controller.java", "controller.ftl", "controller"),
+    MapperXml("Mapper.xml", "mapperXml.ftl", "mapper")
     ;
 
     private String fileExt;
     private String templateFileName;
+    private String packageName;
     private String targetPackage;
     private String targetProject;
 
-    TemplateType(String fileExt, String templateFileName, String targetPackage, String targetProject) {
+    TemplateType(String fileExt, String templateFileName, String packageName) {
         this.fileExt = fileExt;
         this.templateFileName = templateFileName;
-        this.targetPackage = targetPackage;
-        this.targetProject = targetProject;
+        this.packageName = packageName;
     }
 
     public String getFileExt() {
@@ -50,12 +50,11 @@ public enum TemplateType {
         this.targetPackage = targetPackage;
     }
 
-    public String getTargetProject() {
-        return targetProject;
+    public String getPackageName() {
+        return packageName;
     }
 
-    public void setTargetProject(String targetProject) {
-        this.targetProject = targetProject;
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
-
 }

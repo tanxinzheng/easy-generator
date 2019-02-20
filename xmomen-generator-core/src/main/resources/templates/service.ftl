@@ -1,4 +1,4 @@
-package ${targetPackage};
+package ${modulePackage}.service;
 
 import com.github.pagehelper.Page;
 import ${modulePackage}.model.${domainObjectClassName}Query;
@@ -8,7 +8,7 @@ import org.apache.ibatis.exceptions.TooManyResultsException;
 
 import java.util.List;
 
-<#include "header.ftl">
+
 public interface ${domainObjectClassName}Service {
 
     /**

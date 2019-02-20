@@ -6,17 +6,18 @@
     "username":"root",
     "password":"123456"
   },
-  "metadata": {
-    "ignoreKeywordValidate": true
+  "metadata":{
+    "templateDirectory": "/Users/jeng/xmomen-repo/framework/xmomen-generator/xmomen-generator-core/src/main/resources/templates/",
+    "outputDirectory": "/Users/jeng/xmomen-repo/framework/xmomen-generator/xmomen-generator-core/src/test/java",
+    "ignoreKeywordValidate":true
   },
   "tables":[
     {
-      "domainObjectName":"permission",
-      "tableComment":"权限",
-      "tableName":"xmo_permission",
-      "modulePackage":"com.xmomen.module.authorization",
-      "restMapping":"/permission",
-      "targetProject":"src/test/java"
+      "domainObjectName":"Menu",
+      "tableComment":"菜单配置",
+      "tableName":"xmo_menu",
+      "modulePackage":"com.github.tanxinzheng.module.menu",
+      "restMapping":"/menu"
     }
   ]
 }

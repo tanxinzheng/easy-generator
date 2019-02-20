@@ -1,0 +1,11 @@
+dataSource:
+  dialect: MySQL
+  driver: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/dev?useUnicode=true&amp;characterEncoding=utf8
+  username: root
+  password: root
+tables:
+  - domainObjectName: User
+    tableComment: xmo_user
+    modulePackage: com.xmomen.module.user
+    restMapping: /user

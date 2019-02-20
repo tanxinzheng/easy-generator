@@ -1,4 +1,4 @@
-package ${targetPackage};
+package ${modulePackage}.model;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import ${mykey};
 </#if>
 import java.io.Serializable;
 
-<#include "header.ftl">
+
 public @Data class ${domainObjectClassName} implements Serializable {
 
 <#if columns?exists>

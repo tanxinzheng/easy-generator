@@ -1,4 +1,4 @@
-package ${targetPackage};
+package ${modulePackage}.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.xmomen.framework.mybatis.page.Page;
@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-<#include "header.ftl">
+
 public class ${domainObjectClassName}ControllerTest extends BaseTestController {
 
     @Autowired

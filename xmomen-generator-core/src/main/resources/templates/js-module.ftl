@@ -1,6 +1,6 @@
 'use strict';
 
-<#include "header.ftl">
+
 define([
     "angularAMD",
     "./${domainObjectUnderlineName}.api",

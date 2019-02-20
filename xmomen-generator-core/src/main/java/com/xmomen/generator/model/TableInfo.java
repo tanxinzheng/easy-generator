@@ -24,18 +24,6 @@ public @Data class TableInfo {
     private String domainObjectClassName;
     /** 领域对象下划线名称 */
     private String domainObjectUnderlineName;
-    // 模板文件路径
-    private String templateFilePath;
-    // 模板文件名
-    private String templateFileName;
-    // 目标文件名称
-    private String targetFileName;
-    // 模块名
-    private String moduleName;
-    // 项目目录
-    private String targetProject;
-    // 包名(包含模块名)
-    private String targetPackage;
     // 模块包名
     @NotBlank(message = "目标包路径为必填项（java包路径，如:com.xmomen.module.demo）")
     private String modulePackage;
@@ -48,8 +36,6 @@ public @Data class TableInfo {
     private Map<String, String> importClassList;
     // 关键字字段
     private List<ColumnInfo> keywordColumns;
-    // 详情界面排除字段
-    private List<ColumnInfo> saveExcludeColumns;
     private boolean isSkip;
     private ColumnInfo primaryKeyColumn;
     private List<TemplateConfig> templates;
@@ -57,6 +43,6 @@ public @Data class TableInfo {
     /**
      * 是否添加@Excel注解，默认不加
      */
-    private boolean addExcelAnnotation;
+    private boolean supportExcel;
 
 }

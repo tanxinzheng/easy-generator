@@ -7,8 +7,6 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by tanxinzheng on 17/6/10.
  */

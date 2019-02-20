@@ -1,4 +1,4 @@
-package ${targetPackage};
+package ${modulePackage}.mapper;
 
 import ${modulePackage}.model.${domainObjectClassName};
 import ${modulePackage}.model.${domainObjectClassName}Model;
@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-<#include "header.ftl">
+
 @Mapper
 public interface ${domainObjectClassName}Mapper {
 

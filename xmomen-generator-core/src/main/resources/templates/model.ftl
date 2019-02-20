@@ -1,10 +1,10 @@
-package ${targetPackage};
+package ${modulePackage}.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.validator.constraints.*;
 import javax.validation.constraints.*;
-<#if addExcelAnnotation >
+<#if supportExcel >
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecgframework.poi.excel.annotation.ExcelTarget;
 </#if>
@@ -17,8 +17,8 @@ import ${mykey};
 </#if>
 import java.io.Serializable;
 
-<#include "header.ftl">
-<#if addExcelAnnotation >
+
+<#if supportExcel >
 @ExcelTarget(value = "${domainObjectClassName}Model")
 </#if>
 public @Data class ${domainObjectClassName}Model implements Serializable {
@@ -26,7 +26,7 @@ public @Data class ${domainObjectClassName}Model implements Serializable {
 <#if columns?exists>
     <#list columns as field>
     /** ${field['columnComment']} */
-    <#if !field.primaryKey && !field.hide && addExcelAnnotation>
+    <#if !field.primaryKey && !field.hide && supportExcel>
     @Excel(name = "${field['columnComment']}")
     </#if>
     <#if !field.nullable && !field.primaryKey>
@@ -40,7 +40,7 @@ public @Data class ${domainObjectClassName}Model implements Serializable {
     @Length(max = ${field.length}, message = "${field['columnComment']}字符长度限制[0,${field.length}]")
     </#if>
     <#if field['javaType'] = 'Integer'>
-    @Range(max = 999999999, min = -999999999, message = "${field['columnComment']}数值范围[999999999,-999999999]")
+    @Range(max = 10000000, min = 0, message = "${field['columnComment']}数值范围[10000000,0]")
     </#if>
     <#if field['javaType'] = 'Long'>
     @Range(max = ${field['max']}l, min = ${field['min']}l, message = "${field['columnComment']}数值范围[${field['min']}l,${field['max']}l]")

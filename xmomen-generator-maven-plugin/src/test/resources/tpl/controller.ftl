@@ -1,4 +1,4 @@
-package ${targetPackage};
+package ${modulePackage}.controller;
 
 import com.xmomen.framework.mybatis.page.Page;
 import com.xmomen.framework.logger.ActionLog;

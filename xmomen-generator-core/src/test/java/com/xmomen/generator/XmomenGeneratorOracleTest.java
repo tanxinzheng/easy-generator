@@ -1,5 +1,6 @@
 package com.xmomen.generator;
 
+import com.xmomen.generator.configuration.GeneratorConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +21,8 @@ public class XmomenGeneratorOracleTest extends XmomenGeneratorTest {
 
     @Test
     public void generate() throws Exception {
-        super.generate("src/test/resources/generator-config-oracle.json");
+        GeneratorConfiguration configuration = super.generate("src/test/resources/generator-config-oracle.json");
+        OracleGenerator oracleGenerator = new OracleGenerator();
+        oracleGenerator.generate(configuration);
     }
 }

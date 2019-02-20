@@ -1,12 +1,13 @@
 package com.xmomen.generator.utils;
 
-import freemarker.template.*;
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
+import freemarker.template.Template;
+import freemarker.template.TemplateExceptionHandler;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Created by tanxinzheng on 16/8/27.
@@ -16,7 +17,7 @@ public class FreemarkerUtils {
     private static String defaultTemplates = "/templates";
     private static Configuration cfg = null;
 
-    private static Configuration getConfiguration() {
+    public static Configuration getConfiguration() {
         if (null == cfg) {
             cfg = new Configuration();
             cfg.setClassForTemplateLoading(FreemarkerUtils.class, defaultTemplates);

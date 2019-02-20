@@ -1,4 +1,4 @@
-package ${targetPackage};
+package ${modulePackage}.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.xmomen.framework.mybatis.page.Page;
