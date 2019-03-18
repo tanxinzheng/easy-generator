@@ -1,27 +1,43 @@
 package com.xmomen.generator.ui.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.hibernate.validator.constraints.*;
+import javax.validation.constraints.*;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 
-/**
- * Created by tanxinzheng on 2019/1/6.
- */
-@Data
-public class ProjectModel implements Serializable {
+@Document(collection = "PROJECT")
+public @Data class ProjectModel implements Serializable {
 
-    private String code;
-    private String name;
+    /** 主键 */
+    @Length(max = 0, message = "主键字符长度限制[0,0]")
+    private String id;
+    /** 项目名称 */
+    @NotBlank(message = "项目名称为必填项")
+    @Length(max = 0, message = "项目名称字符长度限制[0,0]")
+    private String projectName;
+    /** 项目描述 */
+    @NotBlank(message = "项目描述为必填项")
+    @Length(max = 0, message = "项目描述字符长度限制[0,0]")
     private String description;
-    private Datasource datasource;
+    /** 项目代码 */
+    @NotBlank(message = "项目代码为必填项")
+    @Length(max = 0, message = "项目代码字符长度限制[0,0]")
+    private String projectCode;
 
-    @Data
-    public class Datasource {
-
-        private String dialect;
-        private String driverClass;
-        private String url;
-        private String username;
-        private String password;
+    /**
+    * Get Project Entity Object
+    * @return
+    */
+    @JsonIgnore
+    public Project getEntity(){
+        Project project = new Project();
+        BeanUtils.copyProperties(this, project);
+        return project;
     }
+
+
 }

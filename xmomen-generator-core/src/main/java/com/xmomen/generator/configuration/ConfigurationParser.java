@@ -11,6 +11,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.xml.bind.ValidationException;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.Optional;
@@ -21,6 +22,24 @@ import java.util.Set;
  */
 @Slf4j
 public class ConfigurationParser {
+
+    /**
+     * 根据文件后缀名自动解析config文件
+     * @param file
+     * @return
+     * @throws FileNotFoundException
+     * @throws ParserConfigurationException
+     * @throws ValidationException
+     */
+    public static GeneratorConfiguration parserConfig(File file) throws FileNotFoundException, ParserConfigurationException, ValidationException {
+        if (file.getAbsolutePath().endsWith(".yml") || file.getAbsolutePath().endsWith(".YML")) {
+            return parserYmlConfig(file);
+        }else if(file.getAbsolutePath().endsWith(".json") || file.getAbsolutePath().endsWith(".json")){
+            return parserJsonConfig(file);
+        }else {
+            throw new ParserConfigurationException("仅支持json，yml格式配置文件");
+        }
+    }
 
     /**
      * 解析json格式configuration

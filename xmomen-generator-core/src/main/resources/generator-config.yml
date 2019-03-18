@@ -6,6 +6,7 @@ dataSource:
   password: root
 tables:
   - domainObjectName: User
-    tableComment: xmo_user
+    tableName: xmo_user
+    tableComment: 用户
     modulePackage: com.xmomen.module.user
     restMapping: /user

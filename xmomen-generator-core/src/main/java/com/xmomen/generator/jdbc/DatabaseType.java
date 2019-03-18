@@ -6,5 +6,5 @@ package com.xmomen.generator.jdbc;
 public enum  DatabaseType {
     MYSQL,
     ORACLE,
-    MONGOBD
+    MONGODB
 }

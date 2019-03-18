@@ -26,17 +26,17 @@ public class GeneratorBaseConfigMojo extends AbstractMojo {
      * @throws MojoFailureException
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
-        generateConfig("/generator-config.json");
+        generateConfig("/generator-config.yml");
     }
 
     protected void generateConfig(String sourceConfigPath){
         getLog().info("------------------------------------------------------------------------");
-        getLog().info(MessageFormat.format("Generate Simple Json Configuration File : {0}", "generator-config.json"));
+        getLog().info(MessageFormat.format("Generate Simple Configuration File : {0}", "generator-config.yml"));
         getLog().info("------------------------------------------------------------------------");
         InputStream is = XmomenGenerator.class.getResourceAsStream(sourceConfigPath);
         String basedir = new File("").getAbsolutePath() + File.separator;
         try {
-            FileUtils.copyInputStreamToFile(is, new File(basedir, "/src/test/resources/help/generator-config.json"));
+            FileUtils.copyInputStreamToFile(is, new File(basedir, "/src/test/resources/help/generator-config.yml"));
         } catch (IOException e) {
             throw new IllegalArgumentException(e.getMessage(), e);
         }

@@ -5,7 +5,10 @@
        <build>
               <plugins>
                      <plugin>
+                            <groupId>com.xmomen.generator</groupId>
                             <artifactId>xmomen-generator-maven-plugin</artifactId>
+                            <version>1.0.0-SNAPSHOT</version>
+                            <extensions>true</extensions>
                             <configuration></configuration>
                      </plugin>
               </plugins>

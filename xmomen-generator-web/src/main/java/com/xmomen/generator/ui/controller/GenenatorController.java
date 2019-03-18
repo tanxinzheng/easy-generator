@@ -14,7 +14,7 @@ public class GenenatorController {
 
     /**
      * 菜单配置列表
-     * @param   menuQuery    菜单配置查询参数对象
+     * @param   projectModel    菜单配置查询参数对象
      * @return  Page<MenuModel> 菜单配置领域分页对象
      */
     @GetMapping

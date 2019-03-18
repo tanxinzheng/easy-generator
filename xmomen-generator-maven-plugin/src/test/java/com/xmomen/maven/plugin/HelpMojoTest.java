@@ -14,6 +14,9 @@ public class HelpMojoTest extends AbstractMojoTestCase {
 
     private File testPom;
 
+    /** @component role="org.apache.maven.plugin.Mojo" role-hint="com.xmomen.generator:xmomen-generator-maven-plugin:1.0.0-SNAPSHOT" */
+    HelpMojo mojo;
+
     @Before
     public void setUp() throws Exception {
         super.setUp();
@@ -22,7 +25,7 @@ public class HelpMojoTest extends AbstractMojoTestCase {
 
     @Test
     public void testExecute() throws Exception {
-        HelpMojo mojo = (HelpMojo) lookupMojo ("help", testPom );
+        mojo = (HelpMojo) lookupMojo ("help", testPom );
         mojo.execute();
     }
 

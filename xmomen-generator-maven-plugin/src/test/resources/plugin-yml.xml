@@ -8,7 +8,7 @@
                             <groupId>com.xmomen.generator</groupId>
                             <artifactId>xmomen-generator-maven-plugin</artifactId>
                             <configuration>
-                                    <configurationFile>src/test/resources/tools/generator-config.json</configurationFile>
+                                    <configurationFile>src/test/resources/tools/generator-config.yml</configurationFile>
                             </configuration>
                      </plugin>
               </plugins>

@@ -1,9 +1,13 @@
 package ${modulePackage}.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.*;
 import javax.validation.constraints.*;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 <#if supportExcel >
 import org.jeecgframework.poi.excel.annotation.Excel;
 import org.jeecgframework.poi.excel.annotation.ExcelTarget;
@@ -21,7 +25,11 @@ import java.io.Serializable;
 <#if supportExcel >
 @ExcelTarget(value = "${domainObjectClassName}Model")
 </#if>
-public @Data class ${domainObjectClassName}Model implements Serializable {
+@ApiModel(value = "${tableComment}")
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class ${domainObjectClassName}Model implements Serializable {
 
 <#if columns?exists>
     <#list columns as field>
@@ -49,6 +57,7 @@ public @Data class ${domainObjectClassName}Model implements Serializable {
     @DecimalMax(value = "${field['max']}", message = "${field['columnComment']}数值范围[${field['min']},${field['max']}]")
     @DecimalMin(value = "${field['min']}", message = "${field['columnComment']}数值范围[${field['min']},${field['max']}]")
     </#if>
+    @ApiModelProperty(value = "${field['columnComment']}")
     private ${field['javaType']} ${field['columnName']};
     </#list>
 </#if>

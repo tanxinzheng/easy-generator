@@ -85,22 +85,13 @@ public class GeneratorMojo extends AbstractMojo {
         try {
             String basedir = new File("").getAbsolutePath() + File.separator;
             File configFile = new File(basedir, configurationFile);
-            GeneratorConfiguration configuration = ConfigurationParser.parserJsonConfig(configFile);
-            ProjectMetadata projectMetadata = null;
-            if(configuration.getMetadata() != null){
-                projectMetadata = configuration.getMetadata();
-            }else{
-                projectMetadata = new ProjectMetadata();
-                configuration.setMetadata(projectMetadata);
-            }
-            setDataSource(configuration);
-            projectMetadata.setRootPath(basedir);
             getLog().info("------------------------------------------------------------------------");
-            getLog().info(MessageFormat.format("Reading Generator Json Configuration File ：{0}", configurationFile));
+            getLog().info(MessageFormat.format("Reading Generator Configuration File ：{0}", configurationFile));
             getLog().info("------------------------------------------------------------------------");
-            System.out.println(JSONUtils.formatJson(JSONObject.toJSONString(configuration)));
-            int generateCount = XmomenGenerator.generate(configuration);
-            getLog().info("Generate File Count：" + generateCount);
+            GeneratorConfiguration configuration = XmomenGenerator.generate(configFile);
+            getLog().info("------------------------------------------------------------------------");
+            getLog().info(MessageFormat.format("Generate result files output to directory ：{0}", configuration.getMetadata().getOutputDirectory()));
+            getLog().info("------------------------------------------------------------------------");
         } catch (Exception e) {
             getLog().error(e.getMessage(), e);
             throw new MojoExecutionException(e.getMessage(), e);

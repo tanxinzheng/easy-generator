@@ -3,6 +3,7 @@ package com.xmomen.generator;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.xmomen.generator.configuration.GeneratorConfiguration;
+import com.xmomen.generator.model.ProjectMetadata;
 import com.xmomen.generator.model.TemplateConfig;
 import com.xmomen.generator.model.TemplateType;
 import com.xmomen.generator.utils.FreemarkerUtils;
@@ -11,12 +12,11 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.mybatis.generator.internal.util.JavaBeansUtil;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
+import java.net.URL;
 import java.util.Map;
 
 /**
@@ -49,6 +49,17 @@ public abstract class AbstractGenerator {
      * @param configuration
      */
     public void step1(GeneratorConfiguration configuration){
+        if(configuration.getMetadata() == null){
+            ProjectMetadata metadata = new ProjectMetadata();
+            configuration.setMetadata(metadata);
+        }
+        if(configuration.getMetadata().getRootPath() == null){
+            String basedir = new File("").getAbsolutePath();
+            configuration.getMetadata().setRootPath(basedir);
+        }
+        if(configuration.getMetadata().getOutputDirectory() == null){
+            configuration.getMetadata().setOutputDirectory(configuration.getMetadata().getRootPath() + "/src/main/java");
+        }
         configuration.getTables().stream().forEach(tableInfo -> {
             String domainObjectName = JavaBeansUtil.getCamelCaseString(tableInfo.getTableName(), false);
             if(tableInfo.getDomainObjectName() != null){
@@ -92,9 +103,15 @@ public abstract class AbstractGenerator {
             templateConfig.setPackageName(templateType.getPackageName());
             templateConfig.setTemplateFileName(templateType.getTemplateFileName());
             try {
-                File file = new File(configuration.getMetadata().getTemplateDirectory() + templateConfig.getTemplateFileName());
-                String content = FileUtils.readFileToString(file, "UTF-8");
-                templateConfig.setTemplateContent(content);
+                if(configuration.getMetadata().getTemplateDirectory() == null){
+                    InputStream inputStream = XmomenGenerator.class.getResourceAsStream("/templates/" + templateConfig.getTemplateFileName());
+                    String content = IOUtils.toString(inputStream);
+                    templateConfig.setTemplateContent(content);
+                }else{
+                    File file = new File(configuration.getMetadata().getTemplateDirectory() + templateConfig.getTemplateFileName());
+                    String content = FileUtils.readFileToString(file, "UTF-8");
+                    templateConfig.setTemplateContent(content);
+                }
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
