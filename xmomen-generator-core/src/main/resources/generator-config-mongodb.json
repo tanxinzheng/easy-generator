@@ -15,7 +15,7 @@
       "domainObjectName":"Project",
       "tableComment":"项目",
       "tableName":"project",
-      "modulePackage":"com.xmomen.test.module.project",
+      "modulePackage":"com.xmomen.module.test.project",
       "restMapping":"/project",
       "columns": [
         {

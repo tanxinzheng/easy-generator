@@ -4,14 +4,15 @@ package com.xmomen.generator.model;
  * Created by tanxinzheng on 17/5/27.
  */
 public enum TemplateType {
-    Entity(".java", "entity.ftl", "model"),
-    Query("Query.java", "queryModel.ftl", "model"),
-    Model("Model.java", "model.ftl", "model"),
-    Mapper("Mapper.java", "mapper.ftl", "mapper"),
+    Entity(".java", "entity.ftl", "domain.entity"),
+    DtoResponse("Response.java", "dtoResponse.ftl", "domain.dto"),
+    DtoRequest("Request.java", "dtoRequest.ftl", "domain.dto"),
+    Mapper("Mapper.java", "mapper.ftl", "domain.mapper"),
     Service("Service.java", "service.ftl", "service"),
     ServiceImpl("ServiceImpl.java", "serviceImpl.ftl", "service.impl"),
     Controller("Controller.java", "controller.ftl", "controller"),
-    MapperXml("Mapper.xml", "mapperXml.ftl", "mapper")
+    ControllerTest("ControllerTest.java", "controllerTest.ftl", "controller"),
+    MapperXml("Mapper.xml", "mapperXml.ftl", "domain.mapper")
     ;
 
     private String fileExt;
@@ -24,6 +25,13 @@ public enum TemplateType {
         this.fileExt = fileExt;
         this.templateFileName = templateFileName;
         this.packageName = packageName;
+    }
+
+    TemplateType(String fileExt, String templateFileName, String packageName, String targetProject) {
+        this.fileExt = fileExt;
+        this.templateFileName = templateFileName;
+        this.packageName = packageName;
+        this.targetProject = targetProject;
     }
 
     public String getFileExt() {

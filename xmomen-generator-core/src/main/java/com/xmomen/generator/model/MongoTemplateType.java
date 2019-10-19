@@ -5,7 +5,7 @@ package com.xmomen.generator.model;
  */
 public enum MongoTemplateType {
     Query("Query.java", "queryModel.ftl", "model"),
-    Model("Model.java", "model.ftl", "model"),
+    Model("Model.java", "dtoResponse.ftl", "model"),
     Dao("Dao.java", "dao.ftl", "dao"),
     Service("Service.java", "service.ftl", "service"),
     ServiceImpl("ServiceImpl.java", "serviceImpl.ftl", "service.impl"),

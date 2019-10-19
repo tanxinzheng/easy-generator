@@ -28,6 +28,8 @@ public @Data class TableInfo {
     // 模块包名
     @NotBlank(message = "目标包路径为必填项（java包路径，如:com.xmomen.module.demo）", groups = {CommonValidateGroup.class})
     private String modulePackage;
+    // 文件包路径
+    private String targetPackage;
     // restful 资源映射名称
     @NotBlank(message = "Restful映射接口为必填项（对应Controller类中的RequestMapping，如:/user）", groups = {CommonValidateGroup.class})
     private String restMapping;

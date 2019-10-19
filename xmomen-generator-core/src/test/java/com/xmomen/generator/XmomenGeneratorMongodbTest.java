@@ -21,7 +21,7 @@ public class XmomenGeneratorMongodbTest extends XmomenGeneratorTest {
 
     @Test
     public void generate() throws Exception {
-        GeneratorConfiguration configuration = super.generate("src/test/resources/generator-config-mongodb.json");
+        GeneratorConfiguration configuration = super.generate("src/main/resources/generator-config-mongodb.json");
         NoSqlGenerator generator = new NoSqlGenerator();
         generator.generate(configuration);
     }

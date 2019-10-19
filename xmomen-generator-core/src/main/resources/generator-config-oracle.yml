@@ -1,0 +1,18 @@
+dataSource:
+  dialect: MySQL
+  driver: oracle.jdbc.driver.OracleDriver
+  url: jdbc:oracle:thin:@127.0.0.1:1526:test_db
+  username: root
+  password: root
+
+metadata:
+  templateDirectory: "/Users/jeng/tanxinzheng-repo/xmomen-repo/framework/xmomen-generator/xmomen-generator-core/src/main/resources/templates/mybatisplus/"
+  outputDirectory: "/Users/jeng/tanxinzheng-repo/xmomen-repo/framework/xmomen-generator/xmomen-generator-core/src/test/java"
+  ignoreKeywordValidate: true
+
+tables:
+  - domainObjectName: User
+    tableComment: "用户"
+    tableName: xmo_user
+    modulePackage: com.xmomen.module.test
+    restMapping: /user

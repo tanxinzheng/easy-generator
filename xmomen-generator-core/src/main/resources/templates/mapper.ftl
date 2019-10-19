@@ -1,32 +1,20 @@
-package ${modulePackage}.mapper;
+package ${targetPackage};
 
-import ${modulePackage}.model.${domainObjectClassName};
-import ${modulePackage}.model.${domainObjectClassName}Model;
-import ${modulePackage}.model.${domainObjectClassName}Query;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import ${modulePackage}.domain.dto.${domainObjectClassName}Request;
+import ${modulePackage}.domain.dto.${domainObjectClassName}Response;
+import ${modulePackage}.domain.entity.${domainObjectClassName};
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-
 @Mapper
-public interface ${domainObjectClassName}Mapper {
+public interface ${domainObjectClassName}Mapper extends BaseMapper<${domainObjectClassName}> {
 
-    List<${domainObjectClassName}> select(${domainObjectClassName}Query ${domainObjectName}Query);
+    int insertBatch(@Param("list") List<${domainObjectClassName}> list);
 
-    List<${domainObjectClassName}Model> selectModel(${domainObjectClassName}Query ${domainObjectName}Query);
+    Page<UserResponse> selectPage(Page<UserResponse> page, UserRequest userRequest);
 
-    ${domainObjectClassName} selectByPrimaryKey(String primaryKey);
-
-    ${domainObjectClassName}Model selectModelByPrimaryKey(String primaryKey);
-
-    int deleteByPrimaryKey(String primaryKey);
-
-    int deletesByPrimaryKey(@Param("ids") List<String> primaryKeys);
-
-    int insertSelective(${domainObjectClassName} record);
-
-    int updateSelective(${domainObjectClassName} record);
-
-    int updateSelectiveByQuery(@Param("record") ${domainObjectClassName} record, @Param("query") ${domainObjectClassName}Query example);
 }

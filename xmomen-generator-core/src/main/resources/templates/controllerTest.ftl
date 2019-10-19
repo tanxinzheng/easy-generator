@@ -1,4 +1,4 @@
-package ${modulePackage}.controller;
+package ${targetPackage};
 
 import com.alibaba.fastjson.JSONObject;
 import com.xmomen.framework.mybatis.page.Page;

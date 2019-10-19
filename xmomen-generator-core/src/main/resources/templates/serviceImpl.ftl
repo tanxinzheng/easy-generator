@@ -1,211 +1,113 @@
-package ${modulePackage}.service.impl;
+package ${targetPackage};
 
-import com.github.pagehelper.PageHelper;
-import ${modulePackage}.model.${domainObjectClassName};
-import ${modulePackage}.mapper.${domainObjectClassName}Mapper;
-import ${modulePackage}.model.${domainObjectClassName}Model;
-import ${modulePackage}.model.${domainObjectClassName}Query;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import ${modulePackage}.domain.dto.${domainObjectClassName}Request;
+import ${modulePackage}.domain.dto.${domainObjectClassName}Response;
+import ${modulePackage}.domain.entity.${domainObjectClassName};
+import ${modulePackage}.domain.mapper.${domainObjectClassName}Mapper;
 import ${modulePackage}.service.${domainObjectClassName}Service;
-
-import com.github.pagehelper.Page;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.ibatis.exceptions.TooManyResultsException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import javax.annotation.Resource;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class ${domainObjectClassName}ServiceImpl implements ${domainObjectClassName}Service {
 
-    @Autowired
+    @Resource
     ${domainObjectClassName}Mapper ${domainObjectName}Mapper;
 
     /**
      * 新增${tableComment}
      *
-     * @param ${domainObjectName}Model 新增${tableComment}对象参数
-     * @return ${domainObjectClassName}Model    ${tableComment}领域对象
+     * @param ${domainObjectName}Create
+     * @return ${domainObjectClassName}Response
      */
-    @Override
     @Transactional
-    public ${domainObjectClassName}Model create${domainObjectClassName}(${domainObjectClassName}Model ${domainObjectName}Model) {
-        ${domainObjectClassName} ${domainObjectName} = create${domainObjectClassName}(${domainObjectName}Model.getEntity());
-        if(${domainObjectName} != null){
-            return getOne${domainObjectClassName}Model(${domainObjectName}.getId());
-        }
-        return null;
+    @Override
+    public ${domainObjectClassName}Response create${domainObjectClassName}(${domainObjectClassName} ${domainObjectName}Create) {
+        ${domainObjectName}Mapper.insert(${domainObjectName}Create);
+        ${domainObjectClassName} ${domainObjectName} = ${domainObjectName}Mapper.selectById(${domainObjectName}Create.getId());
+        return ${domainObjectClassName}Response.toResponse(${domainObjectName});
     }
 
     /**
-     * 新增${tableComment}实体对象
+     * 批量新增${tableComment}
      *
-     * @param ${domainObjectName} 新增${tableComment}实体对象参数
-     * @return ${domainObjectClassName} ${tableComment}实体对象
+     * @param ${domainObjectName}
+     * @return List<${domainObjectClassName}Response>
      */
-    @Override
     @Transactional
-    public ${domainObjectClassName} create${domainObjectClassName}(${domainObjectClassName} ${domainObjectName}) {
-        ${domainObjectName}Mapper.insertSelective(${domainObjectName});
-        return ${domainObjectName};
-    }
-
-    /**
-    * 批量新增${tableComment}
-    *
-    * @param ${domainObjectName}Models 新增${tableComment}对象集合参数
-    * @return List<${domainObjectClassName}Model>    ${tableComment}领域对象集合
-    */
     @Override
-    @Transactional
-    public List<${domainObjectClassName}Model> create${domainObjectClassName}s(List<${domainObjectClassName}Model> ${domainObjectName}Models) {
-        List<${domainObjectClassName}Model> ${domainObjectName}ModelList = null;
-        for (${domainObjectClassName}Model ${domainObjectName}Model : ${domainObjectName}Models) {
-            ${domainObjectName}Model = create${domainObjectClassName}(${domainObjectName}Model);
-            if(${domainObjectName}Model != null){
-                if(${domainObjectName}ModelList == null){
-                    ${domainObjectName}ModelList = new ArrayList<>();
-                }
-                ${domainObjectName}ModelList.add(${domainObjectName}Model);
-            }
-        }
-        return ${domainObjectName}ModelList;
-    }
-
-    /**
-    * 更新${tableComment}
-    *
-    * @param ${domainObjectName}Model 更新${tableComment}对象参数
-    * @param ${domainObjectName}Query 过滤${tableComment}对象参数
-    */
-    @Override
-    @Transactional
-    public void update${domainObjectClassName}(${domainObjectClassName}Model ${domainObjectName}Model, ${domainObjectClassName}Query ${domainObjectName}Query) {
-        ${domainObjectName}Mapper.updateSelectiveByQuery(${domainObjectName}Model.getEntity(), ${domainObjectName}Query);
+    public List<${domainObjectClassName}> create${domainObjectClassName}s(List<${domainObjectClassName}> ${domainObjectName}) {
+        ${domainObjectName}Mapper.insertBatch(${domainObjectName});
+        List<String> ids = ${domainObjectName}.stream().map(${domainObjectClassName}::getId).collect(Collectors.toList());
+        return ${domainObjectName}Mapper.selectBatchIds(ids);
     }
 
     /**
      * 更新${tableComment}
      *
-     * @param ${domainObjectName}Model 更新${tableComment}对象参数
+     * @param ${domainObjectName}Update
+     * @return ${domainObjectClassName}Response
      */
-    @Override
     @Transactional
-    public void update${domainObjectClassName}(${domainObjectClassName}Model ${domainObjectName}Model) {
-        update${domainObjectClassName}(${domainObjectName}Model.getEntity());
+    @Override
+    public ${domainObjectClassName}Response update${domainObjectClassName}(${domainObjectClassName} ${domainObjectName}Update) {
+        ${domainObjectName}Mapper.updateById(${domainObjectName}Update);
+        ${domainObjectClassName} ${domainObjectName} = ${domainObjectName}Mapper.selectById(${domainObjectName}Update.getId());
+        return ${domainObjectClassName}Response.toResponse(${domainObjectName});
     }
 
     /**
-     * 更新${tableComment}实体对象
+     * 根据查询参数查询单个对象
      *
-     * @param ${domainObjectName} 新增${tableComment}实体对象参数
-     * @return ${domainObjectClassName} ${tableComment}实体对象
+     * @param id
+     * @return ${domainObjectClassName}Response
      */
     @Override
-    @Transactional
-    public void update${domainObjectClassName}(${domainObjectClassName} ${domainObjectName}) {
-        ${domainObjectName}Mapper.updateSelective(${domainObjectName});
-    }
-
-    /**
-     * 删除${tableComment}
-     *
-     * @param ids 主键数组
-     */
-    @Override
-    @Transactional
-    public void delete${domainObjectClassName}(String[] ids) {
-        ${domainObjectName}Mapper.deletesByPrimaryKey(Arrays.asList(ids));
-    }
-
-    /**
-    * 删除${tableComment}
-    *
-    * @param id 主键
-    */
-    @Override
-    @Transactional
-    public void delete${domainObjectClassName}(String id) {
-        ${domainObjectName}Mapper.deleteByPrimaryKey(id);
+    public ${domainObjectClassName}Response findOne${domainObjectClassName}Response(String id) {
+        ${domainObjectClassName} ${domainObjectName} = ${domainObjectName}Mapper.selectById(id);
+        return ${domainObjectClassName}Response.toResponse(${domainObjectName});
     }
 
     /**
      * 查询${tableComment}领域分页对象（带参数条件）
      *
-     * @param ${domainObjectName}Query 查询参数
-     * @return Page<${domainObjectClassName}Model>   ${tableComment}参数对象
+     * @param ${domainObjectName}Request
+     * @return Page<${domainObjectClassName}Response>
      */
     @Override
-    public Page<${domainObjectClassName}Model> get${domainObjectClassName}ModelPage(${domainObjectClassName}Query ${domainObjectName}Query) {
-        PageHelper.startPage(${domainObjectName}Query);
-        ${domainObjectName}Mapper.selectModel(${domainObjectName}Query);
-        return PageHelper.getLocalPage();
+    public Page<${domainObjectClassName}Response> findPage${domainObjectClassName}Response(${domainObjectClassName}Request ${domainObjectName}Request) {
+        Page<${domainObjectClassName}Response> responsePage = new Page<>(${domainObjectName}Request.getPageNum(), ${domainObjectName}Request.getPageSize());
+        return ${domainObjectName}Mapper.selectPage(responsePage, ${domainObjectName}Request);
     }
 
     /**
-     * 查询${tableComment}领域集合对象（带参数条件）
+     * 批量删除${tableComment}
      *
-     * @param ${domainObjectName}Query 查询参数对象
-     * @return List<${domainObjectClassName}Model> ${tableComment}领域集合对象
+     * @param ids
+     * @return int
      */
+    @Transactional
     @Override
-    public List<${domainObjectClassName}Model> get${domainObjectClassName}ModelList(${domainObjectClassName}Query ${domainObjectName}Query) {
-        return ${domainObjectName}Mapper.selectModel(${domainObjectName}Query);
+    public int delete${domainObjectClassName}(List<String> ids) {
+        return ${domainObjectName}Mapper.deleteBatchIds(ids);
     }
 
     /**
-     * 查询${tableComment}实体对象
+     * 删除${tableComment}
      *
-     * @param id 主键
-     * @return ${domainObjectClassName} ${tableComment}实体对象
+     * @param id
+     * @return int
      */
+    @Transactional
     @Override
-    public ${domainObjectClassName} getOne${domainObjectClassName}(String id) {
-        return ${domainObjectName}Mapper.selectByPrimaryKey(id);
-    }
-
-    /**
-     * 根据主键查询单个对象
-     *
-     * @param id 主键
-     * @return ${domainObjectClassName}Model ${tableComment}领域对象
-     */
-    @Override
-    public ${domainObjectClassName}Model getOne${domainObjectClassName}Model(String id) {
-        if(StringUtils.isBlank(id)){
-            return null;
-        }
-        ${domainObjectClassName}Query query = new ${domainObjectClassName}Query();
-        query.setId(id);
-        List<${domainObjectClassName}Model> list = ${domainObjectName}Mapper.selectModel(query);
-        if(CollectionUtils.isEmpty(list)){
-            return null;
-        }
-        return list.get(0);
-    }
-
-    /**
-     * 根据查询参数查询单个对象（此方法只用于提供精确查询单个对象，若结果数超过1，则会报错）
-     *
-     * @param ${domainObjectName}Query ${tableComment}查询参数对象
-     * @return ${domainObjectClassName}Model ${tableComment}领域对象
-     */
-    @Override
-    public ${domainObjectClassName}Model getOne${domainObjectClassName}Model(${domainObjectClassName}Query ${domainObjectName}Query) {
-        List<${domainObjectClassName}Model> ${domainObjectName}ModelList = ${domainObjectName}Mapper.selectModel(${domainObjectName}Query);
-        if(CollectionUtils.isEmpty(${domainObjectName}ModelList)){
-            return null;
-        }
-        if(${domainObjectName}ModelList.size() > 1){
-            throw new TooManyResultsException();
-        }
-        return ${domainObjectName}ModelList.get(0);
+    public int delete${domainObjectClassName}(String id) {
+        return ${domainObjectName}Mapper.deleteById(id);
     }
 }

@@ -1,0 +1,18 @@
+dataSource:
+  dialect: MySQL
+  driver: com.mysql.jdbc.Driver
+  url: "jdbc:mysql://localhost:3306/xmo_demo?useUnicode=true&amp;characterEncoding=utf8"
+  username: root
+  password: 123456
+
+metadata:
+  templateDirectory: "/Users/jeng/tanxinzheng-repo/xmomen-repo/framework/xmomen-generator/xmomen-generator-core/src/main/resources/templates/mybatisplus/"
+  outputDirectory: "/Users/jeng/tanxinzheng-repo/xmomen-repo/framework/xmomen-generator/xmomen-generator-core/src/test/java"
+  ignoreKeywordValidate: true
+
+tables:
+  - domainObjectName: User
+    tableComment: "用户"
+    tableName: xmo_user
+    modulePackage: com.xmomen.module.test
+    restMapping: /user

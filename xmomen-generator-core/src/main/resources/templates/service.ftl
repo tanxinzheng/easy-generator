@@ -1,10 +1,9 @@
-package ${modulePackage}.service;
+package ${targetPackage};
 
-import com.github.pagehelper.Page;
-import ${modulePackage}.model.${domainObjectClassName}Query;
-import ${modulePackage}.model.${domainObjectClassName}Model;
-import ${modulePackage}.model.${domainObjectClassName};
-import org.apache.ibatis.exceptions.TooManyResultsException;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import ${modulePackage}.domain.dto.${domainObjectClassName}Request;
+import ${modulePackage}.domain.dto.${domainObjectClassName}Response;
+import ${modulePackage}.domain.entity.${domainObjectClassName};
 
 import java.util.List;
 
@@ -13,69 +12,51 @@ public interface ${domainObjectClassName}Service {
 
     /**
      * 新增${tableComment}
-     * @param  ${domainObjectName}Model   新增${tableComment}对象参数
-     * @return  ${domainObjectClassName}Model    ${tableComment}领域对象
+     * @param ${domainObjectName}Create
+     * @return ${domainObjectClassName}Response
      */
-    public ${domainObjectClassName}Model create${domainObjectClassName}(${domainObjectClassName}Model ${domainObjectName}Model);
+    public ${domainObjectClassName}Response create${domainObjectClassName}(${domainObjectClassName} ${domainObjectName}Create);
 
     /**
-    * 批量新增${tableComment}
-    * @param ${domainObjectName}Models     新增${tableComment}对象集合参数
-    * @return List<${domainObjectClassName}Model>    ${tableComment}领域对象集合
-    */
-    List<${domainObjectClassName}Model> create${domainObjectClassName}s(List<${domainObjectClassName}Model> ${domainObjectName}Models);
-
-    /**
-    * 更新${tableComment}
-    *
-    * @param ${domainObjectName}Model 更新${tableComment}对象参数
-    * @param ${domainObjectName}Query 过滤${tableComment}对象参数
-    */
-    public void update${domainObjectClassName}(${domainObjectClassName}Model ${domainObjectName}Model, ${domainObjectClassName}Query ${domainObjectName}Query);
+     * 批量新增${tableComment}
+     * @param ${domainObjectName}
+     * @return List<${domainObjectClassName}>
+     */
+    List<${domainObjectClassName}> create${domainObjectClassName}s(List<${domainObjectClassName}> ${domainObjectName});
 
     /**
      * 更新${tableComment}
-     * @param ${domainObjectName}Model    更新${tableComment}对象参数
+     * @param   ${domainObjectName}Update
+     * @return  ${domainObjectClassName}Response
      */
-    public void update${domainObjectClassName}(${domainObjectClassName}Model ${domainObjectName}Model);
+    public ${domainObjectClassName}Response update${domainObjectClassName}(${domainObjectClassName} ${domainObjectName}Update);
 
     /**
-     * 批量删除${tableComment}
-     * @param ids   主键数组
+     * 根据查询参数查询单个对象
+     * @param   id
+     * @return  ${domainObjectClassName}Response
      */
-    public void delete${domainObjectClassName}(String[] ids);
-
-    /**
-     * 删除${tableComment}
-     * @param id   主键
-     */
-    public void delete${domainObjectClassName}(String id);
+    public ${domainObjectClassName}Response findOne${domainObjectClassName}Response(String id);
 
     /**
      * 查询${tableComment}领域分页对象（带参数条件）
-     * @param ${domainObjectName}Query 查询参数
-     * @return Page<${domainObjectClassName}Model>   ${tableComment}参数对象
+     * @param   ${domainObjectName}Request
+     * @return  Page<${domainObjectClassName}Response>
      */
-    public Page<${domainObjectClassName}Model> get${domainObjectClassName}ModelPage(${domainObjectClassName}Query ${domainObjectName}Query);
+    public Page<${domainObjectClassName}Response> findPage${domainObjectClassName}Response(${domainObjectClassName}Request ${domainObjectName}Request);
 
     /**
-     * 查询${tableComment}领域集合对象（带参数条件）
-     * @param ${domainObjectName}Query 查询参数对象
-     * @return List<${domainObjectClassName}Model> ${tableComment}领域集合对象
+     * 批量删除${tableComment}
+     * @param  ids
+     * @return int
      */
-    public List<${domainObjectClassName}Model> get${domainObjectClassName}ModelList(${domainObjectClassName}Query ${domainObjectName}Query);
+    public int delete${domainObjectClassName}(List<String> ids);
 
     /**
-     * 根据主键查询单个对象
-     * @param id 主键
-     * @return ${domainObjectClassName}Model ${tableComment}领域对象
+     * 删除${tableComment}
+     * @param  id
+     * @return int
      */
-    public ${domainObjectClassName}Model getOne${domainObjectClassName}Model(String id);
+    public int delete${domainObjectClassName}(String id);
 
-    /**
-     * 根据查询参数查询单个对象（此方法只用于提供精确查询单个对象，若结果数超过1，则会报错）
-     * @param ${domainObjectName}Query ${tableComment}查询参数对象
-     * @return ${domainObjectClassName}Model ${tableComment}领域对象
-     */
-    public ${domainObjectClassName}Model getOne${domainObjectClassName}Model(${domainObjectClassName}Query ${domainObjectName}Query);
 }

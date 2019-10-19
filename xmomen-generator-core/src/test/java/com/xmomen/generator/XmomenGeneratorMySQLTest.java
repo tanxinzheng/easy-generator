@@ -20,15 +20,8 @@ public class XmomenGeneratorMySQLTest extends XmomenGeneratorTest {
     }
 
     @Test
-    public void generateJson() throws Exception {
-        GeneratorConfiguration configuration = super.generate("src/test/resources/generator-config-mysql.json");
-        MySqlGenerator generator = new MySqlGenerator();
-        generator.generate(configuration);
-    }
-
-    @Test
-    public void generateYml() throws Exception {
-        GeneratorConfiguration configuration = super.generate("src/test/resources/generator-config.yml");
+    public void generate() throws Exception {
+        GeneratorConfiguration configuration = super.generate("src/main/resources/generator-config-mysql.yml");
         MySqlGenerator generator = new MySqlGenerator();
         generator.generate(configuration);
     }

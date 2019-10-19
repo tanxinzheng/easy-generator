@@ -1,13 +1,17 @@
-# 代码生成器
-基于freemarker模板引擎开发的代码生成器Maven插件
+# Easy-Generator
+基于freemarker模板引擎开发的代码生成器Maven插件工具，可根据各类数据库中的表结构一键生成controller,service,dao,entity等各类型代码文件，并可以自定义文件模板，是一种轻量级的代码生成工具。
 
-## 架构设计
-- easy-generator-core
-- easy-generator-maven-plugin
+## 支持配置文件类型
+- yaml(推荐)
+- json
 
-## maven
+## 支持数据库类型
+- MySQL
+- Oracle
+- PostgreSQL
+- Mongodb
 
-- 配置插件
+## maven插件配置
 ``` pom.xml
 ...
 <plugin>

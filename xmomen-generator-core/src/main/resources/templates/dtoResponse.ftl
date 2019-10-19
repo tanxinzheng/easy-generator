@@ -1,9 +1,8 @@
-package ${modulePackage}.model;
+package ${targetPackage};
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
+import ${modulePackage}.domain.entity.${domainObjectClassName};
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.*;
 import javax.validation.constraints.*;
 import io.swagger.annotations.ApiModel;
@@ -23,13 +22,11 @@ import java.io.Serializable;
 
 
 <#if supportExcel >
-@ExcelTarget(value = "${domainObjectClassName}Model")
+@ExcelTarget(value = "${domainObjectClassName}Response")
 </#if>
 @ApiModel(value = "${tableComment}")
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-public class ${domainObjectClassName}Model implements Serializable {
+public class ${domainObjectClassName}Response implements Serializable {
 
 <#if columns?exists>
     <#list columns as field>
@@ -71,6 +68,18 @@ public class ${domainObjectClassName}Model implements Serializable {
         ${domainObjectClassName} ${domainObjectName} = new ${domainObjectClassName}();
         BeanUtils.copyProperties(this, ${domainObjectName});
         return ${domainObjectName};
+    }
+
+    /**
+    * entity object convert to response object
+    * @param ${domainObjectName}
+    * @return
+    */
+    @JsonIgnore
+    public static ${domainObjectClassName}Response toResponse(${domainObjectClassName} ${domainObjectName}){
+        ${domainObjectClassName}Response ${domainObjectName}Response = new ${domainObjectClassName}Response();
+        BeanUtils.copyProperties(${domainObjectName}, ${domainObjectName}Response);
+        return ${domainObjectName}Response;
     }
 
 

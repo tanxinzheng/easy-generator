@@ -21,7 +21,7 @@ public class XmomenGeneratorTest {
     @After
     public void tearDown() throws Exception {
         PluginUtils.deleteDirectory(new File("./src/test/webapp/com"));
-        PluginUtils.deleteDirectory(new File("./src/test/java/com/xmomen/test"));
+        PluginUtils.deleteDirectory(new File("./src/test/java/com/module/test"));
     }
 
     public GeneratorConfiguration generate(String configPath) throws Exception {

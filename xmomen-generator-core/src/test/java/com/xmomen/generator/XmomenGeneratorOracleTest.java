@@ -21,7 +21,7 @@ public class XmomenGeneratorOracleTest extends XmomenGeneratorTest {
 
     @Test
     public void generate() throws Exception {
-        GeneratorConfiguration configuration = super.generate("src/test/resources/generator-config-oracle.json");
+        GeneratorConfiguration configuration = super.generate("src/main/resources/generator-config-oracle.yml");
         OracleGenerator oracleGenerator = new OracleGenerator();
         oracleGenerator.generate(configuration);
     }

@@ -109,6 +109,7 @@ public abstract class AbstractGenerator {
                         + File.separator
                         + tableInfo.getDomainObjectClassName()
                         + templateConfig.getFileExt());
+
             });
         });
     }
@@ -121,6 +122,7 @@ public abstract class AbstractGenerator {
         configuration.getTables().stream().forEach(tableInfo -> {
             tableInfo.getTemplates().stream().forEach(templateConfig -> {
                 try {
+                    tableInfo.setTargetPackage(templateConfig.getTargetPackage());
                     Template t = new Template("name", new StringReader(templateConfig.getTemplateContent()),
                             FreemarkerUtils.getConfiguration());
                     StringWriter stringWriter = new StringWriter();
