@@ -20,13 +20,13 @@ import java.util.Map;
 public class GeneratorConfiguration {
 
     @Valid
-    @NotNull(message = "数据源配置为必填项")
+    @NotNull(message = "数据源配置为必填项", groups = {CommonValidateGroup.class})
     private DataSource dataSource;
     @Valid
     private ProjectMetadata metadata;
 
-    @NotNull(message = "数据表配置为必填项")
-    @NotEmpty(message = "数据表配置为必填项")
+    @NotNull(message = "数据表配置为必填项", groups = {CommonValidateGroup.class})
+    @NotEmpty(message = "数据表配置为必填项", groups = {CommonValidateGroup.class})
     @Valid
     private List<TableInfo> tables;
 
@@ -36,15 +36,15 @@ public class GeneratorConfiguration {
     public static class DataSource {
 
         private DatabaseType dialectType;
-        @NotBlank(message = "dialect为必填项，且仅支持MySQL，Oracle")
+        @NotBlank(message = "dialect为必填项，且仅支持MySQL，Oracle, MongoDB", groups = {CommonValidateGroup.class})
         private String dialect;
-        @NotBlank(message = "driver为必填项")
+        @NotBlank(message = "driver为必填项", groups = {SQLValidateGroup.class})
         private String driver;
-        @NotBlank(message = "url为必填项")
+        @NotBlank(message = "url为必填项", groups = {SQLValidateGroup.class})
         private String url;
-        @NotBlank(message = "username为必填项")
+        @NotBlank(message = "username为必填项", groups = {SQLValidateGroup.class})
         private String username;
-        @NotBlank(message = "password为必填项")
+        @NotBlank(message = "password为必填项", groups = {SQLValidateGroup.class})
         private String password;
 
         public DatabaseType getDialectType() {

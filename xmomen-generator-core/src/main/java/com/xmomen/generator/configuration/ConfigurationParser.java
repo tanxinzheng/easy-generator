@@ -70,10 +70,10 @@ public class ConfigurationParser {
      * @param configuration
      * @throws ValidationException
      */
-    public static void validate(GeneratorConfiguration configuration) throws ValidationException {
+    public static void validate(GeneratorConfiguration configuration, Class<?>... groups) throws ValidationException {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
-        Set<ConstraintViolation<GeneratorConfiguration>> constraintViolations = validator.validate(configuration);
+        Set<ConstraintViolation<GeneratorConfiguration>> constraintViolations = validator.validate(configuration, groups);
         if(CollectionUtils.isEmpty(constraintViolations)){
             return;
         }

@@ -19,13 +19,6 @@ public interface ${domainObjectClassName}Service {
     public ${domainObjectClassName}Model create${domainObjectClassName}(${domainObjectClassName}Model ${domainObjectName}Model);
 
     /**
-     * 新增${tableComment}实体对象
-     * @param   ${domainObjectName} 新增${tableComment}实体对象参数
-     * @return  ${domainObjectClassName} ${tableComment}实体对象
-     */
-    public ${domainObjectClassName} create${domainObjectClassName}(${domainObjectClassName} ${domainObjectName});
-
-    /**
     * 批量新增${tableComment}
     * @param ${domainObjectName}Models     新增${tableComment}对象集合参数
     * @return List<${domainObjectClassName}Model>    ${tableComment}领域对象集合
@@ -45,13 +38,6 @@ public interface ${domainObjectClassName}Service {
      * @param ${domainObjectName}Model    更新${tableComment}对象参数
      */
     public void update${domainObjectClassName}(${domainObjectClassName}Model ${domainObjectName}Model);
-
-    /**
-     * 更新${tableComment}实体对象
-     * @param   ${domainObjectName} 新增${tableComment}实体对象参数
-     * @return  ${domainObjectClassName} ${tableComment}实体对象
-     */
-    public void update${domainObjectClassName}(${domainObjectClassName} ${domainObjectName});
 
     /**
      * 批量删除${tableComment}
@@ -78,13 +64,6 @@ public interface ${domainObjectClassName}Service {
      * @return List<${domainObjectClassName}Model> ${tableComment}领域集合对象
      */
     public List<${domainObjectClassName}Model> get${domainObjectClassName}ModelList(${domainObjectClassName}Query ${domainObjectName}Query);
-
-    /**
-     * 查询${tableComment}实体对象
-     * @param id 主键
-     * @return ${domainObjectClassName} ${tableComment}实体对象
-     */
-    public ${domainObjectClassName} getOne${domainObjectClassName}(String id);
 
     /**
      * 根据主键查询单个对象
