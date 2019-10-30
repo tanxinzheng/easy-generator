@@ -9,9 +9,9 @@
         <version>2.1.8.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.xmomen.generator</groupId>
-    <artifactId>xmomen-generator</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <groupId>com.github.tanxinzheng</groupId>
+    <artifactId>easy-generator</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <scm>
@@ -40,10 +40,8 @@
     </properties>
 
     <modules>
-        <module>xmomen-generator-core</module>
-        <module>xmomen-generator-maven-plugin</module>
-        <module>xmomen-generator-web</module>
-        <module>xmomen-generator-ui</module>
+        <module>easy-generator-core</module>
+        <module>easy-generator-maven-plugin</module>
     </modules>
 
     <dependencyManagement>
