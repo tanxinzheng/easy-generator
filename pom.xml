@@ -15,15 +15,15 @@
     <packaging>pom</packaging>
 
     <scm>
-        <connection>scm:git:git://github.com/xmomen/xmomen-generator.git</connection>
-        <developerConnection>scm:git:git@github.com:xmomen/xmomen-generator.git</developerConnection>
-        <url>https://github.com/xmomen/xmomen-generator</url>
+        <connection>scm:git:git://github.com/tanxinzheng/easy-generator.git</connection>
+        <developerConnection>scm:git:git@github.com:tanxinzheng/easy-generator.git</developerConnection>
+        <url>https://github.com/tanxinzheng/easy-generator</url>
         <tag>HEAD</tag>
     </scm>
 
     <issueManagement>
         <system>GitHub Issues</system>
-        <url>https://github.com/xmomen/xmomen-generator/issues</url>
+        <url>https://github.com/tanxinzheng/easy-generator/issues</url>
     </issueManagement>
     <developers>
         <developer>
