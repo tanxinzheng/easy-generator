@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.xmomen.generator.mapping.TableMapper" >
+<mapper namespace="com.github.tanxinzheng.generator.mapping.TableMapper" >
     <select id="getTableInfoByMySQL"
-            resultType="com.xmomen.generator.model.ColumnInfo"
+            resultType="com.github.tanxinzheng.generator.model.ColumnInfo"
             parameterType="java.util.HashMap">
         select
         t.table_schema tableSchema,
@@ -25,7 +25,7 @@
     </select>
 
     <select id="getTableInfoByOracle"
-            resultType="com.xmomen.generator.model.ColumnInfo"
+            resultType="com.github.tanxinzheng.generator.model.ColumnInfo"
             parameterType="java.util.HashMap">
         SELECT c.table_name tableName,
                 c.column_name actualColumnName,
@@ -60,7 +60,7 @@
     </select>
 
     <select id="getTableInfoByPGSQL"
-            resultType="com.xmomen.generator.model.ColumnInfo"
+            resultType="com.github.tanxinzheng.generator.model.ColumnInfo"
             parameterType="java.util.HashMap">
         SELECT C
         .relname AS TABLE_NAME,

@@ -15,11 +15,11 @@
 ``` pom.xml
 ...
 <plugin>
-    <groupId>com.xmomen.maven.plugins</groupId>
-    <artifactId>xmomen-generator-maven-plugin</artifactId>
-    <version>1.1.0-SNAPSHOT</version>
+    <groupId>com.github.tanxinzheng</groupId>
+    <artifactId>easy-generator-maven-plugin</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <configuration>
-        <configurationFile>src/test/resources/help/generator-config.json</configurationFile>
+        <configurationFile>src/test/resources/help/generator-config.yml</configurationFile>
     </configuration>
 </plugin>
 ...
@@ -27,25 +27,25 @@
 
 - 常用命令
 ```maven
-xmomen-generator:generate
+easy-generator:generate
   Base on freemarker template create java code.
 
-xmomen-generator:help
-  Display help information on maven-xmomen-generator-plugin.
+easy-generator:help
+  Display help information on maven-easy-generator-plugin.
 
-xmomen-generator:generate-config
+easy-generator:generate-config
   Generate a simple generator-config.json configuration file in the test resources help directory.
 
-xmomen-generator:generate-config-oracle
+easy-generator:generate-config-oracle
 Generate a simple mysql database generator-config.json configuration file in the test resources help directory.
 
-xmomen-generator:generate-config-mysql
+easy-generator:generate-config-mysql
   Generate a simple oracle database generator-config.json configuration file in the test resources help directory.
 
-xmomen-generator:generate-templates
+easy-generator:generate-templates
   Generate all default template files in the test resources help directory.
 
-xmomen-generator:generate-help
+easy-generator:generate-help
   Generate a simple generator-help.json configuration file in the test resources help directory.
-  Or you can view com.xmomen.generator.configuration.GeneratorConfiguration.java file know all properties.
+  Or you can view GeneratorConfiguration.java file know all properties.
 ```
