@@ -31,7 +31,7 @@ public class GeneratorConfigMySQLMojoTest extends AbstractMojoTestCase {
     @After
     public void tearDown() throws Exception {
         super.tearDown();
-        PluginUtils.deleteDirectory(new File("./src/test/resources/help/generator-config.json"));
+        PluginUtils.deleteDirectory(new File("./src/test/resources/help/generator-config.yml"));
     }
 
 }

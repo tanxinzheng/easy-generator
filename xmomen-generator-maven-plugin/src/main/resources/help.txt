@@ -10,14 +10,14 @@ xmomen-generator:generate
 xmomen-generator:help
   Display help information on maven-xmomen-generator-plugin.
 
-xmomen-generator:generate-config
-  Generate a simple generator-config.json configuration file in the test resources help directory.
+xmomen-generator:generate-config-postgresql
+  Generate a simple generator-config-postgresql.yml configuration file in the test resources help directory.
 
 xmomen-generator:generate-config-oracle
-Generate a simple mysql database generator-config.json configuration file in the test resources help directory.
+Generate a simple mysql database generator-config.yml configuration file in the test resources help directory.
 
 xmomen-generator:generate-config-mysql
-  Generate a simple oracle database generator-config.json configuration file in the test resources help directory.
+  Generate a simple oracle database generator-config.yml configuration file in the test resources help directory.
 
 xmomen-generator:generate-templates
   Generate all default template files in the test resources help directory.

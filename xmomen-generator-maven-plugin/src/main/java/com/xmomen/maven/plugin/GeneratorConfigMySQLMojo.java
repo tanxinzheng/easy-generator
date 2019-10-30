@@ -18,7 +18,7 @@ public class GeneratorConfigMySQLMojo extends GeneratorBaseConfigMojo {
      * @throws MojoFailureException
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
-        generateConfig("/generator-config-mysql.json");
+        generateConfig("/generator-config-mysql.yml");
     }
 
 }

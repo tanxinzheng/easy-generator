@@ -26,4 +26,13 @@ public interface TableMapper {
      * @return
      */
     public List<ColumnInfo> getTableInfoByOracle(@Param(value = "config")GeneratorConfiguration configuration);
+
+
+    /**
+     * PostgreSQL
+     * @param configuration
+     * @return
+     */
+    public List<ColumnInfo> getTableInfoByPGSQL(@Param(value = "config")GeneratorConfiguration configuration);
+
 }

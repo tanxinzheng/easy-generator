@@ -1,9 +1,9 @@
 dataSource:
   dialect: MySQL
-  driver: oracle.jdbc.driver.OracleDriver
-  url: jdbc:oracle:thin:@127.0.0.1:1526:test_db
-  username: root
-  password: root
+  driver: org.postgresql.Driver
+  url: "jdbc:postgresql://localhost:5432/demo?useUnicode=true&amp;characterEncoding=utf8"
+  username: postgres
+  password: postgres
 
 metadata:
   templateDirectory: "/Users/jeng/tanxinzheng-repo/xmomen-repo/framework/xmomen-generator/xmomen-generator-core/src/main/resources/templates/"

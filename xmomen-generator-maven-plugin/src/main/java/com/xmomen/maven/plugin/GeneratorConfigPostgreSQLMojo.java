@@ -9,8 +9,8 @@ import org.apache.maven.plugins.annotations.Mojo;
  * Created by tanxinzheng on 16/8/26.
  *
  */
-@Mojo(name = "generate-config-oracle", defaultPhase = LifecyclePhase.NONE)
-public class GeneratorConfigOracleMojo extends GeneratorBaseConfigMojo {
+@Mojo(name = "generate-config-posgresql", defaultPhase = LifecyclePhase.NONE)
+public class GeneratorConfigPostgreSQLMojo extends GeneratorBaseConfigMojo {
 
     /**
      * generator-help
@@ -18,7 +18,7 @@ public class GeneratorConfigOracleMojo extends GeneratorBaseConfigMojo {
      * @throws MojoFailureException
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
-        generateConfig("/generator-config-oracle.yml");
+        generateConfig("/generator-config-posgresql.yml");
     }
 
 }

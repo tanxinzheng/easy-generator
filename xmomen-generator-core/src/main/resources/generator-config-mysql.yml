@@ -6,7 +6,7 @@ dataSource:
   password: 123456
 
 metadata:
-  templateDirectory: "/Users/jeng/tanxinzheng-repo/xmomen-repo/framework/xmomen-generator/xmomen-generator-core/src/main/resources/templates/mybatisplus/"
+  templateDirectory: "/Users/jeng/tanxinzheng-repo/xmomen-repo/framework/xmomen-generator/xmomen-generator-core/src/main/resources/templates/"
   outputDirectory: "/Users/jeng/tanxinzheng-repo/xmomen-repo/framework/xmomen-generator/xmomen-generator-core/src/test/java"
   ignoreKeywordValidate: true
 

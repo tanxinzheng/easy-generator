@@ -59,4 +59,52 @@
         </where>
     </select>
 
+    <select id="getTableInfoByPGSQL"
+            resultType="com.xmomen.generator.model.ColumnInfo"
+            parameterType="java.util.HashMap">
+        SELECT C
+        .relname AS TABLE_NAME,
+        col_description ( A.attrelid, A.attnum ) AS column_comment,
+        UPPER ( T.typname ) AS jdbc_type,
+        cc.character_maximum_length AS LENGTH,
+        cc.numeric_precision data_precision,
+        cc.numeric_scale AS SCALE,
+        A.attname AS actual_column_name,
+        cc.column_default default_value,
+        CASE
+        WHEN pc.pk_name IS NOT NULL THEN
+        'Y' ELSE'N'
+        END AS is_primary_key,
+        CASE
+        WHEN A.attnotnull = 't' THEN
+        'Y' ELSE'N'
+        END AS NULLABLE
+        FROM
+        pg_attribute
+        AS A INNER JOIN pg_class AS C ON A.attrelid = C.oid
+        LEFT JOIN information_schema.COLUMNS AS cc ON cc.TABLE_NAME = C.relname
+        AND cc.COLUMN_NAME = A.attname
+        LEFT JOIN pg_type T ON A.atttypid = T.oid
+        LEFT JOIN (
+        SELECT
+        pg_class.relname,
+        pg_attr.attname AS colname,
+        pg_constraint.conname AS pk_name
+        FROM
+        pg_constraint
+        INNER JOIN pg_class ON pg_constraint.conrelid = pg_class.oid
+        INNER JOIN pg_attribute pg_attr ON pg_attr.attrelid = pg_class.oid
+        AND pg_attr.attnum = pg_constraint.conkey [ 1 ]
+        WHERE
+        pg_constraint.contype = 'p'
+        ) pc ON pc.relname = C.relname
+        AND pc.colname = cc.COLUMN_NAME
+        <where>
+            a.attnum > 0 and c.relname IN
+            <foreach collection="config.tables" item="item" open="(" separator="," close=")">
+                #{item.tableName}
+            </foreach>
+        </where>
+    </select>
+
 </mapper>

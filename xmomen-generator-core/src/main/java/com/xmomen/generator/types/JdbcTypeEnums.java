@@ -9,7 +9,10 @@ import java.util.Date;
 public enum JdbcTypeEnums {
 
     INT(Integer.class, "INTEGER"),
-    TINYINT(Boolean.class, "BIT"),
+    TINYINT(Boolean.class, "INTEGER"),
+    BPCHAR(Boolean.class, "VARCHAR"),
+    INT4(Integer.class, "INTEGER"),
+    INT8(Long.class, "BIGINT"),
     CHAR(String.class, "VARCHAR"),
     VARCHAR(String.class, "VARCHAR"),
     VARCHAR2(String.class, "VARCHAR"),
