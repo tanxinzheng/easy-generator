@@ -10,7 +10,7 @@
   //【选填项】自定义配置元数据
   "metadata":{
     //【选填项】忽略关键词校验，默认false
-    "ignoreKeywordValidate": true,
+    "validateKeyword": true,
     //【选填项】忽略生成那些模板
     "ignoreTemplateTypes":["Query"],
     //【选填项】只生成那些模板

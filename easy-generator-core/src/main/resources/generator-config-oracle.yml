@@ -1,14 +1,9 @@
 dataSource:
   dialect: MySQL
   driver: oracle.jdbc.driver.OracleDriver
-  url: jdbc:oracle:thin:@127.0.0.1:1526:test_db
+  url: "jdbc:oracle:thin:@127.0.0.1:1526:test_db"
   username: root
   password: root
-
-metadata:
-  templateDirectory: "/Users/jeng/tanxinzheng-repo/xmomen-repo/framework/xmomen-generator/xmomen-generator-core/src/main/resources/templates/"
-  outputDirectory: "/Users/jeng/tanxinzheng-repo/xmomen-repo/framework/xmomen-generator/xmomen-generator-core/src/test/java"
-  ignoreKeywordValidate: true
 
 tables:
   - domainObjectName: User
