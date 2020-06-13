@@ -20,6 +20,6 @@ public class ProjectMetadata {
     private String[] ignoreTemplateTypes;
     private String[] templateTypes;
     private String outputDirectory;
-    private boolean ignoreKeywordValidate;
+    private boolean validateKeyword;
 
 }

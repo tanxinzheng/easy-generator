@@ -1,9 +1,12 @@
 dataSource:
   dialect: MySQL
   driver: com.mysql.jdbc.Driver
-  url: "jdbc:mysql://localhost:3306/demo?useUnicode=true&amp;characterEncoding=utf8"
+  url: "jdbc:mysql://localhost:3306/barrel?useUnicode=true&amp;characterEncoding=utf8"
   username: root
-  password: root
+  password: 123456
+
+metadata:
+  outputDirectory: E:\xmomen-repo\webapp\easy-generator\easy-generator-demo\src\main\java
 
 tables:
   - domainObjectName: User

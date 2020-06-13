@@ -5,11 +5,6 @@ dataSource:
   username: postgres
   password: postgres
 
-metadata:
-  templateDirectory: "/Users/jeng/tanxinzheng-repo/xmomen-repo/framework/xmomen-generator/xmomen-generator-core/src/main/resources/templates/"
-  outputDirectory: "/Users/jeng/tanxinzheng-repo/xmomen-repo/framework/xmomen-generator/xmomen-generator-core/src/test/java"
-  ignoreKeywordValidate: true
-
 tables:
   - domainObjectName: User
     tableComment: "用户"

@@ -170,12 +170,13 @@ public abstract class SqlGenerator extends AbstractGenerator {
     }
 
     private static void validateKeyword(GeneratorConfiguration configuration, TableInfo tableInfo, ColumnInfo columnInfo){
-        if(!configuration.getMetadata().isIgnoreKeywordValidate() && SqlReservedWords.containsWord(columnInfo.getActualColumnName())){
+        if(configuration.getMetadata().isValidateKeyword()
+                && SqlReservedWords.containsWord(columnInfo.getActualColumnName())){
             throw new IllegalArgumentException(MessageFormat.format(
-                    "The column [{0}.{1}] is database keyword, please change the column name (or add attribute \"ignoreKeywordValidate\":true to metadata)",
+                    "The column [{0}.{1}] is database keyword, If you don't want to pass/valid database keyword, please change the column name (or set attribute \"validateKeyword\":false to metadata)",
                     tableInfo.getTableName(),
                     columnInfo.getActualColumnName()));
-        }else if(configuration.getMetadata().isIgnoreKeywordValidate() && SqlReservedWords.containsWord(columnInfo.getActualColumnName())){
+        }else if(!configuration.getMetadata().isValidateKeyword() && SqlReservedWords.containsWord(columnInfo.getActualColumnName())){
             columnInfo.setFormatActualColumnName("`" + columnInfo.getActualColumnName()+"`");
         }
     }
