@@ -15,6 +15,6 @@ public interface ${domainObjectClassName}Mapper extends BaseMapper<${domainObjec
 
     int insertBatch(@Param("list") List<${domainObjectClassName}> list);
 
-    Page<UserResponse> selectPage(Page<UserResponse> page, UserRequest userRequest);
+    Page<UserResponse> selectPage(Page<UserResponse> page, UserRequest userRequestVO);
 
 }

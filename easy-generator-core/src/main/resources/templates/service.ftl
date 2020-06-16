@@ -12,10 +12,10 @@ public interface ${domainObjectClassName}Service {
 
     /**
      * 新增${tableComment}
-     * @param ${domainObjectName}Create
-     * @return ${domainObjectClassName}Response
+     * @param ${domainObjectName}DTO
+     * @return ${domainObjectClassName}DTO
      */
-    public ${domainObjectClassName}Response create${domainObjectClassName}(${domainObjectClassName} ${domainObjectName}Create);
+    public ${domainObjectClassName}DTO create${domainObjectClassName}(${domainObjectClassName} ${domainObjectName}DTO);
 
     /**
      * 批量新增${tableComment}
@@ -26,24 +26,24 @@ public interface ${domainObjectClassName}Service {
 
     /**
      * 更新${tableComment}
-     * @param   ${domainObjectName}Update
-     * @return  ${domainObjectClassName}Response
+     * @param   ${domainObjectName}DTO
+     * @return  ${domainObjectClassName}DTO
      */
-    public ${domainObjectClassName}Response update${domainObjectClassName}(${domainObjectClassName} ${domainObjectName}Update);
+    public boolean update${domainObjectClassName}(${domainObjectClassName} ${domainObjectName}DTO);
 
     /**
      * 根据查询参数查询单个对象
      * @param   id
-     * @return  ${domainObjectClassName}Response
+     * @return  ${domainObjectClassName}DTO
      */
-    public ${domainObjectClassName}Response findOne${domainObjectClassName}Response(String id);
+    public ${domainObjectClassName}DTO findOne${domainObjectClassName}(String id);
 
     /**
      * 查询${tableComment}领域分页对象（带参数条件）
-     * @param   ${domainObjectName}Request
-     * @return  Page<${domainObjectClassName}Response>
+     * @param   queryParams
+     * @return  Page<${domainObjectClassName}DTO>
      */
-    public Page<${domainObjectClassName}Response> findPage${domainObjectClassName}Response(${domainObjectClassName}Request ${domainObjectName}Request);
+    public Page<${domainObjectClassName}DTO> findPage${domainObjectClassName}(QueryParams queryParams);
 
     /**
      * 批量删除${tableComment}
