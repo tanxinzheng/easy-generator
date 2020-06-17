@@ -4,14 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.tanxinzheng.framework.mybatis.utils.BeanCopierUtils;
 import com.github.tanxinzheng.framework.utils.AssertValid;
 import com.google.common.collect.Lists;
-import com.xmomen.module.test.BeanCopierUtils;
 import com.xmomen.module.test.domain.dto.UserDTO;
 import com.xmomen.module.test.domain.entity.UserDO;
-import com.xmomen.module.test.domain.mapper.UserMapper;
 import com.xmomen.module.test.service.UserService;
-import com.xmomen.module.test.wrapper.UserWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +40,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
         if(!isOk){
             return null;
         }
-        return user.toDTO(UserDTO.class);
+        return BeanCopierUtils.copy(user, UserDTO.class);
     }
 
 
@@ -61,20 +59,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     /**
      * 批量新增用户
-     *
-     * @param user
-     * @return List<UserResponse>
+     * @param users
+     * @return
      */
     @Transactional
     @Override
-    public List<UserDTO> createUsers(List<UserDTO> user) {
-        List<UserDO> userDOList = UserWrapper.build().dto2do4List(user);
+    public List<UserDTO> createUsers(List<UserDTO> users) {
+        List<UserDO> userDOList = BeanCopierUtils.copy(users, UserDO.class);
         boolean isOK = saveBatch(userDOList);
         if(!isOK){
             return Lists.newArrayList();
         }
         List<String> ids = userDOList.stream().map(UserDO::getId).collect(Collectors.toList());
-        return UserWrapper.build().do2dto4List(userMapper.selectBatchIds(ids));
+        List<UserDO> data = userMapper.selectBatchIds(ids);
+        return BeanCopierUtils.copy(data, UserDTO.class);
     }
 
 
@@ -98,8 +96,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
      */
     @Override
     public IPage<UserDTO> findPage(IPage<UserDO> page, QueryWrapper<UserDO> queryWrapper) {
-        IPage<UserDO> responsePage = (Page<UserDO>) page(page, queryWrapper);
-        return UserWrapper.build().do2dto4Page(responsePage);
+        IPage<UserDO> data = (Page<UserDO>) page(page, queryWrapper);
+        return BeanCopierUtils.copy(data, UserDTO.class);
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.xmomen.module.test.domain.mapper;
+package com.xmomen.module.test.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xmomen.module.test.domain.entity.UserDO;

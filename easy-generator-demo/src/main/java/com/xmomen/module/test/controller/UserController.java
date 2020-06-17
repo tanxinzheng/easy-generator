@@ -2,16 +2,18 @@ package com.xmomen.module.test.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.tanxinzheng.framework.mybatis.domian.QueryParams;
-import com.xmomen.module.test.domain.entity.UserDO;
+import com.github.tanxinzheng.framework.mybatis.utils.BeanCopierUtils;
 import com.xmomen.module.test.domain.dto.UserDTO;
+import com.xmomen.module.test.domain.entity.UserDO;
 import com.xmomen.module.test.domain.vo.UserVO;
 import com.xmomen.module.test.service.UserService;
-import com.xmomen.module.test.wrapper.UserWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -34,10 +36,9 @@ public class UserController {
      */
     @ApiOperation(value = "分页查询用户")
     @GetMapping
-    
     public IPage<UserVO> selectPage(QueryParams<UserDO> queryParams){
         IPage<UserDTO> page = userService.findPage(queryParams.getPage(), queryParams.getQueryWrapper());
-        return UserWrapper.build().dto2vo4Page(page);
+        return BeanCopierUtils.copy(page, UserVO.class);
     }
 
     /**
@@ -47,8 +48,9 @@ public class UserController {
      */
     @ApiOperation(value = "查询用户")
     @GetMapping(value = "/{id}")
-    public UserDTO selectOne(@PathVariable(value = "id") String id){
-        return userService.findOne(id);
+    public UserVO selectOne(@PathVariable(value = "id") String id){
+        UserDTO userDTO = userService.findOne(id);
+        return BeanCopierUtils.copy(userDTO, UserVO.class);
     }
 
     /**
@@ -60,13 +62,13 @@ public class UserController {
     @PostMapping
     public UserVO create(@RequestBody @Valid UserDTO userDTO) {
         userDTO = userService.createUser(userDTO);
-        return UserWrapper.build().dto2vo(userDTO);
+        return BeanCopierUtils.copy(userDTO, UserVO.class);
     }
 
     /**
      * 更新用户
      * @param id    主键
-     * @param userVO  更新对象参数
+     * @param userDTO  更新对象参数
      * @return  UserResponse   用户领域对象
      */
     @ApiOperation(value = "更新用户")
