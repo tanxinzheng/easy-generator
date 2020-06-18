@@ -1,6 +1,8 @@
 package com.github.tanxinzheng.generator.types;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -18,9 +20,9 @@ public enum JdbcTypeEnums {
     VARCHAR2(String.class, "VARCHAR"),
     NVARCHAR2(String.class, "VARCHAR"),
     BIGINT(Long.class, "BIGINT"),
-    DATE(Date.class, "DATE"),
-    DATETIME(Date.class, "TIMESTAMP"),
-    TIMESTAMP(Date.class, "TIMESTAMP"),
+    DATE(LocalDate.class, "DATE"),
+    DATETIME(LocalDateTime.class, "TIMESTAMP"),
+    TIMESTAMP(LocalDateTime.class, "TIMESTAMP"),
     LONG(Long.class, "DECIMAL"),
     BOOLEAN_DECIMAL(Boolean.class, "DECIMAL"),
     BOOLEAN_CHAR(Boolean.class, "VARCHAR"),

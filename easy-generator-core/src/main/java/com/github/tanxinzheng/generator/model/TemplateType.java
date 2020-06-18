@@ -4,15 +4,14 @@ package com.github.tanxinzheng.generator.model;
  * Created by tanxinzheng on 17/5/27.
  */
 public enum TemplateType {
-    Entity(".java", "entity.ftl", "domain.entity"),
-    DtoResponse("Response.java", "dtoResponse.ftl", "domain.dto"),
-    DtoRequest("Request.java", "dtoRequest.ftl", "domain.dto"),
-    Mapper("Mapper.java", "mapper.ftl", "domain.mapper"),
+    Entity("DO.java", "entity.ftl", "domain.entity"),
+    Dto("DTO.java", "dto.ftl", "domain.dto"),
+    Vo("VO.java", "vo.ftl", "domain.vo"),
+    Mapper("Mapper.java", "mapper.ftl", "mapper"),
     Service("Service.java", "service.ftl", "service"),
     ServiceImpl("ServiceImpl.java", "serviceImpl.ftl", "service.impl"),
     Controller("Controller.java", "controller.ftl", "controller"),
-    ControllerTest("ControllerTest.java", "controllerTest.ftl", "controller"),
-    MapperXml("Mapper.xml", "mapperXml.ftl", "domain.mapper")
+    MapperXml("Mapper.xml", "mapperXml.ftl", "mapper")
     ;
 
     private String fileExt;
