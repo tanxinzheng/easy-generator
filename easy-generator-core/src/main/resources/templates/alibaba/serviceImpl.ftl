@@ -36,7 +36,7 @@ public class ${domainObjectClassName}ServiceImpl extends ServiceImpl<${domainObj
     @Transactional
     @Override
     public ${domainObjectClassName}DTO create${domainObjectClassName}(${domainObjectClassName}DTO ${domainObjectName}DTO) {
-        AssertValid.notNull(${domainObjectName}DTO, "${domainObjectName}DTO不能为空");
+        AssertValid.notNull(${domainObjectName}DTO, "${domainObjectName}DTO参数不能为空");
         ${domainObjectClassName}DO ${domainObjectName} = ${domainObjectName}DTO.toDO(${domainObjectClassName}DO.class);
         boolean isOk = save(${domainObjectName});
         if(!isOk){
@@ -68,7 +68,7 @@ public class ${domainObjectClassName}ServiceImpl extends ServiceImpl<${domainObj
     @Transactional
     @Override
     public List<${domainObjectClassName}DTO> create${domainObjectClassName}s(List<${domainObjectClassName}DTO> ${domainObjectName}s) {
-        AssertValid.notEmpty(${domainObjectName}s, "${domainObjectName}s ");
+        AssertValid.notEmpty(${domainObjectName}s, "${domainObjectName}s参数不能为空");
         List<${domainObjectClassName}DO> ${domainObjectName}DOList = BeanCopierUtils.copy(${domainObjectName}s, ${domainObjectClassName}DO.class);
         boolean isOK = saveBatch(${domainObjectName}DOList);
         if(!isOK){
@@ -81,17 +81,28 @@ public class ${domainObjectClassName}ServiceImpl extends ServiceImpl<${domainObj
 
 
     /**
-     * 根据查询参数查询单个对象
+     * 主键查询对象
      *
      * @param id
      * @return ${domainObjectClassName}Response
      */
     @Override
-    public ${domainObjectClassName}DTO findOne(String id) {
+    public ${domainObjectClassName}DTO findById(String id) {
+        AssertValid.notNull(id, "id参数不能为空");
         ${domainObjectClassName}DO ${domainObjectName} = getById(id);
         return BeanCopierUtils.copy(${domainObjectName}, ${domainObjectClassName}DTO.class);
     }
 
+    /**
+    * 查询集合对象
+    *
+    * @param queryWrapper
+    * @return List<${domainObjectClassName}DTO>
+    */
+    @Override
+    public List<${domainObjectClassName}DTO> findList(QueryWrapper<${domainObjectClassName}DO> queryWrapper) {
+        return BeanCopierUtils.copy(list(queryWrapper), ${domainObjectClassName}DTO.class);
+    }
     /**
      * 查询${tableComment}领域分页对象
      * @param page
@@ -113,6 +124,7 @@ public class ${domainObjectClassName}ServiceImpl extends ServiceImpl<${domainObj
     @Transactional
     @Override
     public boolean delete${domainObjectClassName}(List<String> ids) {
+        AssertValid.notEmpty(ids, "ids参数不能为空");
         return removeByIds(ids);
     }
 
@@ -124,6 +136,7 @@ public class ${domainObjectClassName}ServiceImpl extends ServiceImpl<${domainObj
     @Transactional
     @Override
     public boolean delete${domainObjectClassName}(String id) {
+        AssertValid.notNull(id, "id参数不能为空");
         return removeById(id);
     }
 }

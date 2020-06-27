@@ -32,11 +32,19 @@ public interface ${domainObjectClassName}Service {
     public boolean update${domainObjectClassName}(${domainObjectClassName}DTO ${domainObjectName}Update);
 
     /**
-     * 根据查询参数查询单个对象
+     * 主键查询对象
      * @param   id
      * @return  ${domainObjectClassName}DTO
      */
-    public ${domainObjectClassName}DTO findOne(String id);
+    public ${domainObjectClassName}DTO findById(String id);
+
+
+    /**
+    * 查询集合对象
+    * @param queryWrapper
+    * @return List<${domainObjectClassName}DTO>
+    */
+    public List<${domainObjectClassName}DTO> findList(QueryWrapper<${domainObjectClassName}DO> queryWrapper);
 
     /**
      * 查询${tableComment}领域分页对象

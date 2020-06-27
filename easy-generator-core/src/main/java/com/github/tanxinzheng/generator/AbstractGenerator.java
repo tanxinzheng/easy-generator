@@ -2,19 +2,24 @@ package com.github.tanxinzheng.generator;
 
 import com.github.tanxinzheng.generator.configuration.GeneratorConfiguration;
 import com.github.tanxinzheng.generator.model.ProjectMetadata;
+import com.github.tanxinzheng.generator.model.TableInfo;
+import com.github.tanxinzheng.generator.model.TemplateConfig;
 import com.github.tanxinzheng.generator.utils.FreemarkerUtils;
 import com.github.tanxinzheng.generator.utils.PluginUtils;
+import com.google.common.collect.Lists;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.mybatis.generator.internal.util.JavaBeansUtil;
+import org.springframework.beans.BeanUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.List;
 
 /**
  * Created by tanxinzheng on 2019/2/19.
@@ -100,16 +105,31 @@ public abstract class AbstractGenerator {
      * @param configuration
      */
     public void step5(GeneratorConfiguration configuration){
-        configuration.getTables().stream().forEach(tableInfo -> {
-            tableInfo.getTemplates().stream().forEach(templateConfig -> {
+        List<TableInfo> list = configuration.getTables();
+        List<TableInfo> newList = Lists.newArrayList();
+        for (TableInfo tableInfo : list) {
+            List<TemplateConfig> templateConfigList = Lists.newArrayList();
+            List<TemplateConfig> oldTemplateConfigList = tableInfo.getTemplates();
+            for (TemplateConfig templateConfig : oldTemplateConfigList) {
                 templateConfig.setTargetPackage(tableInfo.getModulePackage() + "." + templateConfig.getPackageName());
-                templateConfig.setTargetFileName(configuration.getMetadata().getOutputDirectory()
+                String fileName = configuration.getMetadata().getOutputDirectory()
                         + File.separator
                         + templateConfig.getTargetPackage().replace(".", File.separator)
                         + File.separator
                         + tableInfo.getDomainObjectClassName()
-                        + templateConfig.getFileExt());
-
+                        + templateConfig.getFileExt();
+                templateConfig.setTargetFileName(fileName);
+                TemplateConfig config = new TemplateConfig();
+                BeanUtils.copyProperties(templateConfig, config);
+                templateConfigList.add(config);
+            }
+            tableInfo.setTemplates(templateConfigList);
+            newList.add(tableInfo);
+        }
+        configuration.setTables(newList);
+        configuration.getTables().stream().forEach(tableInfo -> {
+            tableInfo.getTemplates().forEach(templateConfig -> {
+                System.out.println(templateConfig.getTargetFileName());
             });
         });
     }

@@ -41,6 +41,7 @@ public class XmomenGeneratorTest {
             projectMetadata = new ProjectMetadata();
             configuration.setMetadata(projectMetadata);
         }
+        System.out.println();
         projectMetadata.setRootPath(basedir);
         return configuration;
     }

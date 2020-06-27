@@ -21,33 +21,33 @@ import java.util.List;
 @Slf4j
 @Api(tags = "${tableComment}接口")
 @RestController
-@RequestMapping(value = "/${restMapping}")
+@RequestMapping(value = "${restMapping}")
 public class ${domainObjectClassName}Controller {
 
     @Resource
     ${domainObjectClassName}Service ${domainObjectName}Service;
 
     /**
-     * ${tableComment}列表
+     * 分页查询${tableComment}集合
      * @param queryParams
      * @return
      */
     @ApiOperation(value = "分页查询${tableComment}")
     @GetMapping
-    public IPage<${domainObjectClassName}VO> selectPage(QueryParams<${domainObjectClassName}DO> queryParams){
+    public IPage<${domainObjectClassName}VO> findPage(QueryParams<${domainObjectClassName}DO> queryParams){
         IPage<${domainObjectClassName}DTO> page = ${domainObjectName}Service.findPage(queryParams.getPage(), queryParams.getQueryWrapper());
         return BeanCopierUtils.copy(page, ${domainObjectClassName}VO.class);
     }
 
     /**
-     * 查询单个${tableComment}
+     * 主键查询${tableComment}
      * @param   id  主键
      * @return  ${domainObjectClassName}Response   ${tableComment}领域对象
      */
-    @ApiOperation(value = "查询${tableComment}")
+    @ApiOperation(value = "主键查询${tableComment}")
     @GetMapping(value = "/{id}")
-    public ${domainObjectClassName}VO selectOne(@PathVariable(value = "id") String id){
-        ${domainObjectClassName}DTO ${domainObjectName}DTO = ${domainObjectName}Service.findOne(id);
+    public ${domainObjectClassName}VO findById(@PathVariable(value = "id") String id){
+        ${domainObjectClassName}DTO ${domainObjectName}DTO = ${domainObjectName}Service.findById(id);
         return BeanCopierUtils.copy(${domainObjectName}DTO, ${domainObjectClassName}VO.class);
     }
 
@@ -96,6 +96,7 @@ public class ${domainObjectClassName}Controller {
     @ApiOperation(value = "批量删除${tableComment}")
     @DeleteMapping
     public boolean batchDelete(@RequestBody List<String> ids){
+        AssertValid.notEmpty(ids, "数组参数不能为空");
         return ${domainObjectName}Service.delete${domainObjectClassName}(ids);
     }
 
