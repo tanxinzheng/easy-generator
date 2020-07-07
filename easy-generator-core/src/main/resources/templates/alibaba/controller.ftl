@@ -3,6 +3,7 @@ package ${targetPackage};
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.tanxinzheng.framework.mybatis.domian.QueryParams;
 import com.github.tanxinzheng.framework.mybatis.utils.BeanCopierUtils;
+import com.github.tanxinzheng.framework.utils.AssertValid;
 import ${modulePackage}.domain.dto.${domainObjectClassName}DTO;
 import ${modulePackage}.domain.entity.${domainObjectClassName}DO;
 import ${modulePackage}.domain.vo.${domainObjectClassName}VO;

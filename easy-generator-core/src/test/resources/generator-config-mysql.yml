@@ -17,28 +17,8 @@ tables:
 #    tableName: xmo_dictionary
 #    modulePackage: com.github.tanxinzheng.module.dictionary
 #    restMapping: /dictionary
-  - domainObjectName: User
-    tableComment: "用户"
-    tableName: xmo_user
-    modulePackage: com.github.tanxinzheng.module.authorization
-    restMapping: /user
-  - domainObjectName: Role
-    tableComment: "角色"
-    tableName: xmo_role
-    modulePackage: com.github.tanxinzheng.module.authorization
-    restMapping: /role
-  - domainObjectName: Permission
-    tableComment: "权限资源"
-    tableName: xmo_permission
-    modulePackage: com.github.tanxinzheng.module.authorization
-    restMapping: /permission
-  - domainObjectName: UserRoleRelation
-    tableComment: "用户角色关系"
-    tableName: xmo_user_role_relation
-    modulePackage: com.github.tanxinzheng.module.authorization
-    restMapping: /user-role
-  - domainObjectName: RolePermissionRelation
-    tableComment: "角色权限关系"
-    tableName: xmo_role_permission_relation
-    modulePackage: com.github.tanxinzheng.module.authorization
-    restMapping: /role-permission
+  - domainObjectName: ActionLog
+    tableComment: "操作日志"
+    tableName: xmo_action_log
+    modulePackage: com.github.tanxinzheng.module.system.logger
+    restMapping: /action-logs
