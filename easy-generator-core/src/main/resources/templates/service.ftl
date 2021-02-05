@@ -8,7 +8,7 @@ import ${modulePackage}.domain.entity.${domainObjectClassName};
 import java.util.List;
 
 
-public interface ${domainObjectClassName}Service {
+public interface ${domainObjectClassName}Service extends IService<${domainObjectClassName}DO>{
 
     /**
      * 新增${tableComment}

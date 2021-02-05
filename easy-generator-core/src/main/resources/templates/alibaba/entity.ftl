@@ -1,6 +1,9 @@
 package ${targetPackage};
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import com.github.tanxinzheng.framework.model.BaseEntity;
+import lombok.Builder;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
@@ -13,6 +16,9 @@ import java.io.Serializable;
 
 <#include "header.ftl"/>
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @TableName(value = "${tableName}")
 public class ${domainObjectClassName}DO extends BaseEntity implements Serializable {
 

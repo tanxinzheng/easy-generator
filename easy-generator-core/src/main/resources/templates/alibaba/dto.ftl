@@ -1,6 +1,9 @@
 package ${targetPackage};
 
 import com.github.tanxinzheng.framework.model.BaseModel;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.*;
 import javax.validation.constraints.NotBlank;
@@ -21,6 +24,9 @@ import java.io.Serializable;
 
 <#include "header.ftl"/>
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ApiModel(value = "${tableComment}")
 public class ${domainObjectClassName}DTO extends BaseModel implements Serializable {
 <#if columns?exists>

@@ -21,7 +21,7 @@ public class XmomenGeneratorMySQLTest extends XmomenGeneratorTest {
 
     @Test
     public void generate() throws Exception {
-        GeneratorConfiguration configuration = super.generate("src/main/resources/generator-config-mysql.yml");
+        GeneratorConfiguration configuration = super.generate("src/test/resources/generator-config-mysql.yml");
         MySqlGenerator generator = new MySqlGenerator();
         generator.generate(configuration);
     }

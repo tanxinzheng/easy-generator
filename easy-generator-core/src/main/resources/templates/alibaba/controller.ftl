@@ -3,6 +3,9 @@ package ${targetPackage};
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.tanxinzheng.framework.mybatis.domian.QueryParams;
 import com.github.tanxinzheng.framework.mybatis.utils.BeanCopierUtils;
+import com.github.tanxinzheng.framework.utils.AssertValid;
+import com.github.tanxinzheng.framework.web.validate.VInsert;
+import com.github.tanxinzheng.framework.web.validate.VUpdate;
 import ${modulePackage}.domain.dto.${domainObjectClassName}DTO;
 import ${modulePackage}.domain.entity.${domainObjectClassName}DO;
 import ${modulePackage}.domain.vo.${domainObjectClassName}VO;
@@ -58,7 +61,7 @@ public class ${domainObjectClassName}Controller {
      */
     @ApiOperation(value = "新增${tableComment}")
     @PostMapping
-    public ${domainObjectClassName}VO create(@RequestBody @Valid ${domainObjectClassName}DTO ${domainObjectName}DTO) {
+    public ${domainObjectClassName}VO create(@RequestBody @Validated({VInsert.class}) ${domainObjectClassName}DTO ${domainObjectName}DTO) {
         ${domainObjectName}DTO = ${domainObjectName}Service.create${domainObjectClassName}(${domainObjectName}DTO);
         return BeanCopierUtils.copy(${domainObjectName}DTO, ${domainObjectClassName}VO.class);
     }

@@ -6,6 +6,7 @@ import ${modulePackage}.domain.dto.${domainObjectClassName}Response;
 import ${modulePackage}.domain.entity.${domainObjectClassName};
 import ${modulePackage}.domain.mapper.${domainObjectClassName}Mapper;
 import ${modulePackage}.service.${domainObjectClassName}Service;
+import com.github.tanxinzheng.framework.utils.AssertValid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

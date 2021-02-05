@@ -2,13 +2,14 @@ package ${targetPackage};
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
 import ${modulePackage}.domain.dto.${domainObjectClassName}DTO;
 import ${modulePackage}.domain.entity.${domainObjectClassName}DO;
 
 import java.util.List;
 
 <#include "header.ftl"/>
-public interface ${domainObjectClassName}Service {
+public interface ${domainObjectClassName}Service extends IService<${domainObjectClassName}DO> {
 
     /**
      * 新增${tableComment}

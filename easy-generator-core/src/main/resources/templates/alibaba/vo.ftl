@@ -1,5 +1,8 @@
 package ${targetPackage};
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,6 +16,9 @@ import java.io.Serializable;
 
 <#include "header.ftl"/>
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ApiModel(value = "${tableComment}")
 public class ${domainObjectClassName}VO implements Serializable {
 

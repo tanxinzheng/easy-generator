@@ -37,7 +37,8 @@ public class ${domainObjectClassName}ServiceImpl extends ServiceImpl<${domainObj
     @Override
     public ${domainObjectClassName}DTO create${domainObjectClassName}(${domainObjectClassName}DTO ${domainObjectName}DTO) {
         AssertValid.notNull(${domainObjectName}DTO, "${domainObjectName}DTO参数不能为空");
-        ${domainObjectClassName}DO ${domainObjectName} = ${domainObjectName}DTO.toDO(${domainObjectClassName}DO.class);
+        ${domainObjectClassName}DO ${domainObjectName} = BeanCopierUtils.copy(${domainObjectName}DTO, ${domainObjectClassName}DO.class);
+
         boolean isOk = save(${domainObjectName});
         if(!isOk){
             return null;
